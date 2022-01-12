@@ -1,0 +1,8 @@
+{
+  "plugins": [
+	"mathjax-pro"
+  ],
+  "title": "神大人的笔记本",
+  "pluginsConfig": {
+  }
+ }
