@@ -1013,10 +1013,8 @@ public class UserDaoTest {
 2. 在sql拼接中使用通配符
 
 ```xml
-select * from mybatis.user where name like "%"#{value}"%"
+select * from mybatis.user where name like like concat('%',#{name},'%')
 ```
-
-
 
 ## 配置解析
 
@@ -2591,8 +2589,6 @@ public class MyTest {
 
 ```SQL
 select * from user where 1=1 and (id=1 or id=2 or id=3)
-
-
 ```
 
 ![image-20210915132713501](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948220.png)

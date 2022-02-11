@@ -13,8 +13,6 @@
 
 - `\usepackage[options]{package}`
 
-
-
 - `\begin{*环境名称*}`
 
   `内容

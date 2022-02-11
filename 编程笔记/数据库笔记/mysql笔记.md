@@ -1,3 +1,5 @@
+# Mysql笔记
+
 ## 介绍
 
 mysql数据库是为了方便对数据进行存储以及管理的。
@@ -206,7 +208,7 @@ alter table 表名 CHANGE 字段名 新字段名 字段类型;
 alter table 表名 alter 字段名 set default 默认值;
 ```
 
-### 修改
+### 修改字段名
 
 ```
 update 表名 set 字段名= '新的字段值' where 字段名='旧字段值';

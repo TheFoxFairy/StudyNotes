@@ -168,8 +168,8 @@ public class HelloServlet extends HttpServlet {
 ```
 
 * 配置Tomcat，并启动测试
-  * localhost:8080/hello?method=add
-  * localhost:8080/hello?method=delete
+  * **localhost:8080/hello?method=add**
+  * **localhost:8080/hello?method=delete**
 
 **MVC框架要做哪些事情**
 
@@ -510,11 +510,12 @@ public class HelloController implements Controller {
 
 **/ 和 /\* 的区别：**< url-pattern > / </ url-pattern > 不会匹配到.jsp， 只针对我们编写的请求；即：.jsp 不会进入spring的 DispatcherServlet类 。< url-pattern > /* </ url-pattern > 会匹配 *.jsp，会出现返回 jsp视图 时再次进入spring的DispatcherServlet 类，导致找不到对应的controller所以报404错。
 
-1. - 注意web.xml版本问题，要最新版！
-   - 注册DispatcherServlet
-   - 关联SpringMVC的配置文件
-   - 启动级别为1
-   - 映射路径为 / 【不要用/*，会404】
+- 注意web.xml版本问题，要最新版！
+
+- 注册DispatcherServlet
+- 关联SpringMVC的配置文件
+- 启动级别为1
+- 映射路径为 / 【不要用/*，会404】
 
 * **添加Spring MVC配置文件**
 
@@ -899,11 +900,11 @@ public class RestFulController {
 
 ![image-20220109003931902](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201090056347.png)
 
-* 思考：使用路径变量的好处？
+思考：使用路径变量的好处？
 
-1. - 使路径变得更加简洁；
-   - 获得参数更加方便，框架会自动进行类型转换。
-   - 通过路径变量的类型可以约束访问参数，如果类型不一样，则访问不到对应的请求方法，如这里访问是的路径是/add/1/a，则路径与方法不匹配，而不会是参数转换失败。
+1. 使路径变得更加简洁；
+2. 获得参数更加方便，框架会自动进行类型转换。
+3. 通过路径变量的类型可以约束访问参数，如果类型不一样，则访问不到对应的请求方法，如这里访问是的路径是/add/1/a，则路径与方法不匹配，而不会是参数转换失败。
 
 ### 使用method属性指定请求类型
 
@@ -2773,7 +2774,7 @@ INSERT  INTO books(bookID,bookName,bookCounts,detail)VALUES
   * com.easy.controller
   * com.easy.mapper
   * com.easy.service
-  * com.easy.controller
+  * com.easy.pojo
   * mybatis-config.xml
 
   ```xml
@@ -2804,7 +2805,7 @@ INSERT  INTO books(bookID,bookName,bookCounts,detail)VALUES
 
 ```properties
 jdbc.driver=com.mysql.jdbc.Driver
-jdbc.url=jdbc:mysql://localhost:3306/ssmbuild?useSSL=true&useUnicode=true&characterEncoding=utf8
+jdbc.url=jdbc:mysql://localhost:3306/ssmbuild?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&characterEncoding=utf-8
 jdbc.username=root
 jdbc.password=123456
 ```
