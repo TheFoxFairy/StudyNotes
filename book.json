@@ -1,6 +1,6 @@
 {
   "plugins": [
-	"mathjax-pro"
+	"mathjax-pro","splitter"
   ],
   "title": "神大人的笔记本",
   "pluginsConfig": {

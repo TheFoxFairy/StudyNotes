@@ -234,11 +234,8 @@
       - 工具类
         * [Redis Util](编程笔记/Java笔记/微服务开发笔记/工具类/RedisUtil.md)
         * [富文本编辑器](编程笔记/Java笔记/微服务开发笔记/工具类/富文本编辑器.md)
-      * [Shiro笔记](编程笔记/Java笔记/微服务开发笔记/Shiro笔记.md)
       * [SpringBoot笔记](编程笔记/Java笔记/微服务开发笔记/SpringBoot笔记.md)
       * [SpringCloud笔记](编程笔记/Java笔记/微服务开发笔记/SpringCloud笔记.md)
-      * [SpringSecurity笔记](编程笔记/Java笔记/微服务开发笔记/SpringSecurity笔记.md)
-      * [Swagger笔记](编程笔记/Java笔记/微服务开发笔记/Swagger笔记.md)
       * [Vert.x笔记](编程笔记/Java笔记/微服务开发笔记/Vert.x笔记.md)
       * [分布式开发笔记](编程笔记/Java笔记/微服务开发笔记/分布式开发笔记.md)
     - 服务网格笔记

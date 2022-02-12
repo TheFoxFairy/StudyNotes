@@ -2342,6 +2342,2521 @@ public class StudentController {
 }
 ```
 
+## SpringSecurity
+
+### 扩展阅读
+
+* https://www.cnblogs.com/zongmin/p/13783285.html
+
+### 安全简介
+
+在 Web 开发中，安全一直是非常重要的一个方面。安全虽然属于应用的非功能性需求，但是应该在应用开发的初期就考虑进来。如果在应用开发的后期才考虑安全的问题，就可能陷入一个两难的境地：**一方面，应用存在严重的安全漏洞，无法满足用户的要求，并可能造成用户的隐私数据被攻击者窃取；另一方面，应用的基本架构已经确定，要修复安全漏洞，可能需要对系统的架构做出比较重大的调整，因而需要更多的开发时间，影响应用的发布进程。**因此，从应用开发的第一天就应该把安全相关的因素考虑进来，并在整个应用的开发过程中。
+
+> 市面上存在比较有名的：Shiro，Spring Security ！
+
+### 什么是Spring Security？
+
+- Spring Security是一个功能强大且高度可定制的身份验证和访问控制框架。它实际上是保护基于spring的应用程序的标准。
+- Spring Security是一个框架，侧重于为Java应用程序提供身份验证和授权。与所有Spring项目一样，Spring安全性的真正强大之处在于它可以轻松地扩展以满足定制需求
+
+从上面的介绍中可以知道这是一个权限框架。想我们之前做项目是没有使用框架是怎么控制权限的？对于权限 一般会细分为功能权限，访问权限，和菜单权限。代码会写的非常的繁琐，冗余。
+
+怎么解决之前写权限代码繁琐，冗余的问题，一些主流框架就应运而生而Spring Scecurity就是其中的一种。
+
+Spring 是一个非常流行和成功的 Java 应用开发框架。**Spring Security 基于 Spring 框架，提供了一套 Web 应用安全性的完整解决方案。**一般来说，Web 应用的安全性包括用户认证（Authentication）和用户授权（Authorization）两个部分。用户认证指的是验证某个用户是否为系统中的合法主体，也就是说用户能否访问该系统。用户认证一般要求用户提供用户名和密码。系统通过校验用户名和密码来完成认证过程。用户授权指的是验证某个用户是否有权限执行某个操作。在一个系统中，不同用户所具有的权限是不同的。比如对一个文件来说，有的用户只能进行读取，而有的用户可以进行修改。一般来说，系统会为不同的用户分配不同的角色，而每个角色则对应一系列的权限。
+
+对于上面提到的两种应用情景，Spring Security 框架都有很好的支持。**在用户认证方面，Spring Security 框架支持主流的认证方式，包括 HTTP 基本认证、HTTP 表单验证、HTTP 摘要认证、OpenID 和 LDAP 等。在用户授权方面，Spring Security 提供了基于角色的访问控制和访问控制列表（Access Control List，ACL），可以对应用中的领域对象进行细粒度的控制。**
+
+> 工作：认证、授权
+
+### 认识SpringSecurity
+
+Spring Security 是针对Spring项目的安全框架，也是Spring Boot底层安全模块默认的技术选型，他可以实现强大的Web安全控制，对于安全控制，我们仅需要引入 spring-boot-starter-security 模块，进行少量的配置，即可实现强大的安全管理！
+
+记住几个类：
+
+- **WebSecurityConfigurerAdapter：自定义Security策略**
+- **AuthenticationManagerBuilder：自定义认证策略**
+- **@EnableWebSecurity：开启WebSecurity模式**
+
+> 开启某个功能，@Enablexxx
+
+Spring Security的两个主要目标是 “认证” 和 “授权”（访问控制）。
+
+**“认证”（Authentication）**
+
+身份验证是关于验证您的凭据，如用户名/用户ID和密码，以验证您的身份。
+
+身份验证通常通过用户名和密码完成，有时与身份验证因素结合使用。
+
+ **“授权” （Authorization）**
+
+授权发生在系统成功验证您的身份后，最终会授予您访问资源（如信息，文件，数据库，资金，位置，几乎任何内容）的完全权限。
+
+这个概念是通用的，而不是只在Spring Security 中存在。
+
+### 前提工作
+
+* 创建新项目`springboot-06-security`，添加基础模块
+
+![image-20220205212058304](../../../../../../../Pictures/assets/SpringBoot笔记/202202052301617.png)
+
+* 创建在`templates`文件夹下创建
+
+```properties
+index.html
+|views
+    |level1
+        1.html
+        2.html
+        3.html
+    |level2
+        1.html
+        2.html
+        3.html
+    |level3
+        1.html
+        2.html
+        3.html
+    Login.html
+```
+
+> 链接：https://pan.baidu.com/s/1K2CzctswRKit5bce5_CpVw 
+>
+> 提取码：ps61 
+
+* 在`application.properties`中关闭模板引擎缓存，方便调试
+
+```properties
+spring.thymeleaf.cache=false
+```
+
+* 创建Controller类`RouterController.java`
+
+```java
+@Controller
+public class RouterController {
+
+    @RequestMapping({"/","/index"})
+    public String index(){
+        return "index";
+    }
+
+    @RequestMapping("/toLogin")
+    public String toLogin(){
+        return "views/login";
+    }
+
+    @RequestMapping("level1/{id}")
+    public String level1(@PathVariable("id") int id){
+        return String.format("views/level1/%d", id);
+    }
+
+    @RequestMapping("level2/{id}")
+    public String level2(@PathVariable("id") int id){
+        return String.format("views/level2/%d", id);
+    }
+
+    @RequestMapping("level3/{id}")
+    public String level3(@PathVariable("id") int id){
+        return String.format("views/level3/%d", id);
+    }
+}
+```
+
+* 测试环境，是否成功
+
+![image-20220205214616269](../../../../../../../Pictures/assets/SpringBoot笔记/202202052301618.png)
+
+### 认证和授权
+
+目前，测试环境，是谁都可以访问的，使用 Spring Security 增加上认证和授权的功能
+
+* 引入 Spring Security 模块，已经在前面引入了
+
+```xml
+<dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+```
+
+#### 授权
+
+* 编写 Spring Security 配置类
+
+参考官网：https://spring.io/projects/spring-security 
+
+对应的帮助文档：https://www.baeldung.com/spring-security-jdbc-authentication
+
+![image-20220205220126296](../../../../../../../Pictures/assets/SpringBoot笔记/202202052301619.png)
+
+* 编写基础配置类
+
+```java
+@EnableWebSecurity
+@Configuration
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+    }
+}
+```
+
+* 定制请求的授权规则，对不同角色进行设置权限
+
+```java
+@EnableWebSecurity
+@Configuration
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // 设置权限
+        http.authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers("/level1/**").hasRole("vip1")
+                .antMatchers("/level2/**").hasRole("vip2")
+                .antMatchers("/level3/**").hasRole("vip3");
+    }
+}
+```
+
+* 在configure()方法中加入以下配置，开启自动配置的登录功能！对没有权限的用户跳转到登录页面
+
+```
+// 开启自动配置的登录功能
+// /login 请求来到登录页
+// /login?error 重定向到这里表示登录失败
+http.formLogin();
+```
+
+* 测试一下：发现，没有权限的时候，会跳转到登录的页面！
+
+![image-20220205221611449](../../../../../../../Pictures/assets/SpringBoot笔记/202202052301444.png)
+
+#### 认证
+
+##### 内存认证
+
+定义认证规则，重写configure(AuthenticationManagerBuilder auth)方法
+
+```java
+@EnableWebSecurity
+@Configuration
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    
+	...
+        
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("customer").password("123456").roles("vip1","vip2")
+                .and()
+                .withUser("admin").password("123456").roles("vip1","vip2","vip3");
+    }
+}
+```
+
+`inMemoryAuthentication`是从内存中读取，正常情况下应该从数据库中读取。
+
+直接运行后，出现`java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the id "null"`错误，解决如下：
+
+在Spring Security5.0+中，新增了很多加密方式。
+
+```java
+@EnableWebSecurity
+@Configuration
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+	...
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        // 加密
+        BCryptPasswordEncoder bpe = new BCryptPasswordEncoder();
+        auth.inMemoryAuthentication().passwordEncoder(bpe)
+                .withUser("customer").password(bpe.encode("123456")).roles("vip1","vip2")
+                .and()
+                .withUser("admin").password(bpe.encode("123456")).roles("vip1","vip2","vip3");
+    }
+}
+
+```
+
+> spring security 官方推荐的是使用bcrypt加密方式。
+
+* 测试，发现，登录成功，并且每个角色只能访问自己认证下的规则！搞定
+
+![image-20220205225920871](../../../../../../../Pictures/assets/SpringBoot笔记/202202052259831.png)
+
+##### JDBC身份验证
+
+* 创建数据库
+
+```mysql
+create table users(
+    username varchar(50) not null primary key,
+    password varchar(200) not null,
+    enabled boolean not null
+);
+create table authorities (
+    username varchar(50) not null,
+    authority varchar(200) not null,
+    constraint fk_authorities_users foreign key(username) references users(username)
+);
+create unique index ix_auth_username on authorities (username,authority);
+
+-- User user/pass
+INSERT INTO users (username, password, enabled) values 
+('customer',
+    '$2a$10$SBrJ5ixGwqZaE5jPnDSCZOLagXpju4lLk9XrvAYvlyE8QASC7vova',
+    1),
+('admin',
+    '$2a$10$SBrJ5ixGwqZaE5jPnDSCZOLagXpju4lLk9XrvAYvlyE8QASC7vova',
+    1);
+
+INSERT INTO authorities (username, authority) values
+('customer', 'ROLE_vip1'),
+('customer', 'ROLE_vip2'),
+('admin', 'ROLE_vip1'),
+('admin', 'ROLE_vip2'),
+('admin', 'ROLE_vip3');
+```
+
+* 导入依赖
+
+```xml
+<!-- JDBC -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jdbc</artifactId>
+</dependency>
+<!-- Mysql -->
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+* 在application.yml中配置数据库
+
+```yaml
+spring:
+  datasource:
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/review01?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+```
+
+* 必须禁用ddl-auto属性，不然JDBC无法使用
+
+```pro
+#spring.sql.init.mode=always
+spring.datasource.initialization-mode=always
+spring.jpa.hibernate.ddl-auto=none
+```
+
+> 另外，请注意spring.sql.init.mode属性是在 Spring Boot 2.5.0 中引入的；对于早期版本，我们需要使用spring.datasource.initialization-mode。
+
+* 配置JDBC身份验证
+
+```java
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.jdbcAuthentication().dataSource(dataSource)
+                .usersByUsernameQuery("select username, password, enabled from users where username=?")
+                .authoritiesByUsernameQuery(
+                        "select username, authority from authorities where username = ?");
+    }
+```
+
+
+
+### 权限控制和注销
+
+#### 注销
+
+* 开启自动配置的注销的功能
+
+```java
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+		
+        ...
+        // 没有权限的跳转到登录页面
+        http.formLogin();
+
+        //开启自动配置的注销的功能
+        // /logout 注销请求
+        http.logout();
+    }
+```
+
+* 在前端，增加一个注销的按钮，index.html 导航栏中
+
+```html
+<a class="item" th:href="@{/logout}">
+   <i class="address card icon"></i> 注销
+</a>
+```
+
+![image-20220206001315880](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206001315880.png)
+
+* 运行测试
+
+![image-20220206001346592](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206001346592.png)
+
+* 注销后，可以重定向页面
+
+```java
+// 开启注销登录功能
+http.logout()
+    // 用户注销登录时访问的 url，默认为 /logout
+    .logoutUrl("/logout")
+    // 用户成功注销登录后重定向的地址，默认为 loginPage() + ?logout
+    .logoutSuccessUrl("/login/page?logout");    
+```
+
+#### 权限控制
+
+根据角色的权限显示出当前角色拥有的页面功能，无权限页面则不显示，并且如果登录了则隐藏登录按钮，只显示注销按钮，而未登录同理。
+
+* ==我们需要结合thymeleaf中的一些功能==
+
+`sec：authorize="isAuthenticated()"`:是否认证登录！来显示不同的页面
+
+* 导入依赖
+
+```xml
+<!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity4 -->
+<dependency>
+   <groupId>org.thymeleaf.extras</groupId>
+   <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+   <version>3.0.4.RELEASE</version>
+</dependency>
+```
+
+* 修改`index.html`前端页面，导入命名空间
+
+```html
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+```
+
+* 修改导航栏，增加认证判断
+
+```html
+<!--登录注销-->
+<div class="right menu">
+    <!--未登录-->
+    <div sec:authorize="!isAuthenticated()">
+        <a class="item" th:href="@{/toLogin}">
+            <i class="address card icon"></i> 登录
+        </a>
+    </div>
+
+    <!--如果已登录-->
+    <div sec:authorize="isAuthenticated()">
+        <a class="item" th:href="@{/logout}">
+            <i class="address card icon"></i> 注销
+        </a>
+    </div>
+</div>
+```
+
+修改完后，进行测试
+
+![image-20220206002200942](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206002200942.png)
+
+* 如果注销404了，就是因为它默认防止csrf跨站请求伪造，因为会产生安全问题，我们可以将请求改为post表单提交，或者在spring security中关闭csrf功能；我们试试：在 配置中增加 `http.csrf().disable();`
+
+```properties
+http.csrf().disable();//关闭csrf功能:跨站请求伪造,默认只能通过post方式提交logout请求
+http.logout().logoutSuccessUrl("/");
+```
+
+* 修改角色功能块认证完成
+
+```html
+<div class="ui three column stackable grid">
+    <div class="column"  sec:authorize="hasRole('vip1')">
+        <div class="ui raised segment">
+            <div class="ui">
+                <div class="content">
+                    <h5 class="content">Level 1</h5>
+                    <hr>
+                    <div><a th:href="@{/level1/1}"><i class="bullhorn icon"></i> Level-1-1</a></div>
+                    <div><a th:href="@{/level1/2}"><i class="bullhorn icon"></i> Level-1-2</a></div>
+                    <div><a th:href="@{/level1/3}"><i class="bullhorn icon"></i> Level-1-3</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="column" sec:authorize="hasRole('vip2')">
+        <div class="ui raised segment">
+            <div class="ui">
+                <div class="content">
+                    <h5 class="content">Level 2</h5>
+                    <hr>
+                    <div><a th:href="@{/level2/1}"><i class="bullhorn icon"></i> Level-2-1</a><a
+                                                                                                 th:href="@{/level2/2}"><i class="bullhorn icon"></i> Level-2-2</a></div>
+                    <div><a th:href="@{/level2/3}"><i class="bullhorn icon"></i> Level-2-3</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="column" sec:authorize="hasRole('vip3')">
+        <div class="ui raised segment">
+            <div class="ui">
+                <div class="content">
+                    <h5 class="content">Level 3</h5>
+                    <hr>
+                    <div><a th:href="@{/level3/1}"><i class="bullhorn icon"></i> Level-3-1</a></div>
+                    <div><a th:href="@{/level3/2}"><i class="bullhorn icon"></i> Level-3-2</a></div>
+                    <div><a th:href="@{/level3/3}"><i class="bullhorn icon"></i> Level-3-3</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+```
+
+其中，进行判断的语句是` <div class="column" sec:authorize="hasRole('vip3')">`。判断角色拥有的权限。
+
+![image-20220206002623737](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206002623737.png)
+
+### 记住我
+
+现在的情况，只要登录之后，关闭浏览器，再登录，就会让重新登录，但是很多网站的情况，就是有一个记住密码的功能，这个该如何实现呢？很简单
+
+* 开启记住我功能
+
+```java
+//定制请求的授权规则
+@Override
+protected void configure(HttpSecurity http) throws Exception {
+    ....
+    //记住我
+    http.rememberMe();
+}
+```
+
+* 再次启动项目测试一下，发现登录页多了一个记住我功能，登录之后关闭 浏览器，然后重新打开浏览器访问，发现用户依旧存在！
+
+![image-20220206005845955](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206005845955.png)
+
+思考：如何实现的呢？其实非常简单，可以查看浏览器的cookie
+
+![image-20220206010046741](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206010046741.png)
+
+> 默认保存14天
+
+* 更改默认保存时间
+
+```java
+// 开启 Remember-Me 功能
+http.rememberMe()
+    // 指定在登录时“记住我”的 HTTP 参数，默认为 remember-me
+    .rememberMeParameter("remember-me")
+    // 设置 Token 有效期为 200s，默认时长为 2 星期
+    .tokenValiditySeconds(200)
+    // 指定 UserDetailsService 对象
+    .userDetailsService(userDetailsService);
+```
+
+### 全局性的安全配置
+
+```java
+/**
+     * 定制一些全局性的安全配置，例如：不拦截静态资源的访问
+     */
+@Override
+public void configure(WebSecurity web) throws Exception {
+    // 静态资源的访问不需要拦截，直接放行
+    web.ignoring().antMatchers("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
+}
+```
+
+### 定制登录页
+
+现在这个登录页面都是spring security 默认的，怎么样可以使用我们自己写的Login界面呢？
+
+* 在刚才的登录页配置后面指定 loginpage
+
+```java
+http.formLogin().loginPage("/toLogin");
+```
+
+* 然后前端也需要指向我们自己定义的 login请求
+
+```html
+<a class="item" th:href="@{/toLogin}">
+   <i class="address card icon"></i> 登录
+</a>
+```
+
+* 我们登录，需要将这些信息发送到哪里，我们也需要配置，login.html 配置提交请求及方式，方式必须为post:
+
+```html
+<form th:action="@{/login}" method="post">
+   <div class="field">
+       <label>Username</label>
+       <div class="ui left icon input">
+           <input type="text" placeholder="Username" name="username">
+           <i class="user icon"></i>
+       </div>
+   </div>
+   <div class="field">
+       <label>Password</label>
+       <div class="ui left icon input">
+           <input type="password" name="password">
+           <i class="lock icon"></i>
+       </div>
+   </div>
+   <input type="submit" class="ui blue submit button"/>
+</form>
+```
+
+* 这个请求提交上来，我们还需要验证处理，怎么做呢？我们可以查看formLogin()方法的源码！我们配置接收登录的用户名和密码的参数！
+
+```java
+http.formLogin()
+    .usernameParameter("username")
+    .passwordParameter("password")
+    .loginPage("/toLogin")
+    .loginProcessingUrl("/login"); // 登陆表单提交请求
+```
+
+* 在登录页增加记住我的多选框
+
+```html
+<input type="checkbox" name="remember"> 记住我
+```
+
+* 后端验证处理！
+
+```java
+http.rememberMe().rememberMeParameter("remember");
+```
+
+![image-20220206011415325](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206011415325.png)
+
+![image-20220206011425796](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206011425796.png)
+
+### 完整配置代码
+
+```java
+@EnableWebSecurity
+@Configuration
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private DataSource dataSource; //注入数据源
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // 设置权限
+        http.authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers("/level1/**").hasRole("vip1")
+                .antMatchers("/level2/**").hasRole("vip2")
+                .antMatchers("/level3/**").hasRole("vip3");
+
+        // 没有权限的跳转到登录页面
+        http.formLogin()
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .loginPage("/toLogin")
+                .loginProcessingUrl("/login"); // 登陆表单提交请求
+
+        //开启自动配置的注销的功能
+        // /logout 注销请求
+        http.logout();
+
+        http.csrf().disable();//关闭csrf功能:跨站请求伪造,默认只能通过post方式提交logout请求
+        http.logout().logoutSuccessUrl("/");
+
+        http.rememberMe().rememberMeParameter("remember");
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        BCryptPasswordEncoder bpe = new BCryptPasswordEncoder();
+//        auth.inMemoryAuthentication().passwordEncoder(bpe)
+//                .withUser("customer").password(bpe.encode("123456")).roles("vip1", "vip2")
+//                .and()
+//                .withUser("admin").password(bpe.encode("123456")).roles("vip1", "vip2", "vip3");
+
+        auth.jdbcAuthentication().dataSource(dataSource)
+                .usersByUsernameQuery("select username, password, enabled from users where username=?")
+                .authoritiesByUsernameQuery(
+                        "select username, authority from authorities where username = ?");
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    
+}
+```
+
+## Shiro
+
+### 概述
+
+#### 简介
+
+[Apache](https://so.csdn.net/so/search?q=Apache&spm=1001.2101.3001.7020) Shiro是一个强大且易用的Java安全框架
+
+[Shiro](https://so.csdn.net/so/search?q=Shiro&spm=1001.2101.3001.7020) 不仅可以用在 JavaSE 环境中，也可以用在 JavaEE 环境中，它可以完成身份验证、授权、密码和会话管理
+
+官网： http://shiro.apache.org/
+
+#### 功能
+
+![](../../../../../../../Pictures/assets/SpringBoot笔记/202202060119401.png)
+
+- Authentication：身份认证/登录，验证用户是不是拥有相应的身份；
+
+- Authorization：授权，即权限验证，验证某个已认证的用户是否拥有某个权限；即判断用户是否能做事情，常见的如：验证某个用户是否拥有某个角色。或者细粒度的验证某个用户对某个资源是否具有某个权限；
+
+- Session Manager：会话管理，即用户登录后就是一次会话，在没有退出之前，它的所有信息都在会话中；会话可以是普通JavaSE环境的，也可以是如Web环境的；
+
+- Cryptography：加密，保护数据的安全性，如密码加密存储到数据库，而不是明文存储；
+
+- Web Support：Web支持，可以非常容易的集成到Web环境；
+
+- Caching：缓存，比如用户登录后，其用户信息、拥有的角色/权限不必每次去查，这样可以提高效率；
+
+- Concurrency：shiro支持多线程应用的并发验证，即如在一个线程中开启另一个线程，能把权限自动传播过去；
+
+- Testing：提供测试支持；
+
+- Run As：允许一个用户假装为另一个用户（如果他们允许）的身份进行访问；
+
+- Remember Me：记住我，这个是非常常见的功能，即一次登录后，下次再来的话不用登录了。
+
+#### 从外部看
+
+![](../../../../../../../Pictures/assets/SpringBoot笔记/202202060130682.png)
+
+应用代码直接交互的对象是Subject，也就是说Shiro的对外API核心就是Subject；其每个API的含义：
+
+​	**Subject**：主体，代表了当前“用户”，这个用户不一定是一个具体的人，与当前应用交互的任何东西都是Subject，如网络爬虫，机器人等；即一个抽象概念；所有Subject都绑定到SecurityManager，与Subject的所有交互都会委托给SecurityManager；可以把Subject认为是一个门面；SecurityManager才是实际的执行者；
+
+​	**SecurityManager**：安全管理器；即所有与安全有关的操作都会与SecurityManager交互；且它管理着所有Subject；可以看出它是Shiro的核心，它负责与后边介绍的其他组件进行交互，如果学习过SpringMVC，你可以把它看成DispatcherServlet前端控制器；
+
+​	**Realm**：域，Shiro从从Realm获取安全数据（如用户、角色、权限），就是说SecurityManager要验证用户身份，那么它需要从Realm获取相应的用户进行比较以确定用户身份是否合法；也需要从Realm得到用户相应的角色/权限进行验证用户是否能进行操作；可以把Realm看成DataSource，即安全数据源。
+
+也就是说对于我们而言，最简单的一个Shiro应用：
+
+1. 应用代码通过Subject来进行认证和授权，而Subject又委托给SecurityManager；
+
+2. 我们需要给Shiro的SecurityManager注入Realm，从而让SecurityManager能得到合法的用户及其权限进行判断。
+
+
+从以上也可以看出，Shiro不提供维护用户/权限，而是通过Realm让开发人员自己注入
+
+外部架构
+
+![](../../../../../../../Pictures/assets/SpringBoot笔记/202202060131369.png)
+
+- **Subject**：主体，可以看到主体可以是任何可以与应用交互的“用户”；
+- **SecurityManager**：相当于SpringMVC中的DispatcherServlet或者Struts2中的FilterDispatcher；是Shiro的心脏；所有具体的交互都通过SecurityManager进行控制；它管理着所有Subject、且负责进行认证和授权、及会话、缓存的管理。
+- **Authenticator**：认证器，负责主体认证的，这是一个扩展点，如果用户觉得Shiro默认的不好，可以自定义实现；其需要认证策略（Authentication Strategy），即什么情况下算用户认证通过了；
+- **Authrizer**：授权器，或者访问控制器，用来决定主体是否有权限进行相应的操作；即控制着用户能访问应用中的哪些功能；
+- **Realm**：可以有1个或多个Realm，可以认为是安全实体数据源，即用于获取安全实体的；可以是JDBC实现，也可以是LDAP实现，或者内存实现等等；由用户提供；注意：Shiro不知道你的用户/权限存储在哪及以何种格式存储；所以我们一般在应用中都需要实现自己的Realm；
+- **SessionManager**：如果写过Servlet就应该知道Session的概念，Session呢需要有人去管理它的生命周期，这个组件就是SessionManager；而Shiro并不仅仅可以用在Web环境，也可以用在如普通的JavaSE环境、EJB等环境；所有呢，Shiro就抽象了一个自己的Session来管理主体与应用之间交互的数据；这样的话，比如我们在Web环境用，刚开始是一台Web服务器；接着又上了台EJB服务器；这时想把两台服务器的会话数据放到一个地方，这个时候就可以实现自己的分布式会话（如把数据放到Memcached服务器）；
+- **SessionDAO**：DAO大家都用过，数据访问对象，用于会话的CRUD，比如我们想把Session保存到数据库，那么可以实现自己的SessionDAO，通过如JDBC写到数据库；比如想把Session放到Memcached中，可以实现自己的Memcached SessionDAO；另外SessionDAO中可以使用Cache进行缓存，以提高性能；
+- **CacheManager**：缓存控制器，来管理如用户、角色、权限等的缓存的；因为这些数据基本上很少去改变，放到缓存中后可以提高访问的性能
+- **Cryptography**：密码模块，Shiro提高了一些常见的加密组件用于如密码加密/解密的
+
+####  认证流程
+
+![](../../../../../../../Pictures/assets/SpringBoot笔记/202202060132088.png)
+
+**用户** 提交 **身份信息、凭证信息** 封装成 **令牌** 交由 **安全管理器** 认证
+
+### 快速入门
+
+* 新建一个Maven工程`springboot-08-shiro`，删除其 src 目录，将其作为父工程
+
+* 在父工程中新建一个 Maven 模块`hello-shiro`
+
+![image-20220206013909463](../../../../../../../Pictures/assets/SpringBoot笔记/202202060139932.png)
+
+* 复制快速入门案例 POM.xml 文件中的依赖 （版本号自选）
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.apache.shiro</groupId>
+        <artifactId>shiro-core</artifactId>
+        <version>1.4.1</version>
+    </dependency>
+
+    <!-- configure logging -->
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>1.7.29</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-slf4j-impl</artifactId>
+        <version>2.17.1</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>2.17.1</version>
+    </dependency>
+</dependencies>
+```
+
+* 把快速入门案例中的 resource 下的`log4j.xml`复制下来
+* 复制一下 `shiro.ini` 文件
+* 复制一下 `Quickstart.java` 文件
+  **如果有导包的错误，把那两个错误的包删掉，就会自动导对的包了，快速入门案例中用的方法过时了**
+
+其中IniSecurityManager已经弃用
+
+```java
+Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");
+SecurityManager securityManager = factory.getInstance();
+```
+
+新写法如下：
+
+```java
+DefaultSecurityManager securityManager = new DefaultSecurityManager();
+IniRealm iniRealm = new IniRealm("classpath:shiro.ini");
+securityManager.setRealm(iniRealm);
+```
+
+* 运行 `Quickstart.java`，得到结果
+
+![image-20220206020420241](../../../../../../../Pictures/assets/SpringBoot笔记/202202060204903.png)
+
+### 分析案例
+
+* 通过 SecurityUtils 获取当前执行的用户 Subject
+
+```java
+Subject currentUser = SecurityUtils.getSubject();
+```
+
+* 通过 当前用户拿到 Session
+
+```java
+Session session = currentUser.getSession();
+```
+
+* 用 Session 存值取值
+
+```java
+session.setAttribute("someKey", "aValue");
+        String value = (String) session.getAttribute("someKey");
+```
+
+* 判断用户是否被认证
+
+```java
+currentUser.isAuthenticated()
+```
+
+* 权限判断
+
+```java
+currentUser.hasRole("vip1")
+```
+
+* 执行登录操作
+
+```java
+ currentUser.login(token);
+```
+
+* 打印其标识主体
+
+```java
+currentUser.getPrincipal()
+```
+
+* 注销
+
+```java
+currentUser.logout();
+```
+
+* 完整样例
+
+```java
+public class Quickstart {
+
+    private static final transient Logger log = LoggerFactory.getLogger(Quickstart.class);
+
+
+    public static void main(String[] args) {
+
+        // 工厂模式，通过shiro.ini 配置文件中的信息，生成一个工厂实例
+        DefaultSecurityManager securityManager = new DefaultSecurityManager();
+        IniRealm iniRealm = new IniRealm("classpath:shiro.ini");
+        securityManager.setRealm(iniRealm);
+        SecurityUtils.setSecurityManager(securityManager);
+
+        // 现在已经建立了一个简单的shiro环境，看看能做什么
+        // 通过SecurityUtils获取当前执行的用户Subject
+        Subject currentUser = SecurityUtils.getSubject();
+
+        // 通过当前用户拿到session
+        // 使用shiro的session（不需要web或者EJB容器）
+        Session session = currentUser.getSession();
+
+        // 通过session进行存值取值
+        session.setAttribute("someKey", "aValue");
+        String value = (String) session.getAttribute("someKey");
+        if (value.equals("aValue")) {
+            log.info("Retrieved the correct value! [" + value + "]");
+        }
+
+        // 登录当前用户，以便可以检查角色和权限
+        // 这里和SpringSecurity使用了类似的代码，判断用户是否被认证
+        if (!currentUser.isAuthenticated()) {
+
+            // 如果被认证，就可以获得一个令牌（token）
+            // 通过用户的账号密码生成一个令牌
+            UsernamePasswordToken token = new UsernamePasswordToken("lonestarr", "vespa");
+            token.setRememberMe(true);
+            try {
+                // 执行登录操作
+                currentUser.login(token);
+            } catch (UnknownAccountException uae) {
+                // 如果用户不存在
+                log.info("没有用户名为 " + token.getPrincipal());
+            } catch (IncorrectCredentialsException ice) {
+                //如果密码不正确
+                log.info("账户密码 " + token.getPrincipal() + " 不正确");
+            } catch (LockedAccountException lae) {
+                // 用户被锁定，如密码输出过多，则被锁住
+                log.info("用户名账户 " + token.getPrincipal() + " 被锁住了  " +
+                        "请与管理员联系将其解锁");
+            }
+            // 在此处捕获更多异常
+            catch (AuthenticationException ae) {
+                //异常
+            }
+        }
+
+        // currentUser一些用法
+        // 打印其标识主题（在这种情况下，为用户名）
+        log.info("User [" + currentUser.getPrincipal() + "] logged in successfully.");
+
+        // 测试角色是否存在
+        if (currentUser.hasRole("schwartz")) {
+            log.info("schwartz 用户存在");
+        } else {
+            log.info("schwartz 用户不存在");
+        }
+
+        // 细粒度，权限范围小
+        // 测试类型化的权限（不是实例级别）
+        if (currentUser.isPermitted("lightsaber:wield")) {
+            log.info("You may use a lightsaber ring.  Use it wisely.");
+        } else {
+            log.info("Sorry, lightsaber rings are for schwartz masters only.");
+        }
+
+        // x粒度，权限范围广
+        // 实例级别权限
+        if (currentUser.isPermitted("winnebago:drive:eagle5")) {
+            log.info("You are permitted to 'drive' the winnebago with license plate (id) 'eagle5'.  " +
+                    "Here are the keys - have fun!");
+        } else {
+            log.info("Sorry, you aren't allowed to drive the 'eagle5' winnebago!");
+        }
+
+        // 注销
+        currentUser.logout();
+
+        System.exit(0);
+    }
+}
+```
+
+### SpringBoot 集成 Shiro
+
+#### 编写配置文件
+
+* 在刚刚的父项目中新建一个 springboot 模块`shiro-springboot`
+
+* 导入 SpringBoot 和 Shiro 整合包的依赖
+
+```xml
+<!--SpringBoot 和 Shiro 整合包-->
+<!-- https://mvnrepository.com/artifact/org.apache.shiro/shiro-spring-boot-web-starter -->
+<dependency>
+    <groupId>org.apache.shiro</groupId>
+    <artifactId>shiro-spring-boot-web-starter</artifactId>
+    <version>1.6.0</version>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
+```
+
+* 在`resources`或者`src/main/resources/META-INF`文件夹下创建一个名为`shiro.ini`的文件.并且添加我们的用户验证信息.如下图所示
+
+  ![image-20220206030730667](../../../../../../../Pictures/assets/SpringBoot笔记/202202060524518.png)
+
+不然会出现`Description: No bean of type ‘org.apache.shiro.realm.Realm‘ found.`错误。
+
+* 下面是编写配置文件
+
+Shiro 三大要素
+
+1. subject -> ShiroFilterFactoryBean（用户）
+2. securityManager -> DefaultWebSecurityManager（管理所有用户）
+3. realm（数据）
+
+实际操作中对象创建的顺序 ： realm -> securityManager -> subject
+
+* 编写自定义的ShiroConfig，需要继承 `AuthorizingRealm`
+
+```java
+@Configuration
+public class ShiroConfig {
+
+    // ShiroFilterFactoryBean
+    @Bean(name = "shiroFilterFactoryBean") //这里必须这样写
+    public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("defaultWebSecurityManager") DefaultWebSecurityManager defaultWebSecurityManager){
+        ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
+
+        // 关联securityManager
+        // 设置安全管理器
+        bean.setSecurityManager(defaultWebSecurityManager);
+
+        /*
+          添加shiro的内置过滤器：
+            anon:无需认证就可以访问
+            authc:必须认证才可以访问
+            user:必须拥有 记住我  功能才能用
+            perms:拥有某个资源的权限才能访问
+            role:拥有某个角色的权限才能访问
+         */
+
+        Map<String ,String> filterMap = new LinkedHashMap<>();
+        filterMap.put("/index", "anon");
+        filterMap.put("/", "anon");
+        filterMap.put("/login", "anon");
+        filterMap.put("/**", "authc");
+
+        bean.setFilterChainDefinitionMap(filterMap);
+        
+        bean.setLoginUrl("/toLogin");
+
+        return bean;
+    }
+
+    // DefaultWebSecurityManager
+    // 通过@Qualifier("userRealm")创建realm对象数据
+    @Bean(name = "defaultWebSecurityManager")
+    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("userRealm") UserRealm userRealm){
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+
+        // 关联UserRealm
+        securityManager.setRealm(userRealm);
+
+        return securityManager;
+    }
+
+    // 创建realm对象，需要自定义类
+    @Bean
+    public UserRealm userRealm(){
+        return new UserRealm();
+    }
+}
+```
+
+* 编写UserRealm类
+
+```java
+// 自定义的UserRealm
+public class UserRealm extends AuthorizingRealm {
+    // 授权
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+       System.out.println("执行了授权");
+        return null;
+    }
+
+    // 认证
+    @Override
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+        System.out.println("执行了认证");
+        return null;
+    }
+}
+```
+
+* 编写前端页面
+
+`index.html`
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    首页
+    <div th:text="${msg}"></div>
+</body>
+</html>
+```
+
+`add.html`
+
+```html
+<body>
+    添加
+</body>
+```
+
+`update.html`
+
+```
+<body>
+   	修改
+</body>
+```
+
+编写登录页面`login.html`
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>登录</h1>
+    <hr/>
+    <form th:action="@{/login}">
+        <p>用户名：<input type="text" name="username"></p>
+        <p>密码：<input type="password" name="password"></p>
+        <p><input type="submit"></p>
+        <div th:text="${msg}"></div>
+    </form>
+</body>
+</html>
+```
+
+* 编写控制类`MyController.java`
+
+```java
+@Controller
+public class MyController {
+
+    @GetMapping({"/","/index"})
+    public String index(Model model){
+        model.addAttribute("msg", "hello shiro");
+        return "index";
+    }
+
+    @GetMapping("/add")
+    public String add(){
+        return "add";
+    }
+
+    @GetMapping("/update")
+    public String update(){
+        return "update";
+    }
+    
+    @GetMapping("/toLogin")
+    public String toLogin(){
+        return "login";
+    }
+}
+```
+
+* 测试，发现shiro默认在没有认证的情况下会自动跳往login.jsp，这是因为权限问题。
+* 可以自行设置登录页面
+
+```java
+//设置登录页面
+bean.setLoginUrl("/toLogin");
+```
+
+#### 登录拦截器
+
+在上面的 `getShiroFilterFactoryBean` 方法中加上需要拦截的登录请求
+
+```java
+    // ShiroFilterFactoryBean
+    @Bean(name = "shiroFilterFactoryBean") //这里必须这样写
+    public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("securityManager") DefaultWebSecurityManager defaultWebSecurityManager){
+        ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
+
+        // 关联securityManager
+        // 设置安全管理器
+        bean.setSecurityManager(defaultWebSecurityManager);
+
+        
+        // 拦截
+        /*
+          添加shiro的内置过滤器：
+            anon:无需认证就可以访问
+            authc:必须认证才可以访问
+            user:必须拥有 记住我  功能才能用
+            perms:拥有某个资源的权限才能访问
+            role:拥有某个角色的权限才能访问
+         */
+
+        Map<String ,String> filterMap = new LinkedHashMap<>();
+        // 这样就可以进行访问了
+        filterMap.put("/index", "anon");
+        filterMap.put("/", "anon");
+        filterMap.put("/login", "anon");
+        filterMap.put("/**", "authc");
+        
+        // 放开静态资源
+        filterMap.put("/imgs/**","anon");
+        filterMap.put("/css/**","anon");
+        filterMap.put("/js/**","anon");
+
+        bean.setFilterChainDefinitionMap(filterMap);
+        
+        //设置登录页面
+        bean.setLoginUrl("/toLogin");
+
+        return bean;
+    }
+```
+
+* 测试，点击 add链接，不会跳到 add页面，而是跳到登录页，拦截成功
+
+![image-20220206052423160](../../../../../../../Pictures/assets/SpringBoot笔记/202202060524619.png)
+
+#### 用户认证
+
+* 在 Controller 中写一个登录的控制器
+
+```java
+@GetMapping("/login")
+public String login(String username,String password,Model model){
+
+    // 获取当前的用户
+    Subject subject = SecurityUtils.getSubject();
+    // 封装用户的登录数据=>token
+    UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+    try {
+        // 执行登录的方法
+        subject.login(token);
+        return "index";
+    }catch (UnknownAccountException e){
+        model.addAttribute("msg", "用户名错误");
+        return "login";
+    }catch (IncorrectCredentialsException e){
+        model.addAttribute("msg", "密码错误");
+        return "login";
+    }
+    return "login";
+}
+```
+
+![image-20220206053826694](../../../../../../../Pictures/assets/SpringBoot笔记/202202060538921.png)
+
+* 下面去自定义的 `UserRealm` 中的 `AuthenticationInfo` 方法中去获取用户信息
+
+```java
+    // 认证
+    @Override
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+        System.out.println("执行了认证");
+
+        // 用户名&密码，一般在用户库中取
+        String name = "admin";
+        String password = "123456";
+
+        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+
+        // 获取用户名并进行判断
+        if (token.getUsername() !=null &&!token.getUsername().equals(name)){
+            return null;// 抛出异常，UnknownAccountException
+        }
+
+        //密码认证， Shiro 自己做，为了避免和密码的接触
+        //最后返回一个 AuthenticationInfo 接口的实现类，这里选择 SimpleAuthenticationInfo
+        // 三个参数：获取当前用户的认证 ； 密码 ； 认证名
+        return new SimpleAuthenticationInfo("",password,"");
+    }
+```
+
+#### 整合Mybatis
+
+* 导入依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jdbc</artifactId>
+</dependency>
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <scope>runtime</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.mybatis.spring.boot</groupId>
+    <artifactId>mybatis-spring-boot-starter</artifactId>
+    <version>2.2.2</version>
+</dependency>
+
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <version>1.18.22</version>
+</dependency>
+```
+
+* 在`application.yaml`中配置数据源
+
+```yaml
+spring:
+  datasource:
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/review01?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+
+#配置mybatis
+mybatis:
+  #开启驼峰写法
+  configuration:
+    map-underscore-to-camel-case: true
+  #如果配置文件和类名对应包名可以省略，否则 需要声明位置
+  mapper-locations: classpath:mapper/*.xml,dao/*.xml
+  #配置别名
+  type-aliases-package: com.easy.pojo
+```
+
+* 必须禁用ddl-auto属性，不然JDBC无法使用
+
+```pro
+#spring.sql.init.mode=always
+spring.datasource.initialization-mode=always
+spring.jpa.hibernate.ddl-auto=none
+```
+
+> 另外，请注意spring.sql.init.mode属性是在 Spring Boot 2.5.0 中引入的；对于早期版本，我们需要使用spring.datasource.initialization-mode。
+
+* 编写实体类`User`
+
+```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class User {
+    private String username;
+    private String password;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
+}
+```
+
+* 编写mapper层`UserMapper.java`
+
+```java
+@Repository // bean
+@Mapper // 注册
+public interface UserMapper {
+    public User getUserByName(@Param("username") String name);
+}
+
+```
+
+* 编写mapper层`UserMapper.xml`
+
+```xml
+<mapper namespace="com.easy.mapper.UserMapper">
+    <select id="getUserByName" resultType="User" parameterType="String">
+        select * from users where username = #{username};
+    </select>
+</mapper>
+```
+
+* 如果出现错误，可能是资源过滤问题，在`pom.xml`中配置
+
+```xml
+<resources>
+    <resource>
+        <directory>src/main/java</directory>
+        <includes>
+            <include>**/*.xml</include>
+        </includes>
+        <filtering>true</filtering>
+    </resource>
+</resources>
+```
+
+* 测试
+
+```java
+@SpringBootTest
+class ShiroSpringbootApplicationTests {
+
+    @Autowired
+    UserServiceImpl userService;
+
+    @Test
+    void contextLoads() {
+        System.out.println(userService.getUserByName("admin"));
+    }
+}
+
+```
+
+![image-20220206071322868](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206071322868.png)
+
+* 修改 `UserRealm` 中的 `AuthenticationInfo`，连接数据库
+
+```java
+// 自定义的UserRealm
+public class UserRealm extends AuthorizingRealm {
+
+    @Autowired
+    UserService userService;
+
+    // 授权
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        System.out.println("执行了授权");
+        return null;
+    }
+
+    // 认证
+    @Override
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+        System.out.println("执行了认证");
+
+        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+
+        // 连接真实数据库
+        User user = userService.getUserByName(token.getUsername());
+
+        if(user == null) {
+            return null;
+        }
+
+        //根据用户的情况，来构建AuthenticationInfo对象,通常使用的实现类为SimpleAuthenticationInfo
+        //以下信息是从数据库中获取的
+        //1)principal：认证的实体信息，可以是username，也可以是数据库表对应的用户的实体对象
+        //Object principal = token.getPrincipal();
+        User principal = user; //这里一定要写为User对象，不然在授权时，会因为获取对象出错
+        //2)credentials：数据库中的密码（经过加密的密码）
+        Object credentials = user.getPassword();
+        //3)credentials：盐值（使用用户名）
+        ByteSource credentialsSalt = ByteSource.Util.bytes(principal.getUsername());
+        //4)realmName：当前realm对象的name，调用父类的getName()方法即可
+        String realmName = getName();
+    }
+}
+```
+
+* 在注册用户时修改加密方式,在 BCrypt 中我们不需要为每个用户分配不同的盐，只要使用 `BCrypt.gensalt()` 就可以生成盐。
+
+```java
+public String encodeByBCrypt(String password) {
+    return BCrypt.hashpw(password, BCrypt.gensalt());
+}
+```
+
+* 如果需要加密，Shiro 框架没有内置 BCrypt 。需要引入新的库 `jBCrypt`:
+
+```xml
+<dependency>
+    <groupId>de.svenkubiak</groupId>
+    <artifactId>jBCrypt</artifactId>
+    <version>0.4.1</version>
+</dependency>
+```
+
+* 在 Shiro 配置文件 `ShiroConfig` 中为我们自定义的 `UserRealm` Bean 添加凭证匹配器。
+
+```java
+// 创建realm对象，需要自定义类
+@Bean
+public UserRealm userRealm(){
+
+    UserRealm realm = new UserRealm();
+    //配置单项hash
+    //UserRealm.setCredentialsMatcher(hashedCredentialsMatcher());
+
+    //配置 BCrypt
+    realm.setCredentialsMatcher(new CredentialsMatcher() {
+        @Override
+        public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
+            UsernamePasswordToken userToken = (UsernamePasswordToken) token;
+            //要验证的明文密码
+            String plaintext = new String(userToken.getPassword());
+            //数据库中的加密后的密文
+            String hashed = info.getCredentials().toString();
+            return BCrypt.checkpw(plaintext, hashed);
+        }
+    });
+    return realm;
+}
+```
+
+![image-20220206073628169](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206073628169.png)
+
+#### 请求授权
+
+**修改实体类，增加一个字段**
+
+```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class User {
+    private String username;
+    private String password;
+    private String perms;
+}
+```
+
+对数据库进行修改，添加一个字段
+
+![image-20220206085837366](../../../../../../../Pictures/assets/SpringBoot笔记/202202060858342.png)
+
+在`public ShiroFilterFactoryBean getShiroFilterFactoryBean`中，添加授权样例
+
+```java
+// 授权
+filterMap.put("/add", "perms[add]");
+```
+
+必须通过当前参数，比如perms[user:method]，表示`/user/method`类似链接。在未授权进行访问的时候，会跳转到未授权页面。如果想修改跳转到其他未授权页面，如下：
+
+```java
+bean.setUnauthorizedUrl("/unauthorized");
+```
+
+* 对被拦截的用户进行授权访问
+
+```java
+// 授权
+@Override
+protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+    System.out.println("执行了授权");
+
+    SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+
+    Subject subject = SecurityUtils.getSubject(); //获得当前对象
+    User currentUser = (User) subject.getPrincipal(); //拿到User对象
+    info.addStringPermission(currentUser.getPerms()); //设置权限
+
+    return info;
+}
+```
+
+![image-20220206075736936](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206075736936.png)
+
+#### 整合Thymeleaf
+
+需求：**根据权限展示不同的前端页面**
+
+* 添加maven依赖
+
+```xml
+<!-- https://mvnrepository.com/artifact/com.github.theborakompanioni/thymeleaf-extras-shiro -->
+<dependency>
+    <groupId>com.github.theborakompanioni</groupId>
+    <artifactId>thymeleaf-extras-shiro</artifactId>
+    <version>2.1.0</version>
+</dependency>
+```
+
+* **配置一个shiro的Dialect ，在shiro的配置中增加一个Bean**
+
+```java
+//配置ShiroDialect：用于 thymeleaf 和 shiro 标签配合使用
+@Bean
+public ShiroDialect getShiroDialect(){
+    return new ShiroDialect();
+}
+```
+
+* 修改`index.html`
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    首页
+    <div th:text="${msg}"></div>
+
+    <hr/>
+
+    <div shiro:hasPermission="add">
+        <a th:href="@{/add}">add</a>
+    </div>
+
+    <div shiro:hasPermission="update">
+        <a th:href="@{/update}">update</a>
+    </div>
+
+</body>
+</html>
+```
+
+![image-20220206091234671](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206091234671.png)
+
+* 在用户登录后应该把信息放到Session中，完善下！在执行认证逻辑时候，加入session
+
+**在controller的login方法中**
+
+```java
+// 执行登录的方法
+subject.login(token);
+
+//登陆成功存放用户信息
+Subject currentSubject = SecurityUtils.getSubject();
+Session session = currentSubject.getSession();
+session.setAttribute("loginUser",username);
+```
+
+* 修改`index.html`页面，添加登录和注销
+
+```html
+<p th:if="${session.get('loginUser')}==null">
+    <a th:href="@{/toLogin}">登录</a>
+</p>
+<p th:if="${session.get('loginUser')}!=null">
+    <a th:href="@{/logOut}">注销</a>
+</p>
+```
+
+![image-20220206092313534](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206092313534.png)
+
+* 实现注销功能
+
+```java
+//注销登录功能
+@RequestMapping("/logOut")
+public String logOut(){
+
+    Subject currentUser = SecurityUtils.getSubject();
+    currentUser.logout();
+
+    return "index";
+}
+```
+
+## Swagger
+
+![image-20220206131351334](../../../../../../../Pictures/assets/SpringBoot笔记/202202061313761.png)
+
+### 学习目标
+
+- 了解Swagger的概念及作用
+- 掌握在项目中集成Swagger自动生成API文档
+
+### Swagger简介
+
+**前后端分离**
+
+- 前端 -> 前端控制层、视图层
+- 后端 -> 后端控制层、服务层、数据访问层
+- 前后端通过API进行交互
+- 前后端相对独立且松耦合
+
+**产生的问题**
+
+- 前后端集成，前端或者后端无法做到“及时协商，尽早解决”，最终导致问题集中爆发
+
+**解决方案**
+
+- 首先定义schema [ 计划的提纲 ]，并实时跟踪最新的API，降低集成风险
+- 以前：指定word计划文档
+
+**Swagger**
+
+- 号称世界上最流行的API框架
+- Restful Api 文档在线自动生成器 => **API 文档 与API 定义同步更新**
+- 直接运行，在线测试API
+- 支持多种语言 （如：Java，PHP等）
+- 官网：https://swagger.io/
+
+### SpringBoot集成Swagger
+
+**SpringBoot集成Swagger** => **springfox**，两个jar包
+
+1. **Springfox-swagger2**
+2. swagger-springmvc
+
+**使用Swagger**，要求：jdk 1.8 + 否则swagger2无法运行
+
+* 新建一个SpringBoot-web项目
+* 导入相应依赖
+
+`swagger2.9.2`版本
+
+```xml
+<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
+<dependency>
+    <groupId>io.springfox</groupId>
+    <artifactId>springfox-swagger2</artifactId>
+    <version>2.9.2</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
+<dependency>
+    <groupId>io.springfox</groupId>
+    <artifactId>springfox-swagger-ui</artifactId>
+    <version>2.9.2</version>
+</dependency>
+</dependencies>
+```
+
+`swagger3.0.0`版本
+
+```xml
+<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
+<dependency>
+    <groupId>io.springfox</groupId>
+    <artifactId>springfox-swagger2</artifactId>
+    <version>3.0.0</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
+<dependency>
+    <groupId>io.springfox</groupId>
+    <artifactId>springfox-swagger-ui</artifactId>
+    <version>3.0.0</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter -->
+<dependency>
+    <groupId>io.springfox</groupId>
+    <artifactId>springfox-boot-starter</artifactId>
+    <version>3.0.0</version>
+</dependency>
+```
+
+
+
+* 编写一个HelloController
+
+```java
+@RestController
+public class HelloController {
+    @RequestMapping("/")
+    public String hello(){
+        return "hello swagger";
+    }
+}
+```
+
+* 在WebMvcConfig中配置静态资源
+
+```java
+@Configuration
+public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
+}
+```
+
+* 在SwaggerConfig中配置Swagger
+
+```java
+@Configuration
+@EnableSwagger2 //开启Swagger2
+// @EnableOpenApi //开启Swagger3
+public class SwaggerConfig{
+
+}
+```
+
+**注意：版本不同`注解`不同**
+
+- **Swagger3.0**——>注解：`@EnableOpenApi` //开启Swagger3.0
+
+```java
+// 配置Swagger的Docket的Bean实例
+@Bean
+public Docket docket() {
+    return new Docket(DocumentationType.OAS_30) // 这里和2.x有区别
+        .apiInfo(apiInfo())
+        .select()
+        // RequestHandlerSelect，配置要扫描的包的接口
+        .apis(RequestHandlerSelectors.basePackage("com.easy.controller"))
+        .build();
+}
+```
+
+- **Swagger2.0**——>注解：`@EnableSwagger2`
+
+* 测试运行：http://localhost:8080/swagger-ui.html
+
+**注意：版本不同`测试路径`不同**
+
+- **Swagger3.0**——>测试地址：`http://localhost:8080/swagger-ui/index.html`
+- **Swagger2.0**——>测试地址：`http://localhost:8080/swagger-ui.html`
+
+![image-20220206140046487](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206140046487.png)
+
+![image-20220207050959176](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220207050959176.png)
+
+### 配置Swagger
+
+Swagger实例Bean是Docket，所以通过配置Docket实例来配置Swaggger。其中可以通过apiInfo()属性配置文档信息
+
+```java
+@Configuration
+@EnableSwagger2 //开启Swagger2
+public class SwaggerConfig {
+
+    // 配置Swagger的Docket的Bean实例
+    @Bean
+    public Docket docket() {
+        return new Docket(DocumentationType.OAS_30)
+                .apiInfo(apiInfo());
+    }
+
+    // 配置Swagger信息（apiInfo）
+    private ApiInfo apiInfo() {
+
+        Contact contact = new Contact("洛洛历险记", "https://xxx.com", "xxx@qq.com");
+
+        ApiInfo info = new ApiInfo(
+                "Api接口文档",
+                "这是一个Api接口文档",
+                "v1.0",
+                "https://xxx.com",
+                contact,
+                "Apache 2.0",
+                "http://www.apache.org/licenses/LICENSE-2.0",
+                new ArrayList());
+        return info;
+    }
+}
+
+```
+
+![image-20220206142732928](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206142732928.png)
+
+### 配置扫描端口
+
+分析一下接口部分显示信息
+
+![](../../../../../../../Pictures/assets/SpringBoot笔记/202202070518859.png)
+
+#### 设置扫描包及过滤
+
+* 构建Docket时通过select()方法配置怎么扫描接口。
+
+```java
+// 配置Swagger的Docket的Bean实例
+@Bean
+public Docket docket() {
+    return new Docket(DocumentationType.OAS_30)
+        .apiInfo(apiInfo())
+        .select()
+        // RequestHandlerSelect，配置要扫描的包的接口
+        //basePackage指定要扫描的包
+        .apis(RequestHandlerSelectors.basePackage("com.easy.controller"))
+        .build();
+}
+```
+
+![image-20220207052209185](../../../../../../../Pictures/assets/SpringBoot笔记/202202070552181.png)
+
+RequestHandlerSelectors扫描接口的方式
+
+**RequestHandlerSelectors**，扫描接口的方式。其拥有的配置方法：
+
+- **basePackage**指定要扫描的包（常用）
+- **any()**扫描全部
+- **none**不扫描
+- **withClassAnnotation** 扫描类上得注解
+- **withMethodAnnotation** 扫描方法上得注解
+
+#### PathSelectors过滤方式
+
+方法：
+
+- ant()：过滤路径
+- any()：全部过滤
+- none()：不过滤
+- regex()：正则表达式
+
+使用第一种过滤路径测试
+
+![image-20220207055015769](../../../../../../../Pictures/assets/SpringBoot笔记/202202070553223.png)
+
+过滤后什么都没有了
+
+![image-20220207055028242](../../../../../../../Pictures/assets/SpringBoot笔记/202202070552183.png)
+
+#### 配置是否启动
+
+`enabled=true`属性是控制启动
+
+在`.apiInfo(apiInfo())`后面进行添加`.enable(false)`
+
+```java
+// 配置Swagger的Docket的Bean实例
+@Bean
+public Docket docket() {
+    return new Docket(DocumentationType.OAS_30)
+        .apiInfo(apiInfo())
+        .enable(false)//关闭Swagger
+        .select()
+        .apis(RequestHandlerSelectors.basePackage("com.easy.controller"))
+        .build();
+}
+```
+
+测试地址：http://localhost:8080/swagger-ui/index.html#/
+
+![image-20220207055720687](../../../../../../../Pictures/assets/SpringBoot笔记/202202070557411.png)
+
+#### 设置Swagger在对应的项目环境启动
+
+在项目中只在**开发环境**开启Swagger，**生产环境**就要关闭Swagger。下面进行设置。
+
+##### 创建测试环境
+
+- application-dev：开发环境
+- application-pro：生产环境
+
+![image-20220207061528258](../../../../../../../Pictures/assets/SpringBoot笔记/202202070627108.png)
+
+
+
+`application.properties`内代码：``spring.profiles.active=dev`
+`application-dev.properties`内代码：`server.port=8081`
+`application-pro.properties`内代码：`server.port=8082`
+
+##### 编写配置类获取项目环境
+
+- `Profiles.of()`设置要显示的swagger的环境
+- 通过`environment.acceptsProfiles`判断是否处在自己设定的环境中 获取`boolean`值`flag`
+- 赋值给`enable（flag）`
+
+```java
+// 配置Swagger的Docket的Bean实例
+@Bean
+public Docket docket(Environment environment) {
+
+    // 设置要显示的Swagger环境
+    Profiles profiles = Profiles.of("dev","test");
+    // 通过`Environment environment`获取项目环境
+    // 通过environment.acceptsProfiles判断是否处于自己设置的环境中
+    boolean flag = environment.acceptsProfiles(profiles);
+
+    return new Docket(DocumentationType.OAS_30)
+        .apiInfo(apiInfo())
+        .enable(flag)
+        .select()
+        .apis(RequestHandlerSelectors.basePackage("com.easy.controller"))
+        .build();
+}
+```
+
+##### 测试
+
+application.properties中切换环境为dev环境： `spring.profiles.active=dev`
+
+dev环境的测试地址：http://localhost:8081/swagger-ui/index.html#/
+
+![image-20220207061958893](../../../../../../../Pictures/assets/SpringBoot笔记/202202070627141.png)
+
+application.properties中切换环境为pro环境： `spring.profiles.active=pro`
+
+![image-20220207062053031](../../../../../../../Pictures/assets/SpringBoot笔记/202202070627625.png)
+
+### API分组
+
+#### 设置分组
+
+Docket的源码可以看到分组的默认值为default
+
+![img](../../../../../../../Pictures/assets/SpringBoot笔记/202202070627594.png)
+
+进行修改,只需要一行代码
+
+```java
+.groupName("花儿为什么这样红")
+```
+
+![image-20220207062858754](../../../../../../../Pictures/assets/SpringBoot笔记/202202070630386.png)
+
+运行后，看到前端页面，也发什么了修改
+
+![image-20220207062954903](../../../../../../../Pictures/assets/SpringBoot笔记/202202070629293.png)
+
+#### 设置分组
+
+**多个分组就是多人协作开发时每个人分组**，其实就是多个**Docket实例**。
+
+```java
+@Bean
+public Docket docket1(){
+    return new Docket(DocumentationType.OAS_30).groupName("A");
+}
+
+@Bean
+public Docket docket2(){
+    return new Docket(DocumentationType.OAS_30).groupName("B");
+}
+
+@Bean
+public Docket docket3(){
+    return new Docket(DocumentationType.OAS_30).groupName("C");
+}
+```
+
+运行一下就可以看到多个分组了，选择一个分组信息就会发生变化，以及测试路径。
+
+![image-20220207063512761](../../../../../../../Pictures/assets/SpringBoot笔记/202202070635169.png)
+
+### 注释
+
+#### 常用注解
+
+Swagger的所有注解定义在io.swagger.annotations包下
+
+下面列一些经常用到的，未列举出来的可以另行查阅说明：
+
+| Swagger注解                                            | 简单说明                                             |
+| ------------------------------------------------------ | ---------------------------------------------------- |
+| @Api(tags = "xxx模块说明")                             | 作用在模块类上                                       |
+| @ApiOperation("xxx接口说明")                           | 作用在接口方法上                                     |
+| @ApiModel("xxxPOJO说明")                               | 作用在模型类上：如VO、BO                             |
+| @ApiModelProperty(value = "xxx属性说明",hidden = true) | 作用在类方法和属性上，hidden设置为true可以隐藏该属性 |
+| @ApiParam("xxx参数说明")                               | 作用在参数、方法和字段上，类似@ApiModelProperty      |
+
+#### 实体类注释
+
+先创建pojo编写一个User进行测试
+
+```java
+public class User {
+    private String username;
+    private String password;
+}
+```
+
+直接启动项目是不能扫描到实体类的。
+
+#### 方法一（不是用注解，也可以扫描到实体类）
+
+实体类不使用注释也可以被扫描，只要请求返回类型是实体类即可。
+
+* 在`HelloController`中添加方法
+
+```java
+@RequestMapping("/user")
+public User getUser(){
+    return new User();
+}
+```
+
+* 运行测试
+
+![image-20220207064413412](../../../../../../../Pictures/assets/SpringBoot笔记/202202070646180.png)
+
+实体有了但是这样的没有属性，这是因为没有给属性添加get set方法。给是实体类添加get set 方法,再次测试
+
+```java
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class User {
+    private String username;
+    private String password;
+}
+```
+
+![image-20220207064600943](../../../../../../../Pictures/assets/SpringBoot笔记/202202070646391.png)
+
+
+
+#### 方法二（注解）
+
+- `@ApiModel("用户实体类")`：用于实体类上，描述实体类
+- `@ApiModelProperty(value = "用户名",hidden = false)`：用于属性上描述实体类属性，hidden功能是，是否隐藏该属性
+
+```java
+@ApiModel("用户实体类")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class User {
+    @ApiModelProperty(value = "用户名",hidden = false)//hidden是否隐藏
+    private String username;
+    @ApiModelProperty(value = "密码")
+    private String password;
+}
+
+```
+
+![image-20220207065026736](../../../../../../../Pictures/assets/SpringBoot笔记/202202070650683.png)
+
+#### 接口注释
+
+接口常用的三个注解
+
+- `@Api(tags = "helloController层")`：放在控制层类上，描述控制层
+
+- `@ApiOperation(value = "hello2方法",notes = "方法描述")`：放在方法控制层上，描述控制层方法
+
+- `@ApiParam("用户名")`：参数描述
+
+```java
+@Api(tags = "HelloController层")
+@RestController
+public class HelloController {
+
+    @ApiOperation("hello方法")
+    @RequestMapping("/")
+    public String hello(){
+        return "hello swagger";
+    }
+
+    @ApiOperation(value = "用户接口方法",notes = "方法描述")
+    @RequestMapping("/user")
+    public User getUser(@ApiParam("用户名") String username,@ApiParam("密码") String password){
+        return new User(username,password);
+    }
+}
+```
+
+![image-20220207065736537](../../../../../../../Pictures/assets/SpringBoot笔记/202202070821709.png)
+
+### 扩展功能
+
+#### 默认的 
+
+Swagger2：http://localhost:8080/swagger-ui.html
+
+Swagger3： http://localhost:8080/swagger-ui/index.html
+
+```xml
+<dependency>
+   <groupId>io.springfox</groupId>
+   <artifactId>springfox-swagger-ui</artifactId>
+   <version>2.9.2</version>
+</dependency>
+```
+
+#### Layui-ui
+
+ http://localhost:8080/docs.html
+
+```xml
+<!-- 引入swagger-ui-layer包 /docs.html-->
+<dependency>
+   <groupId>com.github.caspar-chen</groupId>
+   <artifactId>swagger-ui-layer</artifactId>
+   <version>1.1.3</version>
+</dependency>
+```
+
+#### mg-ui
+
+http://localhost:8080/document.html
+
+```xml
+<!-- 引入swagger-mg-ui包 /document.html-->
+<dependency>
+   <groupId>com.zyplayer</groupId>
+   <artifactId>swagger-mg-ui</artifactId>
+   <version>1.0.6</version>
+</dependency>
+```
+
+![image-20220207082116083](../../../../../../../Pictures/assets/SpringBoot笔记/202202070821453.png)
+
+需要在`webMvcConfig.java`设置
+
+```java
+@Configuration
+public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("document.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("docs.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
+}
+```
+
+#### knife4j（推荐）
+
+#### 配置
+
+http://localhost:8080/doc.html
+
+```xml
+<dependency>
+    <groupId>com.github.xiaoymin</groupId>
+    <artifactId>knife4j-spring-boot-starter</artifactId>
+    <version>3.0.3</version>
+</dependency>
+```
+
+注意
+
+- knife4j 已经引入了 springfox，所以在使用的时候无需再次引入
+  springfox，否则有可能会导致版本冲突，如果你在网关聚合时，必须禁用 knife4j 的增强功能。
+- 使用Knife4j2.0.6及以上的版本，Spring Boot的版本必须大于等于2.2.x
+
+**SwaggerConfig 配置依赖**
+
+```java
+@Configuration
+@EnableOpenApi // 开启Swagger3
+public class SwaggerConfig{
+
+    // 配置Swagger的Docket的Bean实例
+    @Bean
+    public Docket docket(Environment environment) {
+
+        // 设置要显示的Swagger环境
+        Profiles profiles = Profiles.of("dev","test");
+        // 通过`Environment environment`获取项目环境
+        // 通过environment.acceptsProfiles判断是否处于自己设置的环境中
+        boolean flag = environment.acceptsProfiles(profiles);
+
+
+        return new Docket(DocumentationType.OAS_30)
+                .apiInfo(apiInfo())
+                .enable(flag)
+                .groupName("花儿为什么这样红")
+                .select()
+                // RequestHandlerSelect，配置要扫描的包的接口
+                //basePackage指定要扫描的包
+                .apis(RequestHandlerSelectors.basePackage("com.easy.controller"))
+//                // paths：过滤路径
+//                .paths(PathSelectors.ant("/easy/**"))
+                .build();
+    }
+
+    @Bean
+    public Docket docket1(){
+        return new Docket(DocumentationType.OAS_30).groupName("A");
+    }
+
+    @Bean
+    public Docket docket2(){
+        return new Docket(DocumentationType.OAS_30).groupName("B");
+    }
+
+    @Bean
+    public Docket docket3(){
+        return new Docket(DocumentationType.OAS_30).groupName("C");
+    }
+
+    // 配置Swagger信息（apiInfo）
+    private ApiInfo apiInfo() {
+
+        Contact contact = new Contact("洛洛历险记", "https://xxx.com", "xxx@qq.com");
+
+        return new ApiInfo(
+                "Api接口文档",
+                "这是一个Api接口文档",
+                "v1.0",
+                "https://xxx.com",
+                contact,
+                "Apache 2.0",
+                "http://www.apache.org/licenses/LICENSE-2.0",
+                new ArrayList());
+    }
+
+}
+```
+
+如果在启动项目的时候抛出：**Failed to start bean 'documentationPluginsBootstrapper'; nested exception is java.lang.NullPointerException**
+
+那是因为springboot 版本太高，应该是 2.6.x，由于Springfox使用的路径匹配是基于AntPathMatcher，而Spring Boot 2.6.X使用的是PathPatternMatcher，所以将MVC的路径匹配规则改成 AntPathMatcher，在配置文件中加入如下参数即可（如果没有报错，可以跳过这个环节）
+
+```yaml
+spring:
+  mvc:
+    pathmatch:
+      # Springfox使用的路径匹配是基于AntPathMatcher的，而Spring Boot 2.6.X使用的是PathPatternMatcher
+      # 所以需要配置此参数
+      matching-strategy: ant_path_matcher
+```
+
+启动成功之后，在浏览器中访问：http://localhost:8080/doc.html。
+
+并且在`WebMvcConfig`中配置如下：
+
+```java
+registry.addResourceHandler("doc.html")
+    .addResourceLocations("classpath:/META-INF/resources/");
+```
+
+![image-20220207083032117](../../../../../../../Pictures/assets/SpringBoot笔记/202202070830165.png)
+
+#### knife4j增强功能
+
+什么是 knife4j 的增强功能？我们在前面看到的只是 knife4j 最基础的使用方式，knife4j 还有很多强大的功能还没有展示出来，比如：i18n国际化、接口添加作责、自定义文档、访问权限控制、接口排序、到处离线文档、过滤请求参数等等，这些都是 knife4j 的增强功能，那如何开启 knife4j 的增强功能呢？
+
+Knife4j自2.0.6版本开始,将目前在Ui界面中一些个性化配置剥离,开发者可以在后端进行配置，并且提供的knife4j-spring-boot-strater组件自动装载，开发者可以在配置文件中决定需要开启的功能。
+
+springboot 中 knife4j的完整参数如下：
+
+```yaml
+knife4j:
+  # 开启增强配置 
+  enable: true
+  # 开启生产环境屏蔽
+  production: false
+  documents:
+    -
+      group: 2.X版本
+      name: 接口签名
+      locations: classpath:sign/*
+  setting:
+    language: zh-CN
+    enableSwaggerModels: true
+    enableDocumentManage: true
+    swaggerModelName: 实体类列表
+    enableVersion: false
+    enableReloadCacheParameter: false
+    enableAfterScript: true
+    enableFilterMultipartApiMethodType: POST
+    enableFilterMultipartApis: false
+    enableRequestCache: true
+    enableHost: false
+    enableHostText: 192.168.0.193:8000
+    enableHomeCustom: true
+    homeCustomLocation: classpath:markdown/home.md
+    enableSearch: false
+    enableFooter: false
+    enableFooterCustom: true
+    footerCustomContent: Apache License 2.0 | Copyright  2019-[浙江八一菜刀股份有限公司](https://gitee.com/xiaoym/knife4j)
+    enableDynamicParameter: false
+    enableDebug: true
+    enableOpenApi: false
+    enableGroup: true
+  cors: false
+  basic:
+    enable: false
+    username: test
+    password: 12313
+```
+
+knife4j 的增强功能是需要开启的，默认关闭，开启也是十分的简单，**在以前的版本中,开发者需要在配置文件中手动使用@EnableKnife4j来使用增强，自2.0.6版本后,只需要在配置文件中配置knife4j.enable=true即可不在使用注解**
+**注意：要使用Knife4j提供的增强，knife4j.enable=true必须开启。包括后面所讲解到的所有增强功能，都需要设置这个参数。**
+
+下面来介绍以下上面的这些属性值所表达的是什么意思
+
+| 属性                                               | 默认值         | 说明                                                         |
+| -------------------------------------------------- | -------------- | ------------------------------------------------------------ |
+| knife4j.enable                                     | false          | 是否开启Knife4j增强模式                                      |
+| knife4j.cors                                       | false          | 是否开启一个默认的跨域配置,该功能配合自定义Host使用          |
+| knife4j.production                                 | false          | 是否开启生产环境保护策略,详情参考文档                        |
+| knife4j.basic                                      |                | 对Knife4j提供的资源提供BasicHttp校验,保护文档                |
+| knife4j.basic.enable                               | false          | 关闭BasicHttp功能                                            |
+| knife4j.basic.username                             |                | basic用户名                                                  |
+| knife4j.basic.password                             |                | basic密码                                                    |
+| knife4j.documents                                  |                | 自定义文档集合，该属性是数组                                 |
+| knife4j.documents.group                            |                | 所属分组                                                     |
+| knife4j.documents.name                             |                | 类似于接口中的tag,对于自定义文档的分组                       |
+| knife4j.documents.locations                        |                | markdown文件路径,可以是一个文件夹(classpath:markdowns/*)，也可以是单个文件(classpath:md/sign.md) |
+| knife4j.setting                                    |                | 前端Ui的个性化配置属性                                       |
+| knife4j.setting.enableAfterScript                  | true           | 调试Tab是否显示AfterScript功能,默认开启                      |
+| knife4j.setting.language                           | zh-CN          | Ui默认显示语言,目前主要有两种:中文(zh-CN)、英文(en-US)       |
+| knife4j.setting.enableSwaggerModels                | true           | 是否显示界面中SwaggerModel功能                               |
+| knife4j.setting.swaggerModelName                   | Swagger Models | 重命名SwaggerModel名称,默认                                  |
+| knife4j.setting.enableDocumentManage               | true           | 是否显示界面中"文档管理"功能                                 |
+| knife4j.setting.enableReloadCacheParameter         | false          | 是否在每个Debug调试栏后显示刷新变量按钮,默认不显示           |
+| knife4j.setting.enableVersion                      | false          | 是否开启界面中对某接口的版本控制,如果开启，后端变化后Ui界面会存在小蓝点 |
+| knife4j.setting.enableRequestCache                 | true           | 是否开启请求参数缓存                                         |
+| knife4j.setting.enableFilterMultipartApis          | false          | 针对RequestMapping的接口请求类型,在不指定参数类型的情况下,如果不过滤,默认会显示7个类型的接口地址参数,如果开启此配置,默认展示一个Post类型的接口地址 |
+| knife4j.setting.enableFilterMultipartApiMethodType | POST           | 具体接口的过滤类型                                           |
+| knife4j.setting.enableHost                         | false          | 是否启用Host                                                 |
+| knife4j.setting.enableHomeCustom                   | false          | 是否开启自定义主页内容                                       |
+| knife4j.setting.homeCustomLocation                 |                | 主页内容Markdown文件路径                                     |
+| knife4j.setting.enableSearch                       | false          | 是否禁用Ui界面中的搜索框                                     |
+| knife4j.setting.enableFooter                       | true           | 是否显示Footer                                               |
+| knife4j.setting.enableFooterCustom                 | false          | 是否开启自定义Footer                                         |
+| knife4j.setting.footerCustomContent                | false          | 自定义Footer内容                                             |
+| knife4j.setting.enableDynamicParameter             | false          | 是否开启动态参数调试功能                                     |
+| knife4j.setting.enableDebug                        | true           | 启用调试                                                     |
+| knife4j.setting.enableOpenApi                      | true           | 显示OpenAPI规范                                              |
+| knife4j.setting.enableGroup                        | true           | 显示服务分组                                                 |
+
+以下增强功能都需要
+
+#### 接口添加作者
+
+用于查看谁实现的接口
+
+使用方式：添加注解 `@ApiOperationSupport(author = "胡桃最棒")`
+
+```java
+@ApiImplicitParam(name = "name",value = "姓名",required = true)
+@ApiOperationSupport(author = "胡桃最棒")
+@ApiOperation("hello方法")
+@GetMapping("/hello")
+public String hello(@RequestParam("name") String name){
+    return "hello "+name;
+}
+```
+
+![image-20220207084050177](../../../../../../../Pictures/assets/SpringBoot笔记/202202070840949.png)
+
+#### 访问权限控制
+
+虽然 knife4j给我们提供了很方便的在线接口文档，俗话说的好，凡事都具有两面性，有利自然也有弊，那就是在生茶环境上，也会显示出接口文档，这是非常危险的一件事情，问题如下：
+
+- 系统部署生产环境时,我们想屏蔽Swagger的文档功能,不管是接口或者html文档
+- 通常我们有时候需要生产环境部署后,又需要Swagger的文档调试功能,辅助开发者调试,但是存在安全隐患,没有对Swagger的资源接口过滤
+
+Knife4j 基于 Servlet 体系提供了过滤 Filter 功能,如果开发者使用 Spring Boot 开发框架进行开发的话,只需在`application.properties`或者`application.yml`配置文件中配置相关属性即可方便的解决上面的问题,不用删除 Springfox-swagger 的 jar 包或者删除相关代码等复杂的操作,提升开发体验。
+
+#### 资源屏蔽
+
+目前`Springfox-Swagger`以及`Knife4j`提供的资源接口包括如下
+
+| 资源                                      | 说明                                          |
+| ----------------------------------------- | --------------------------------------------- |
+| /doc.html                                 | Knife4j提供的文档访问地址                     |
+| /v2/api-docs-ext                          | Knife4j提供的增强接口地址,自`2.0.6`版本后删除 |
+| /swagger-resources                        | Springfox-Swagger提供的分组接口               |
+| /v2/api-docs                              | Springfox-Swagger提供的分组实例详情接口       |
+| /swagger-ui.html                          | Springfox-Swagger提供的文档访问地址           |
+| /swagger-resources/configuration/ui       | Springfox-Swagger提供                         |
+| /swagger-resources/configuration/security | Springfox-Swagger提供                         |
+
+项目发布到生产环境之后，我们需要屏蔽 swagger 相关的资源，由于 Knife4j 基于 Servlet 体系提供了过滤 Filter 功能，所以就不需要我们再去造轮子了，直接使用即可。
+
+springboot 只需要在配置文件中做如下修改即可
+
+```yaml
+knife4j:
+  # 开启增强配置 
+  enable: true
+　# 开启生产环境屏蔽
+  production: true
+```
+
+然后重启项目
+
+![image-20220207084512721](../../../../../../../Pictures/assets/SpringBoot笔记/202202070845305.png)
+
+如果看到如下信息，说明资源已经屏蔽成功，但是你又不想在生产环境中屏蔽 swagger 资源，只想给一部分人使用，也是可以的，加入权限校验即可。
+
+#### 访问页面加权控制
+
+针对Swagger的资源接口,`Knife4j`提供了简单的**Basic认证功能**
+
+简单点说，指定一个用户名和密码，访问 Swagger 文档需要验证登录名和密码，验证通过之后才能正常访问。
+
+knife4 允许开发者在配置文件（application.yml/properties）中增加一组用户名和密码。
+
+```yaml
+knife4j:
+  # 开启增强配置 
+  enable: true
+　# 开启Swagger的Basic认证功能,默认是false
+  basic:
+      enable: true
+      # Basic认证用户名
+      username: test
+      # Basic认证密码
+      password: 123
+```
+
+如果用户开启了 basic （knife4j.basic.enable = true）认证功能，但是没有指定 username 和password，那么 knife4j 提供了一组默认的用户名密码
+
+配置好application.yml 文件之后，我们再次重启项目（这个时候需要将之前设置的资源屏蔽需要去掉哦）
+
+![image-20220207084656872](../../../../../../../Pictures/assets/SpringBoot笔记/202202070846052.png)
+
+#### 接口排序
+
+们在开发中，一个 controller 中往往会存在很多的接口，这样我们在文档查找的时候就会变得很苦恼，所以 knife4j 在 `@ApiOperationSupport`注解中增加了 order 字段,用于接口排序。
+
+**在使用此注解之前需要开启增强功能。**
+
+```java
+@Api(tags = "HelloController层")
+@RestController
+public class HelloController {
+
+    @ApiImplicitParam(name = "name",value = "姓名",required = true)
+    @ApiOperationSupport(author = "胡桃最棒",order = 1)
+    @ApiOperation("hello方法")
+    @GetMapping("/hello")
+    public String hello(@RequestParam("name") String name){
+        return "hello "+name;
+    }
+
+    @ApiOperation(value = "用户接口方法",notes = "方法描述")
+    @ApiOperationSupport(author = "胡桃最棒",order = 2)
+    @RequestMapping("/user")
+    public User getUser(@ApiParam("用户名") String username,@ApiParam("密码") String password){
+        return new User(username,password);
+    }
+
+}
+```
+
+![image-20220207084938784](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220207084938784.png)
+
+[更多方法，查看该文档](https://doc.xiaominfo.com/knife4j/documentation/)
+
 ## 任务
 
 ### 前言
