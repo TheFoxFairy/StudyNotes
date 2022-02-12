@@ -1,67 +1,59 @@
+前言 
 
-
-<<<<<<< HEAD
-<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201090108807.jpg" width=40% align=right hspace="5" vspace="5"/>**学习笔记：记录学习的笔记！！！[个人学习笔记地址](https://luoran.gitbook.io/)<<<**
-=======
-# 前言
-
-
-
-![](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201090108807.jpg)**学习笔记：记录学习的笔记！！！个人学习笔记<<<**
->>>>>>> 911c3cc5522aa7675e2e01d52831e6bd749bcbbd
+**学习笔记：记录学习的笔记！！！[个人学习笔记地址](https://luoran.gitbook.io/)**<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201090108807.jpg" width=25% align=right hspace="5" vspace="5"/>
 
 ## Java学习阶段
 
 ### JavaSE
 
-| 学习内容板块    | 用途 | 学习地址 | 是否完成                 | 学习时长 |
-| --------- | -- | ---- | -------------------- | ---- |
-| Java基础    |    |      | :heavy\_check\_mark: |      |
-| 面向对象编程    |    |      | :heavy\_check\_mark: |      |
-| Java常用类学习 |    |      | :heavy\_check\_mark: |      |
-| I/O       |    |      | :heavy\_check\_mark: |      |
-| NIO       |    |      |                      |      |
-| 多线程       |    |      | :heavy\_check\_mark: |      |
-| 网络编程      |    |      | :heavy\_check\_mark: |      |
-| GUI编程     |    |      |                      |      |
-| JUC并发编程   |    |      |                      |      |
-| JVM详解     |    |      |                      |      |
+| 学习内容板块   | 用途 | 学习地址 | 是否完成           | 学习时长 |
+| -------------- | ---- | -------- | ------------------ | -------- |
+| Java基础       |      |          | :heavy_check_mark: |          |
+| 面向对象编程   |      |          | :heavy_check_mark: |          |
+| Java常用类学习 |      |          | :heavy_check_mark: |          |
+| I/O            |      |          | :heavy_check_mark: |          |
+| NIO            |      |          |                    |          |
+| 多线程         |      |          | :checkered_flag:   |          |
+| 网络编程       |      |          | :heavy_check_mark: |          |
+| GUI编程        |      |          |                    |          |
+| JUC并发编程    |      |          |                    |          |
+| JVM详解        |      |          |                    |          |
 
 ### JavaWeb
 
-| 学习内容板块         | 用途 | 学习地址 | 是否完成 | 学习时长 |
-| -------------- | -- | ---- | ---- | ---- |
-| web基本概念        |    |      |      |      |
-| http协议         |    |      |      |      |
-| tomcat         |    |      |      |      |
-| maven详解        |    |      |      |      |
-| cookie/session |    |      |      |      |
-|                |    |      |      |      |
-|                |    |      |      |      |
-|                |    |      |      |      |
+| 学习内容板块   | 用途 | 学习地址 | 是否完成           | 学习时长 |
+| -------------- | ---- | -------- | ------------------ | -------- |
+| web基本概念    |      |          | :heavy_check_mark: |          |
+| http协议       |      |          | :heavy_check_mark: |          |
+| tomcat         |      |          |                    |          |
+| maven详解      |      |          |                    |          |
+| cookie/session |      |          | :heavy_check_mark: |          |
+|                |      |          |                    |          |
+|                |      |          |                    |          |
+|                |      |          |                    |          |
 
 ### SSM框架
 
-| 学习内容板块         | 用途             | 学习地址 | 是否完成                 | 学习时长 |
-| -------------- | -------------- | ---- | -------------------- | ---- |
-| Mybatis        |                |      | :heavy\_check\_mark: |      |
-| Spring         | 一个轻量级的Java开源框架 |      | :heavy\_check\_mark: |      |
-| SpringMVC      |                |      | :heavy\_check\_mark: |      |
-| Spring         |                |      | :heavy\_check\_mark: |      |
-| Fluent Mybatis |                |      |                      |      |
+| 学习内容板块   | 用途                     | 学习地址 | 是否完成           | 学习时长 |
+| -------------- | ------------------------ | -------- | ------------------ | -------- |
+| Mybatis        |                          |          | :heavy_check_mark: |          |
+| Spring         | 一个轻量级的Java开源框架 |          | :heavy_check_mark: |          |
+| SpringMVC      |                          |          | :heavy_check_mark: |          |
+| Spring         |                          |          | :heavy_check_mark: |          |
+| Fluent Mybatis |                          |          |                    |          |
 
 ### 微服务开发
 
-| 学习内容板块                            | 用途 | 学习地址 | 是否完成                 | 学习时长 |
-| --------------------------------- | -- | ---- | -------------------- | ---- |
-| Spring Boot                       |    |      | :heavy\_check\_mark: |      |
-| Spring Security                   |    |      | :heavy\_check\_mark: |      |
-| Shiro                             |    |      | :heavy\_check\_mark: |      |
-| Spring Cloud/Spring Cloud Alibaba |    |      |                      |      |
-| Swagger                           |    |      | :heavy\_check\_mark: |      |
-| Zookeeper                         |    |      | :heavy\_check\_mark: |      |
-| dubbo                             |    |      | :heavy\_check\_mark: |      |
-| RocketMQ                          |    |      |                      |      |
+| 学习内容板块                      | 用途 | 学习地址 | 是否完成           | 学习时长 |
+| --------------------------------- | ---- | -------- | ------------------ | -------- |
+| Spring Boot                       |      |          | :heavy_check_mark: |          |
+| Spring Security                   |      |          | :heavy_check_mark: |          |
+| Shiro                             |      |          | :heavy_check_mark: |          |
+| Spring Cloud/Spring Cloud Alibaba |      |          |                    |          |
+| Swagger                           |      |          | :heavy_check_mark: |          |
+| Zookeeper                         |      |          | :checkered_flag:   |          |
+| dubbo                             |      |          | :checkered_flag:   |          |
+| RocketMQ                          |      |          |                    |          |
 
 ### 常用中间件
 
@@ -113,15 +105,15 @@
 
 ## Linux运维
 
-| 学习内容板块  | 用途 | 学习地址 | 是否完成 | 学习时长 |
-| ------- | -- | ---- | ---- | ---- |
-| Linux   |    |      |      |      |
-| Ngnix   |    |      |      |      |
-| Docker  |    |      |      |      |
-| Jenkins |    |      |      |      |
-| Zabbix  |    |      |      |      |
-| Nexus   |    |      |      |      |
-|         |    |      |      |      |
+| 学习内容板块 | 用途 | 学习地址 | 是否完成         | 学习时长 |
+| ------------ | ---- | -------- | ---------------- | -------- |
+| Linux        |      |          |                  |          |
+| Ngnix        |      |          | :checkered_flag: |          |
+| Docker       |      |          |                  |          |
+| Jenkins      |      |          |                  |          |
+| Zabbix       |      |          |                  |          |
+| Nexus        |      |          |                  |          |
+|              |      |          |                  |          |
 
 ## C/C++学习阶段
 
@@ -140,32 +132,32 @@
 
 ## 前端学习阶段
 
-| 学习内容 | 用途 | 学习地址 | 是否完成                 | 学习时长 |
-| ---- | -- | ---- | -------------------- | ---- |
-| Vue  |    |      | :heavy\_check\_mark: |      |
-| css  |    |      | :heavy\_check\_mark: |      |
-| html |    |      | :heavy\_check\_mark: |      |
-| js   |    |      | :heavy\_check\_mark: |      |
+| 学习内容 | 用途 | 学习地址 | 是否完成           | 学习时长 |
+| -------- | ---- | -------- | ------------------ | -------- |
+| Vue      |      |          | :heavy_check_mark: |          |
+| css      |      |          | :heavy_check_mark: |          |
+| html     |      |          | :heavy_check_mark: |          |
+| js       |      |          | :heavy_check_mark: |          |
 
 ## Python学习阶段
 
-| 学习内容     | 用途 | 学习地址 | 是否完成                 | 学习时长 |
-| -------- | -- | ---- | -------------------- | ---- |
-| python基础 |    |      | :heavy\_check\_mark: |      |
-| 爬虫       |    |      | :heavy\_check\_mark: |      |
-| flask    |    |      | :heavy\_check\_mark: |      |
-| django   |    |      | :heavy\_check\_mark: |      |
+| 学习内容   | 用途 | 学习地址 | 是否完成           | 学习时长 |
+| ---------- | ---- | -------- | ------------------ | -------- |
+| python基础 |      |          | :heavy_check_mark: |          |
+| 爬虫       |      |          | :heavy_check_mark: |          |
+| flask      |      |          | :heavy_check_mark: |          |
+| django     |      |          | :heavy_check_mark: |          |
 
 ## 数据库学习阶段
 
-| 学习内容        | 用途 | 学习地址 | 是否完成              | 学习时长 |
-| ----------- | -- | ---- | ----------------- | ---- |
-| **mysql**   |    |      | :checkered\_flag: |      |
-| **redis**   |    |      |                   |      |
-| **Hbase**   |    |      |                   |      |
-| 分布式文件系统     |    |      |                   |      |
-| **mongodb** |    |      |                   |      |
-| **Neo4j**   |    |      |                   |      |
+| 学习内容       | 用途 | 学习地址 | 是否完成           | 学习时长 |
+| -------------- | ---- | -------- | ------------------ | -------- |
+| **mysql**      |      |          | :heavy_check_mark: |          |
+| **redis**      |      |          | :heavy_check_mark: |          |
+| **Hbase**      |      |          |                    |          |
+| 分布式文件系统 |      |          |                    |          |
+| **mongodb**    |      |          |                    |          |
+| **Neo4j**      |      |          |                    |          |
 
 ## 算法学习阶段
 
@@ -188,10 +180,10 @@
 
 ## 工具
 
-| 学习内容      | 用途 | 学习地址 | 是否完成 | 学习时长 |
-| --------- | -- | ---- | ---- | ---- |
-| myeclipse |    |      |      |      |
-| vscode    |    |      |      |      |
-| idea      |    |      |      |      |
-| svn       |    |      |      |      |
-| git       |    |      |      |      |
+| 学习内容  | 用途 | 学习地址 | 是否完成           | 学习时长 |
+| --------- | ---- | -------- | ------------------ | -------- |
+| myeclipse |      |          |                    |          |
+| vscode    |      |          |                    |          |
+| idea      |      |          | :heavy_check_mark: |          |
+| svn       |      |          |                    |          |
+| git       |      |          | :heavy_check_mark: |          |
