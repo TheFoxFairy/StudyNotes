@@ -2,6 +2,20 @@
 
 **学习笔记：记录学习的笔记！！！[个人学习笔记地址](https://luoran.gitbook.io/)**<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201090108807.jpg" width=25% align=right hspace="5" vspace="5"/>
 
+## 当前学习内容板块
+
+| 学习内容板块 | 是否完成     |
+| ------------ | ------------ |
+| Linux        |              |
+| Ngnix        |              |
+| 注射与反解   | :baby_chick: |
+| I/O          |              |
+| NIO          |              |
+| 多线程       | :baby_chick: |
+| JVM          |              |
+| GUI编程      |              |
+| RabbitMQ     |              |
+
 ## Java学习阶段
 
 ### JavaSE
@@ -44,15 +58,15 @@
 
 ### 微服务开发
 
-| 学习内容板块                      | 用途 | 学习地址                                    | 是否完成           | 学习时长 |
-| --------------------------------- | ---- | ------------------------------------------- | ------------------ | -------- |
-| Spring Boot                       |      |                                             | :heavy_check_mark: |          |
-| Spring Security                   |      |                                             | :heavy_check_mark: |          |
-| Shiro                             |      |                                             | :heavy_check_mark: |          |
-| Spring Cloud/Spring Cloud Alibaba |      |                                             |                    |          |
-| Swagger                           |      |                                             | :heavy_check_mark: |          |
-| Zookeeper                         |      | https://www.bilibili.com/video/BV1Ph411n7Ep | :checkered_flag:   | 3h       |
-| dubbo                             |      | https://www.bilibili.com/video/BV1VE411q7dX | :checkered_flag:   | 3h       |
+| 学习内容板块                      | 用途 | 学习地址                                                     | 是否完成           | 学习时长 |
+| --------------------------------- | ---- | ------------------------------------------------------------ | ------------------ | -------- |
+| Spring Boot                       |      |                                                              | :heavy_check_mark: |          |
+| Spring Security                   |      |                                                              | :heavy_check_mark: |          |
+| Shiro                             |      |                                                              | :heavy_check_mark: |          |
+| Spring Cloud/Spring Cloud Alibaba |      |                                                              |                    |          |
+| Swagger                           |      |                                                              | :heavy_check_mark: |          |
+| Zookeeper                         |      | [https://www.bilibili.com/video/BV1Ph411n7Ep](https://www.bilibili.com/video/BV1Ph411n7Ep) | :heavy_check_mark: | 3h       |
+| dubbo                             |      | [https://www.bilibili.com/video/BV1VE411q7dX](https://www.bilibili.com/video/BV1VE411q7dX) | :heavy_check_mark: | 3h       |
 
 ### 常用中间件
 
@@ -105,15 +119,15 @@
 
 ## Linux运维
 
-| 学习内容板块 | 用途 | 学习地址 | 是否完成         | 学习时长 |
-| ------------ | ---- | -------- | ---------------- | -------- |
-| Linux        |      |          |                  |          |
-| Ngnix        |      |          | :checkered_flag: |          |
-| Docker       |      |          |                  |          |
-| Jenkins      |      |          |                  |          |
-| Zabbix       |      |          |                  |          |
-| Nexus        |      |          |                  |          |
-|              |      |          |                  |          |
+| 学习内容板块 | 用途 | 学习地址                                                     | 是否完成         | 学习时长 |
+| ------------ | ---- | ------------------------------------------------------------ | ---------------- | -------- |
+| Linux        |      | [https://www.bilibili.com/video/BV16Q4y1y7xS](https://www.bilibili.com/video/BV16Q4y1y7xS) |                  | 15h      |
+| Ngnix        |      | [https://www.bilibili.com/video/BV1W44y1J74a](https://www.bilibili.com/video/BV1W44y1J74a) | :checkered_flag: | 9h       |
+| Docker       |      |                                                              |                  |          |
+| Jenkins      |      |                                                              |                  |          |
+| Zabbix       |      |                                                              |                  |          |
+| Nexus        |      |                                                              |                  |          |
+|              |      |                                                              |                  |          |
 
 ## C/C++学习阶段
 

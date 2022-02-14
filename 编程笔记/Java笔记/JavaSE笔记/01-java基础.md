@@ -1,4 +1,4 @@
-# 01-java基础
+# java基础笔记
 
 ## 输入输出
 
@@ -229,7 +229,9 @@ public class Main {
 }
 ```
 
-## Number & Math 类方法
+## Java常用类
+
+### Number & Math 类方法
 
 下面的表中列出的是 Number & Math 类常用的一些方法：
 
@@ -263,7 +265,7 @@ public class Main {
 | 26 | [toRadians()](https://www.runoob.com/java/number-toradians.html) 将角度转换为弧度。                                                                                                |
 | 27 | [random()](https://www.runoob.com/java/number-random.html) 返回一个随机数。                                                                                                       |
 
-## Character 类
+### Character 类
 
 ```
 public class Main {
@@ -293,7 +295,7 @@ public class Main {
 | 7  | [toLowerCase](https://www.runoob.com/java/character-tolowercase.html)() 指定字母的小写形式      |
 | 8  | [toString](https://www.runoob.com/java/character-tostring.html)() 返回字符的字符串形式，字符串的长度仅为1 |
 
-## String类
+### String类
 
 ```
 public class Main {
@@ -386,7 +388,7 @@ public class Main {
 
 [传送地址](https://www.runoob.com/java/java-regular-expressions.html)
 
-## 定义方法
+## 传递参数
 
 ```
 import java.util.Scanner;
@@ -407,6 +409,8 @@ public class Main {
 ```
 
 ![image-20210327223725352](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201121632825.png)
+
+## 面向对象
 
 ## 异常处理
 
@@ -487,3 +491,9 @@ public class MyException extends Exception{
     }
 }
 ```
+
+## 注射与反解
+
+## 多线程
+
+## 网络编程
