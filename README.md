@@ -44,28 +44,28 @@
 
 ### 微服务开发
 
-| 学习内容板块                      | 用途 | 学习地址 | 是否完成           | 学习时长 |
-| --------------------------------- | ---- | -------- | ------------------ | -------- |
-| Spring Boot                       |      |          | :heavy_check_mark: |          |
-| Spring Security                   |      |          | :heavy_check_mark: |          |
-| Shiro                             |      |          | :heavy_check_mark: |          |
-| Spring Cloud/Spring Cloud Alibaba |      |          |                    |          |
-| Swagger                           |      |          | :heavy_check_mark: |          |
-| Zookeeper                         |      |          | :checkered_flag:   |          |
-| dubbo                             |      |          | :checkered_flag:   |          |
-| RocketMQ                          |      |          |                    |          |
+| 学习内容板块                      | 用途 | 学习地址                                    | 是否完成           | 学习时长 |
+| --------------------------------- | ---- | ------------------------------------------- | ------------------ | -------- |
+| Spring Boot                       |      |                                             | :heavy_check_mark: |          |
+| Spring Security                   |      |                                             | :heavy_check_mark: |          |
+| Shiro                             |      |                                             | :heavy_check_mark: |          |
+| Spring Cloud/Spring Cloud Alibaba |      |                                             |                    |          |
+| Swagger                           |      |                                             | :heavy_check_mark: |          |
+| Zookeeper                         |      | https://www.bilibili.com/video/BV1Ph411n7Ep | :checkered_flag:   | 3h       |
+| dubbo                             |      | https://www.bilibili.com/video/BV1VE411q7dX | :checkered_flag:   | 3h       |
 
 ### 常用中间件
 
-| 学习内容板块        | 用途 | 学习地址 | 是否完成 | 学习时长 |
-| ------------- | -- | ---- | ---- | ---- |
-| RabbitMQ      |    |      |      |      |
-| ElasticSearch |    |      |      |      |
-| MyCat         |    |      |      |      |
-| Kafka         |    |      |      |      |
-| isearch       |    |      |      |      |
-| netty         |    |      |      |      |
-| memcache      |    |      |      |      |
+| 学习内容板块  | 用途 | 学习地址 | 是否完成 | 学习时长 |
+| ------------- | ---- | -------- | -------- | -------- |
+| RabbitMQ      |      |          |          |          |
+| RocketMQ      |      |          |          |          |
+| ElasticSearch |      |          |          |          |
+| MyCat         |      |          |          |          |
+| Kafka         |      |          |          |          |
+| isearch       |      |          |          |          |
+| netty         |      |          |          |          |
+| memcache      |      |          |          |          |
 
 ### 服务网格
 

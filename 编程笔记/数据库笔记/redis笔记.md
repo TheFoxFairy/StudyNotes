@@ -283,7 +283,6 @@ redis-server –service-stop
 
 ```sh
 wget http://download.redis.io/releases/redis-6.0.6.tar.gz
-
 ```
 
 * 解压redis
