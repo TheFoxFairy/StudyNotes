@@ -215,7 +215,7 @@ DispatcherServlet的作用是将请求分发到不同的处理器。从Spring 2.
 
 Spring的web框架围绕DispatcherServlet设计。DispatcherServlet的作用是将请求分发到不同的处理器。从Spring 2.5开始，使用Java 5或者以上版本的用户可以采用基于注解的controller声明方式。
 
-​	Spring MVC框架像许多其他MVC框架一样, **以请求为驱动** , **围绕一个中心Servlet分派请求及提供其他功能**，**DispatcherServlet是一个实际的Servlet (它继承自HttpServlet 基类)**。
+Spring MVC框架像许多其他MVC框架一样, **以请求为驱动** , **围绕一个中心Servlet分派请求及提供其他功能**，**DispatcherServlet是一个实际的Servlet (它继承自HttpServlet 基类)**。
 
 ![图片](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201072319895)
 
@@ -3251,7 +3251,7 @@ public class BookServiceImpl implements BookService{
 </beans>
 ```
 
-* **Spring配置整合文件，applicationContext.xml**
+* **Spring配置整合文件，applicationConfig.xml**
 
 ```xml
 <?xml version="1.0" encoding="UTF8"?>

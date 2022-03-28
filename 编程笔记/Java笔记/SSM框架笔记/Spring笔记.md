@@ -1853,7 +1853,6 @@ public class AfterLog implements AfterReturningAdvice {
         <!--执行环绕增加！-->
         <aop:advisor advice-ref="beforeLog" pointcut-ref="pointcut" />
         <aop:advisor advice-ref="afterLog" pointcut-ref="pointcut" />
-
     </aop:config>
 </beans>
 ```
@@ -2353,8 +2352,6 @@ public class UserMapperImpl2 extends SqlSessionDaoSupport implements UserMapper 
 
 * 声明式事务：AOP
 * 编程式事务：需要在代码中，进行事务的管理
-
-
 
 1. **使用Spring管理事务，注意头文件的约束导入 : tx**
 
