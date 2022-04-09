@@ -1,4 +1,4 @@
-剑指offer
+# 剑指offer
 
 ## 算法面试介绍
 
@@ -2554,6 +2554,8 @@ x为头的整棵树上，最大路径和是多少,返回。路径要求，一定
 
 ![image-20220303222916201](../../../../../Pictures/assets/剑指offer/image-20220303222916201.png)
 
+#### 第四课
+
 ![image-20220405104303762](../../../../../Pictures/assets/剑指offer/image-20220405104303762.png)
 
 * 思路
@@ -2575,5 +2577,156 @@ x为头的整棵树上，最大路径和是多少,返回。路径要求，一定
 
 ```tex
 观察，先解决外圈，依次如此。
+```
+
+![image-20220408165238528](../../../../../Pictures/assets/剑指offer/image-20220408165238528.png)
+
+* 思路
+
+```tex
+1) N是质数 n-1次
+2）N不是质数， 21 = 3*7，找到该数的质数因子 =》 N = a*b*c*d，a，b，c，d是质数因子分解出来的东西=》a+b+c+d - 4
+```
+
+![image-20220408171522930](../../../../../Pictures/assets/剑指offer/image-20220408171522930.png)
+
+* 思路
+
+```tex
+把字符串遍历，使用hash表存储记录字符的出现次数，然后使用大根堆进行建立进行存储（优先队列）。
+```
+
+* 代码
+
+```java
+public class TopKFrequent {
+
+    HashMap<String, Integer> strIndexMap = new HashMap<>();
+
+    public static class Pair {
+        String value;
+        int count;
+
+        public Pair(String value, int count) {
+            this.value = value;
+            this.count = count;
+        }
+    }
+
+    public void swap(Pair[] pairs, int i, int j) {
+
+        strIndexMap.put(pairs[i].value, j);
+        strIndexMap.put(pairs[j].value, i);
+
+        Pair tmp = pairs[i];
+        pairs[i] = pairs[j];
+        pairs[j] = tmp;
+    }
+
+    public void heapify(Pair[] pairs, int index, int heapSize) {
+
+        int left = 2 * index + 1;
+
+        while (left < heapSize) {
+
+            int largest = left + 1 < heapSize && pairs[left + 1].count < pairs[left].count ? left + 1 : left;
+            largest = pairs[largest].count < pairs[index].count ? largest : index;
+
+            if (largest == index) break;
+
+            swap(pairs, largest, index);
+            index = largest;
+            left = 2 * index + 1;
+
+        }
+
+    }
+
+    public void heapInsert(Pair[] pairs, int index) {
+        while (pairs[index].count > pairs[(index - 1) / 2].count) {
+            swap(pairs, index, (index - 1) / 2);
+            index = (index - 1) / 2;
+        }
+    }
+
+    public List<String> heapSort(Pair[] pairs, int k) {
+        for (int i = pairs.length - 1; i >= 0; i--)
+            heapify(pairs, i, pairs.length);
+
+        int heapSize = pairs.length;
+
+        List<String> res = new ArrayList<>();
+
+        while (k > 0 && heapSize > 0) {
+            res.add(pairs[0].value);
+            swap(pairs, 0, --heapSize);
+            heapify(pairs, 0, heapSize);
+            k--;
+        }
+
+        return res;
+
+    }
+
+    public List<String> topKFrequent(String[] words, int k) {
+
+        HashMap<String, Integer> map = new HashMap<>();
+        Pair[] pairs = new Pair[k];
+        int i = 0;
+
+        for (String word : words) {
+
+            map.put(word, map.getOrDefault(word, 0) + 1);
+
+            if (strIndexMap.containsKey(word)) {
+                int index = strIndexMap.get(word);
+                pairs[index] = new Pair(word, map.get(word));
+                heapify(pairs, index, strIndexMap.size());
+            } else if (i < k) {
+
+                strIndexMap.put(word,i);
+                pairs[i] = new Pair(word, map.get(word));
+                heapInsert(pairs, i++);
+
+            } else if (pairs[0].count < map.get(word)) {
+                strIndexMap.remove(pairs[0].value);
+                pairs[0] = new Pair(word, map.get(word));
+                heapify(pairs, 0, pairs.length);
+            }
+        }
+
+        System.out.println(strIndexMap);
+
+        List<String> res = new ArrayList<>();
+        for (int j = Math.min(k,strIndexMap.size())-1; j >= 0; j--)
+            res.add(pairs[j].value);
+        return res;
+
+    }
+
+    public static void main(String[] args) {
+        String[] words = {"1", "1", "2", "23", "45", "45", "1","2"};
+        int k = 2;
+        TopKFrequent solution = new TopKFrequent();
+
+        List<String> res = solution.topKFrequent(words, k);
+
+        for (String word : res) {
+            System.out.println(word);
+        }
+    }
+    
+}
+```
+
+假设，用户让你实现一个结构，这个结构可以接收用户给的某种字符串， 而且用户会调一个函数，显示当前的topk（动态的）。
+
+```tex
+自己手动实现小根堆，用两个map进行记录，一个map记录词频（词频表），一个map记录当前词在上的位置（堆位置表）。
+
+每次进行添加时，判断是否存在再堆中，如果在堆中，由于词频增加了，只需要后面调整。
+如果不在堆中，只需要添加即可。
+
+每次添加/调整都需要动态的调整map记录的词的位置。在swap哪里进行记录即可。。。。
 ```
 
