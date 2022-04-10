@@ -72,7 +72,7 @@
 
 ### 认识时间复杂度
 
-![image-20220321153935039](../../../../../Pictures/assets/剑指offer/image-20220321153935039.png)
+![image-20220321153935039](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092315929.png)
 
 两种交换方法
 
@@ -142,7 +142,7 @@ public void insertSort(int[] arr){
 
 ### 二分查找
 
-![image-20220321170509481](../../../../../Pictures/assets/剑指offer/image-20220321170509481.png)
+![image-20220321170509481](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092315081.png)
 
 ```java
 // 分查找不需要数组一定有序
@@ -159,7 +159,7 @@ public int getMaxNumber(int[] arr,int L,int R){
 }
 ```
 
-![image-20220321232836321](../../../../../Pictures/assets/剑指offer/image-20220321232836321.png)
+![image-20220321232836321](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092315589.png)
 
 ### **快速排序** 
 
@@ -252,7 +252,7 @@ public void mergeSort(int[] arr) {
 
 ```
 
-![image-20220321235804938](../../../../../Pictures/assets/剑指offer/image-20220321235804938.png)
+![image-20220321235804938](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092315795.png)
 
 ```java
 // 不需要动其他，只需要记录即可
@@ -261,7 +261,7 @@ if(arr[p2] > arr[p1]){
 }
 ```
 
-![image-20220322105759736](../../../../../Pictures/assets/剑指offer/image-20220322105759736.png)
+![image-20220322105759736](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092315320.png)
 
 ```tex
 问题1：数组 3 5 6 7 4 3 5 8 ,数 5
@@ -368,9 +368,9 @@ public void heapSort2(int[] arr) {
 }
 ```
 
-![image-20220322171931081](../../../../../Pictures/assets/剑指offer/image-20220322171931081.png)
+![image-20220322171931081](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092315746.png)
 
-![image-20220322172053359](../../../../../Pictures/assets/剑指offer/image-20220322172053359.png)
+![image-20220322172053359](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092315132.png)
 
 ```java
 前7个数，建立成小根堆，把堆顶最小的数，与第一个数交换，之后加入7，依次如此。
@@ -431,7 +431,7 @@ public void bucketSort(int[] arr){
 }
 ```
 
-![image-20220322201918293](../../../../../Pictures/assets/剑指offer/image-20220322201918293.png)
+![image-20220322201918293](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092315230.png)
 
 ### 基数排序
 
@@ -520,7 +520,7 @@ a = a ^ b = 甲^乙^甲=乙
 
 ### 题目
 
-![image-20220303223044412](../../../../../Pictures/assets/剑指offer/image-20220303223044412.png)
+![image-20220303223044412](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092315911.png)
 
 * 思路
 
@@ -541,7 +541,7 @@ a = a ^ b = 甲^乙^甲=乙
 （3） 两个循环链表相交，有两个相交节点处。
 ```
 
-![image-20220303232028889](../../../../../Pictures/assets/剑指offer/image-20220303232028889.png)
+![image-20220303232028889](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092316762.png)
 
 ## 二叉树
 
@@ -577,7 +577,7 @@ class Node<V>{
 
 #### 先序遍历
 
-![image-20220303233507014](../../../../../Pictures/assets/剑指offer/image-20220303233507014.png)
+![image-20220303233507014](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092316760.png)
 
 ```java
 // 准备一个栈：后处理的先压入栈
@@ -721,7 +721,7 @@ public Node reverseEdge(Node from){
 
 ### 二叉树题目
 
-![image-20220304212137588](../../../../../Pictures/assets/剑指offer/image-20220304212137588.png)
+![image-20220304212137588](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092316618.png)
 
 * 思路
 
@@ -742,7 +742,7 @@ public Node reverseEdge(Node from){
 
 ![image-20220304225016479](../../../../../Pictures/assets/剑指offer/image-20220304225016479.png)
 
-<img src="../../../../../Pictures/assets/剑指offer/image-20220304230306601.png" alt="image-20220304230306601" style="zoom:33%;" />
+<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092316499.png" alt="image-20220304230306601" style="zoom:33%;" />
 
 * 思路
 
@@ -758,7 +758,7 @@ public Node reverseEdge(Node from){
 （2）s和e彼此不会对方的最低公共祖先
 ```
 
-![image-20220304234744805](../../../../../Pictures/assets/剑指offer/image-20220304234744805.png)
+![image-20220304234744805](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092316036.png)
 
 <img src="../../../../../Pictures/assets/剑指offer/image-20220304234826995.png" alt="image-20220304234826995" style="zoom:33%;" />
 
@@ -776,7 +776,7 @@ public Node reverseEdge(Node from){
 （3）整颗树的右节点没有后续节点
 ```
 
-![image-20220305000721159](../../../../../Pictures/assets/剑指offer/image-20220305000721159.png)
+![image-20220305000721159](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092316915.png)
 
 <img src="../../../../../Pictures/assets/剑指offer/image-20220305000831007.png" alt="image-20220305000831007" style="zoom:33%;" />
 
@@ -798,9 +798,9 @@ public Node reverseEdge(Node from){
 
 ### 树形dp
 
-![image-20220320091515211](../../../../../Pictures/assets/剑指offer/image-20220320091515211.png)
+![image-20220320091515211](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092316354.png)
 
-![image-20220320091633398](../../../../../Pictures/assets/剑指offer/image-20220320091633398.png)
+![image-20220320091633398](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092316758.png)
 
 ```tex
 以x为头节点
@@ -846,9 +846,9 @@ public static Info maxDistance(Node x){
 }
 ```
 
-![image-20220320095709907](../../../../../Pictures/assets/剑指offer/image-20220320095709907.png)
+![image-20220320095709907](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092316610.png)
 
-![image-20220320094652391](../../../../../Pictures/assets/剑指offer/image-20220320094652391.png)
+![image-20220320094652391](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092316475.png)
 
 ```tex
 x 参与
@@ -1073,11 +1073,11 @@ public class Graph {
 
 ### 图遍历
 
-![image-20220305205018228](../../../../../Pictures/assets/剑指offer/image-20220305205018228.png)
+![image-20220305205018228](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092316350.png)
 
 ### 拓扑排序
 
-![image-20220306191149069](../../../../../Pictures/assets/剑指offer/image-20220306191149069.png)
+![image-20220306191149069](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092317248.png)
 
 ```html
 先输出所有入度为0的节点，然后消除当前节点的影响即入度，出度。
@@ -1086,7 +1086,7 @@ public class Graph {
 
 ### 生成最小生成树
 
-![image-20220306193347099](../../../../../Pictures/assets/剑指offer/image-20220306193347099.png)
+![image-20220306193347099](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092317320.png)
 
 
 
@@ -1096,9 +1096,9 @@ public class Graph {
 通过并查集，这样被选取的边上的节点，就可以连起来了；下次选取边的时候，就可以判断当前边的节点是否已经相连了。
 ```
 
-![image-20220306200028732](../../../../../Pictures/assets/剑指offer/image-20220306200028732.png)
+![image-20220306200028732](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092317654.png)
 
-![image-20220306200558649](../../../../../Pictures/assets/剑指offer/image-20220306200558649.png)
+![image-20220306200558649](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092317415.png)
 
 ```html
 1. 将解锁的边放到优先队列中
@@ -1156,7 +1156,7 @@ floyd：通过三个循环i,j,k
 
 局部最优 -?-> 整体最优
 
-![image-20220313170641313](../../../../../Pictures/assets/剑指offer/image-20220313170641313.png)
+![image-20220313170641313](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092317291.png)
 
 ```html
 思路-贪心：那个会议的宣讲时间先介绍，就先进行安排
@@ -1195,7 +1195,7 @@ public class Greedy {
 }
 ```
 
-![image-20220313171839543](../../../../../Pictures/assets/剑指offer/image-20220313171839543.png)
+![image-20220313171839543](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092317631.png)
 
 ```html
 字符串拼接，将字符串数组进行拼接为一个字典序最小的字符串。
@@ -1233,13 +1233,13 @@ public class Greedy {
 }
 ```
 
-![image-20220313200045678](../../../../../Pictures/assets/剑指offer/image-20220313200045678.png)
+![image-20220313200045678](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092317123.png)
 
 ```html
 思路：哈夫曼树，选出最小的两个数，然后相加，又返回去，继续...
 ```
 
-![image-20220313210930844](../../../../../Pictures/assets/剑指offer/image-20220313210930844.png)
+![image-20220313210930844](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092317009.png)
 
 ```html
 通过使用两个堆，即大根堆和小根堆
@@ -1254,7 +1254,7 @@ public class Greedy {
 因此可以发现中位数，一直在两个堆的堆顶。
 ```
 
-![image-20220313212522192](../../../../../Pictures/assets/剑指offer/image-20220313212522192.png)
+![image-20220313212522192](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092317994.png)
 
 ```html
 思路：深度优先遍历
@@ -1266,7 +1266,7 @@ public class Greedy {
 通过record[n]记录每个皇后摆放的位置。
 ```
 
-![image-20220313215923510](../../../../../Pictures/assets/剑指offer/image-20220313215923510.png)
+![image-20220313215923510](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092317685.png)
 
 ```html
 但是耗时，使用位运算进行优化
@@ -1280,7 +1280,7 @@ public class Greedy {
 异或运算  0000111000000...000 表示当前皇后的三个限制
 ```
 
-![image-20220313234619866](../../../../../Pictures/assets/剑指offer/image-20220313234619866.png)
+![image-20220313234619866](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092317420.png)
 
 ## 暴力递归
 
@@ -1294,7 +1294,7 @@ public class Greedy {
 
 4. 不记录每一个子问题的解
 
-![image-20220314145252182](../../../../../Pictures/assets/剑指offer/image-20220314145252182.png)
+![image-20220314145252182](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092317846.png)
 
 ```html
 每次只能移动一次，需要保证小盘一定在大盘上方。一共有三个杆。
@@ -1302,7 +1302,7 @@ public class Greedy {
 要求：需要全部移动到最右边杆
 ```
 
-![image-20220314160525722](../../../../../Pictures/assets/剑指offer/image-20220314160525722.png)
+![image-20220314160525722](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092317518.png)
 
 ```java
 public void allSubsequence(char[] word,int i,List<Character> res){
@@ -1326,7 +1326,7 @@ public void allSubsequence(char[] word,int i,List<Character> res){
 }
 ```
 
-![image-20220314162618188](../../../../../Pictures/assets/剑指offer/image-20220314162618188.png)
+![image-20220314162618188](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092317867.png)
 
 ```java
     public void fullPermutation(char[] word,int i,HashSet<String> res){
@@ -1350,7 +1350,7 @@ public void allSubsequence(char[] word,int i,List<Character> res){
     }
 ```
 
-![image-20220314165147339](../../../../../Pictures/assets/剑指offer/image-20220314165147339.png)
+![image-20220314165147339](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092318108.png)
 
 ```java
 public int f(int[] arr,int i,int j){
@@ -1372,7 +1372,7 @@ public int gameProblem(int[] arr){
 }
 ```
 
-![image-20220314174201841](../../../../../Pictures/assets/剑指offer/image-20220314174201841.png)
+![image-20220314174201841](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092318974.png)
 
 ```java
 public void recurStack(Stack stack){
@@ -1394,7 +1394,7 @@ public void recurStack(Stack stack){
 }
 ```
 
-![image-20220314181241845](../../../../../Pictures/assets/剑指offer/image-20220314181241845.png)
+![image-20220314181241845](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092318792.png)
 
 ```java
 public int switchCharacter(char[] arr,int i){
@@ -1416,7 +1416,7 @@ public int switchCharacter(char[] arr,int i){
 }
 ```
 
-![image-20220314195115442](../../../../../Pictures/assets/剑指offer/image-20220314195115442.png)
+![image-20220314195115442](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092318546.png)
 
 ```java
 public int knapsackProblem(int[] weights,int[] values,int bag,int i,int alreadyWeight){
@@ -1438,7 +1438,7 @@ public int knapsackProblem(int[] weights,int[] values,int bag,int i,int alreadyW
 
 例子:一个字符串类型的数组arr1，另一个字符串类型的数组arr2。arr2中有哪些字符，是arr1中出现的?请打印。arr2中有哪些字符，是作为arr1中某个字符串前缀出现的?请打印。arr2中有哪些字符，是作为arr1中某个字符串前缀出现的?请打印 arr2中出现次数最大的前缀。
 
-```html
+```java
 class TrieNode{
 
     public int pass;    //用于记录当前字符经过的次数
@@ -1565,7 +1565,7 @@ public class TrieTree {
 
 ### KMP算法
 
-![image-20220318231845021](../../../../../Pictures/assets/剑指offer/image-20220318231845021.png)
+![image-20220318231845021](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092318391.png)
 
 ```tex
 abbabb
@@ -1592,7 +1592,7 @@ aabaabsaabaabst
 =>[-1,0,1,0,1,2,3.....] =>nexts数组
 ```
 
-![image-20220319124651312](../../../../../Pictures/assets/剑指offer/image-20220319124651312.png)
+![image-20220319124651312](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092318168.png)
 
 
 
@@ -1649,7 +1649,7 @@ public int kmp(String str1,String str2){
 
 传统算法：对于源字符串中插入`#`字符，这样就很好进行判断，最后除以2就是当前的回文字符串长度。时间复杂度为$Big\ O(N^2)$
 
-![image-20220319152224671](../../../../../Pictures/assets/剑指offer/image-20220319152224671.png)
+![image-20220319152224671](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092318973.png)
 
 manacher算法：与kmp相似，原来算法不同，只是在原来基础上加速。
 
@@ -1710,7 +1710,7 @@ manacher算法：与kmp相似，原来算法不同，只是在原来基础上加
 
 ## 滑动窗口
 
-![image-20220319171447969](../../../../../Pictures/assets/剑指offer/image-20220319171447969.png)
+![image-20220319171447969](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092318816.png)
 
 ```tex
 双端队列：从大到小进行排列，保证双端队列的大头方向
@@ -1721,7 +1721,7 @@ manacher算法：与kmp相似，原来算法不同，只是在原来基础上加
 
 ## 单调栈 
 
-![image-20220319224818846](../../../../../Pictures/assets/剑指offer/image-20220319224818846.png)
+![image-20220319224818846](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092318041.png)
 
 ```tex
 5 4 6 7 2 3 0 1
@@ -1732,7 +1732,7 @@ stack:5 4 3 ，放6，需要依次弹出3 4 5并记录左右距离最大的数
 依次如此
 ```
 
- ![image-20220319233823599](../../../../../Pictures/assets/剑指offer/image-20220319233823599.png)
+ ![image-20220319233823599](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092318705.png)
 
 ```java
 5 3 2 1 6 7 8 4
@@ -1758,7 +1758,7 @@ stack:5 4 3 ，放6，需要依次弹出3 4 5并记录左右距离最大的数
 
 介绍树的左旋
 
-![image-20220327205330818](../../../../../Pictures/assets/剑指offer/image-20220327205330818.png)
+![image-20220327205330818](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092319640.png)
 
 ```tex
 左旋：指的是头结点往那边倒，往左倒，就是左旋
@@ -1807,7 +1807,7 @@ LL：T节点的左孩子的左孩子的大小，大于T节点的右孩子
 =>先做一个右旋，让L上去，T节点就变成L的右子树。m(T)
 ```
 
-![image-20220329100536731](../../../../../Pictures/assets/剑指offer/image-20220329100536731.png)
+![image-20220329100536731](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092319295.png)
 
 ```tex
 => 右旋后，R的平衡性不变（左右孩子没有变动），T变了，因此检测T，对T进行调整
@@ -1818,7 +1818,7 @@ LR
 RL
 ```
 
-![image-20220329102405462](../../../../../Pictures/assets/剑指offer/image-20220329102405462.png)
+![image-20220329102405462](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092319643.png)
 
 ### 跳表skiplist
 
@@ -1960,7 +1960,7 @@ public class UnionFind {
 但是存在两个问题：加上一个机器可能会导致不均衡。
 ```
 
-![image-20220318001611136](../../../../../Pictures/assets/剑指offer/image-20220318001611136.png)
+![image-20220318001611136](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092319629.png)
 
 ```tex
 每个机器生成1000个hashcode，这样就能很好方便放在环上了。
@@ -1969,13 +1969,13 @@ public class UnionFind {
 
 
 
-![image-20220318002111275](../../../../../Pictures/assets/剑指offer/image-20220318002111275.png)
+![image-20220318002111275](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092319887.png)
 
 
 
 ## 大数据题目
 
-![image-20220320134923153](../../../../../Pictures/assets/剑指offer/image-20220320134923153.png)
+![image-20220320134923153](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092319669.png)
 
 bitmap和布隆过滤器
 
@@ -1985,11 +1985,11 @@ bitmap和布隆过滤器
 申请21位，大约41亿数据，够用了，当前QQ进行映射为hashcode，然后再对应的bit位上赋值为1。就类似打卡。
 ```
 
-![image-20220320134707639](../../../../../Pictures/assets/剑指offer/image-20220320134707639.png)
+![image-20220320134707639](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092319936.png)
 
 如果只有3kb的，使用整形数组，需要申请3kb/4>512位，然后将$2^{32}$按照512位等量划分为838608个。然后使用二分查找法，进行查找。
 
-![image-20220320134555679](../../../../../Pictures/assets/剑指offer/image-20220320134555679.png)
+![image-20220320134555679](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092319952.png)
 
 ```text
 万能方法：哈希表分流--
@@ -1997,7 +1997,7 @@ bitmap和布隆过滤器
 
 
 
-![image-20220320135717976](../../../../../Pictures/assets/剑指offer/image-20220320135717976.png)
+![image-20220320135717976](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092319609.png)
 
 ```tex
 如果内存降低到10kb，怎么做
@@ -2046,7 +2046,7 @@ private:
 };
 ```
 
-![image-20220321100505304](../../../../../Pictures/assets/剑指offer/image-20220321100505304.png)
+![image-20220321100505304](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092313152.png)
 
 ```tex
 2的幂，只有一位上是1，其余是0，就是取最右边的1，然后与原来的数相比是否相等。
@@ -2055,7 +2055,7 @@ private:
 4的幂，同理，(num & (num-1)) ==0 && (num & 0x55555555) !=0
 ```
 
-![image-20220321102046305](../../../../../Pictures/assets/剑指offer/image-20220321102046305.png)
+![image-20220321102046305](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092313116.png)
 
 ```tex
 前提：
@@ -2215,13 +2215,13 @@ public int win(int[] arr){
 }
 ```
 
-![image-20220327141421155](../../../../../Pictures/assets/剑指offer/image-20220327141421155.png)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+![image-20220327141421155](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092313160.png)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
 
 
 
 一个棋盘10x9大小，其中一个棋子马位置在(0,0)，目标位置(a,b)，指定跳动的k步，在这个范围中，有多少中跳法。
 
-![image-20220327141854350](../../../../../Pictures/assets/剑指offer/image-20220327141854350.png)
+![image-20220327141854350](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092313013.png)
 
 ```java
     public int process(int x,int y,int step){
@@ -2323,7 +2323,7 @@ kog
 
 * 思路：
 
-![image-20220302202631962](../../../../../Pictures/assets/剑指offer/image-20220302202631962.png)
+![image-20220302202631962](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312096.png)
 
 ```html
 第一种，子矩阵是长方形，需要通过上下两个点来固定长方形，由于上下两个点，都有n^2种可能，因此O(n^4)的复杂度
@@ -2383,7 +2383,7 @@ kog
 i 左子树只有i个节点，右子树有n-i个节点
 ```
 
-![image-20220303181928486](../../../../../Pictures/assets/剑指offer/image-20220303181928486.png)
+![image-20220303181928486](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312639.png)
 
 * 思路
 
@@ -2393,7 +2393,7 @@ i 左子树只有i个节点，右子树有n-i个节点
      1 0 -1(0) 1=> count=1,right=1=>count+right=2
 ```
 
-![image-20220303182731715](../../../../../Pictures/assets/剑指offer/image-20220303182731715.png)
+![image-20220303182731715](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312900.png)
 
 * 思路
 
@@ -2402,7 +2402,7 @@ i 左子树只有i个节点，右子树有n-i个节点
 使用哈希表：[3,2,5,7,0]，遍历数组+k，是否在哈希表中存在。
 ```
 
-![image-20220303190530254](../../../../../Pictures/assets/剑指offer/image-20220303190530254.png)
+![image-20220303190530254](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312763.png)
 
 * 思路：先是范围分析，然后发现最小贪心选择需要的数。
 
@@ -2421,7 +2421,7 @@ i 左子树只有i个节点，右子树有n-i个节点
 	由于题目是最多可以多少次magic操作，如果有多个数可以拿，比如A集合有[60,70,80,90]，拿60，对于A是最大幅度的提升，B有最小幅度的提升，这样就可以能够尽量多次magic。                                               
 ```
 
-![image-20220303194019829](../../../../../Pictures/assets/剑指offer/image-20220303194019829.png)
+![image-20220303194019829](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312229.png)
 
 * 思路
 
@@ -2500,7 +2500,7 @@ public int longestValidParentheses2(String s) {
 }
 ````
 
-![image-20220303205525984](../../../../../Pictures/assets/剑指offer/image-20220303205525984.png)
+![image-20220303205525984](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312724.png)
 
 * 思路
 
@@ -2514,7 +2514,7 @@ public int longestValidParentheses2(String s) {
 以此类推。。。
 ```
 
-![image-20220303213852084](../../../../../Pictures/assets/剑指offer/image-20220303213852084.png)
+![image-20220303213852084](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312451.png)
 
 * 思路：从左往右的尝试模型
 
@@ -2529,7 +2529,7 @@ public int longestValidParentheses2(String s) {
 => f[i][i+1] <= 26 		 f[i+2]
 ```
 
-![image-20220303220713436](../../../../../Pictures/assets/剑指offer/image-20220303220713436.png)
+![image-20220303220713436](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312315.png)
 
 * 思路
 
@@ -2540,11 +2540,11 @@ x为头的整棵树上，最大路径和是多少,返回。路径要求，一定
 一般：从头开始往下进行计算权值和，然后进行记录最大值。
 ```
 
-![image-20220303222326182](../../../../../Pictures/assets/剑指offer/image-20220303222326182.png)
+![image-20220303222326182](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312041.png)
 
 * 思路
 
-![image-20220303222501152](../../../../../Pictures/assets/剑指offer/image-20220303222501152.png)
+![image-20220303222501152](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312977.png)
 
 ```html
 找一个数字7，从右上角开始找，不合适就往左走，合适就往下走。
@@ -2552,11 +2552,11 @@ x为头的整棵树上，最大路径和是多少,返回。路径要求，一定
 变体算法：如下
 ```
 
-![image-20220303222916201](../../../../../Pictures/assets/剑指offer/image-20220303222916201.png)
+![image-20220303222916201](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312660.png)
 
 #### 第四课
 
-![image-20220405104303762](../../../../../Pictures/assets/剑指offer/image-20220405104303762.png)
+![image-20220405104303762](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312206.png)
 
 * 思路
 
@@ -2567,11 +2567,11 @@ x为头的整棵树上，最大路径和是多少,返回。路径要求，一定
 ...
 ```
 
-![image-20220405110441313](../../../../../Pictures/assets/剑指offer/image-20220405110441313.png)
+![image-20220405110441313](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312801.png)
 
-![image-20220405110531907](../../../../../Pictures/assets/剑指offer/image-20220405110531907.png)
+![image-20220405110531907](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312624.png)
 
-![image-20220405110558341](../../../../../Pictures/assets/剑指offer/image-20220405110558341.png)
+![image-20220405110558341](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312105.png)
 
 * 思路
 
@@ -2579,7 +2579,7 @@ x为头的整棵树上，最大路径和是多少,返回。路径要求，一定
 观察，先解决外圈，依次如此。
 ```
 
-![image-20220408165238528](../../../../../Pictures/assets/剑指offer/image-20220408165238528.png)
+![image-20220408165238528](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312808.png)
 
 * 思路
 
@@ -2588,7 +2588,7 @@ x为头的整棵树上，最大路径和是多少,返回。路径要求，一定
 2）N不是质数， 21 = 3*7，找到该数的质数因子 =》 N = a*b*c*d，a，b，c，d是质数因子分解出来的东西=》a+b+c+d - 4
 ```
 
-![image-20220408171522930](../../../../../Pictures/assets/剑指offer/image-20220408171522930.png)
+![image-20220408171522930](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312407.png)
 
 * 思路
 
@@ -2730,3 +2730,77 @@ public class TopKFrequent {
 每次添加/调整都需要动态的调整map记录的词的位置。在swap哪里进行记录即可。。。。
 ```
 
+#### 第五课
+
+![image-20220409225442613](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092312987.png)
+
+* 思路
+
+```tex
+使用两个队列，可以不看
+```
+
+![image-20220409225552498](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092320582.png)
+
+* 思路
+
+```tex
+最小数栈与原始数栈保持同步，每次往原始栈添加数时，比较当前最小数栈中与原始栈数大小，然后将最小的数，放入到最小数栈中
+```
+
+![image-20220409230024989](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092311775.png)
+
+* 思路
+
+```tex
+栈->队列：push栈装入数据，pop栈倒出数据
+当前pop栈没数据的时候，push栈才能将数据给pop，不然就从pop中拿出数据
+
+队列->栈：两个队列，其中一个有数据的队列，全部弹出只留下一个，就是需要拿出的数据，依次类推。
+```
+
+![image-20220409230903224](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092311747.png)
+
+* 思路
+
+```tex
+使用一维数组，进行更新，因为看一行或者第一列就知道只与一方有关系
+```
+
+![image-20220409233234540](../../../../../Pictures/assets/剑指offer/image-20220409233234540.png)
+
+<img src="../../../../../Pictures/assets/剑指offer/image-20220409233509130.png" alt="image-20220409233509130" style="zoom:50%;" />
+
+* 思路
+
+```tex
+把目光盯在当前位置能留下多少水
+
+=> 当前i位置，记录左右最大的数 => 就可以记录当前的位置的水数量
+
+=> i = min{左max{0,...,i-1},右max{i+1,...,n}} - arr[i]
+
+=> 使用双指针，高度矮的先计算
+```
+
+![image-20220409234800141](../../../../../Pictures/assets/剑指offer/image-20220409234800141.png)
+
+* 思路
+
+```tex
+一个数组划分成两部分=>
+先找到max，如果max在左边，为了让右边的最大值尽量最小，但是题目无论是否都有n-1个数，
+max在右边类似。
+
+因此max - min(arr[0],arr[n-1])
+```
+
+![image-20220409235348858](../../../../../Pictures/assets/剑指offer/image-20220409235348858.png)
+
+* 思路
+
+```tex
+a = a+a = cdabcdab => 可以发现b=abcd是a的子串，因此采用kmp算法。
+```
+
+咖啡杯问题：
