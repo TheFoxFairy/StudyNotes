@@ -641,6 +641,10 @@ public class PaymentController {
 
 ![image-20220408224740851](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345193.png)
 
+如果报错，就如下输入
+
+![image-20220411111140777](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117509.png)
+
 ##### 热部署Devtools
 
 热部署：开启后，项目在已部署状态下，每次代码改动后无需手动重新部署，可以实时更新。付费插件`JRebel`也可实现热部署。
@@ -1504,7 +1508,7 @@ eureka:
     lease-expiration-duration-in-seconds: 2
 ```
 
-![image-20220410142522753](../../../../../../../Pictures/assets/SpringCloud笔记/image-20220410142522753.png)
+![image-20220410142522753](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101554313.png)
 
 关了自我保护机制，一旦发生故障，就去除。
 
@@ -1531,11 +1535,11 @@ systemctl stop firewalld # 关闭防火墙
 ifconfig # 查看当前虚拟机中的IP地址，然后使用ping查看是否连通
 ```
 
-#### 构建步骤
+#### 服务提供者
 
 ##### 新建module
 
-![image-20220410154407500](../../../../../../../Pictures/assets/SpringCloud笔记/image-20220410154407500.png)
+![image-20220410154407500](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101554314.png)
 
 ##### 改写pom
 
@@ -1647,15 +1651,715 @@ public class PaymentMain8004 {
 }
 ```
 
+##### Controller
 
+可以和之前一样，这里为了快速测试，就简单写一个函数，方便访问进行测试zookeeper是否可用。
 
+```java
+@RestController
+@Slf4j
+public class PaymentController {
+    @Value("${server.port}")
+    private String serverPort;
 
+    @GetMapping("/payment/zk")
+    public String paymentZk(){
+        return "spring cloud with zookeeper:" + serverPort +":" + UUID.randomUUID().toString();
+    }
+}
+```
 
+访问地址：http://localhost:8004/payment/zk
+
+![image-20220410161317527](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117512.png)
+
+之后，查看zookeeper里面的当前数据。
+
+```sh
+ls / # 查看当前节点数据
+ls /services # 这是当前服务的数据
+```
+
+![image-20220410161543026](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117513.png)
+
+一直查下去，会出现一个流水号
+
+![image-20220410162255923](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117514.png)
+
+之后，使用get获取节点的内部数据信息
+
+```sh
+get /services/cloud-provider-payment/d1374223-68fd-4555-8f58-fe66628c9555
+```
+
+![image-20220410162345194](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117515.png)
+
+![ ](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117516.png)
+
+#### 思考：服务节点是临时还是永久？
+
+在zookeeper中服务节点是临时的，如果服务挂掉了，过一段时间后，服务节点就会在zookeeper中去掉。
+
+重新加入后，流水号就会变了，因为它会默认是加入了新的一个服务节点进来。
+
+#### 服务消费者
+
+##### 新建module
+
+![image-20220410163605035](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117517.png)
+
+##### 改写pom
+
+```xml
+<dependencies>
+
+    <dependency>
+        <groupId>com.atguigu.springcloud</groupId>
+        <artifactId>cloud-api-commons</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+
+    <!--SpringBoot整合Zookeeper客户端-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
+        <exclusions>
+            <!--先排除自带的zookeeper3.5.3-->
+            <exclusion>
+                <groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+    <!--添加zookeeper3.4.6版本 -->
+    <dependency>
+        <groupId>org.apache.zookeeper</groupId>
+        <artifactId>zookeeper</artifactId>
+        <version>3.4.6</version>
+    </dependency>
+</dependencies>
+
+```
+
+##### 写yaml
+
+```yaml
+server:
+  port: 80
+
+# 服务名称--注册zookeeper到注册中心名称
+spring:
+  application:
+    name: cloud-consumer-order
+  cloud:
+    zookeeper:
+      connect-string: 192.168.183.102:2181
+```
+
+##### 主启动
+
+````java
+@SpringBootApplication
+@EnableDiscoveryClient
+public class OrderZookeeperMain80 {
+    public static void main(String[] args) {
+        SpringApplication.run(OrderZookeeperMain80.class,args);
+    }
+}
+````
+
+##### 配置类
+
+```java
+@Configuration
+public class ApplicationContextConfig {
+    @Bean
+    @LoadBalanced
+    public RestTemplate getRestRemplate(){
+        return new RestTemplate();
+    }
+}
+```
+
+##### Controller
+
+```java
+@RestController
+@Slf4j
+public class PaymentController {
+
+    public static final String INVOKE_URL = "http://cloud-provider-payment";
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @GetMapping("/consumer/payment/zk")
+    public String paymentInfo(){
+        String result = restTemplate.getForObject(INVOKE_URL+"/payment/zk",String.class);
+        return result;
+    }
+}
+```
+
+##### 测试
+
+启动后，发现该项目也加入进来了。
+
+![image-20220410164548097](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117518.png)
+
+之后访问地址：http://localhost/consumer/payment/zk
+
+![image-20220410164630311](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117519.png)
+
+##### Eureka与Zookeeper的区别
+
+###### Eureka保证AP
+
+Eureka服务器节点之间是对等的，只要有一个节点在，就可以正常提供服务。
+
+Eureka客户端的所有操作可能需要一段时间才能在Eureka服务器中反映出来，随后在其他Eureka客户端中反映出来。也就是说，客户端获取到的注册信息可能不是最新的，它并不保证强一致性
+
+###### Zookeeper保证CP
+
+Zookeeper集群中有一个Leader，多个Follower。Leader负责写，Follower负责读，ZK客户端连接到任何一个节点都是一样的，写操作完成以后要同步给所有Follower以后才会返回。如果Leader挂了，那么重新选出新的Leader，在此期间服务不可用。
+
+###### 为什么用Eureka
+
+分布式系统大都可以归结为两个问题：数据一致性和防止单点故障。而作为注册中心的话，即使在一段时间内不一致，也不会有太大影响，所以在A和C之间选择A是比较适合该场景的。
 ### Consul
+
+#### 什么是Consul？
+
+![image-20220410165515379](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117520.png)
+
+Consul是一个服务网格（微服务间的 TCP/IP，负责服务之间的网络调用、限流、熔断和监控）解决方案，它是一个一个分布式的，高度可用的系统，而且开发使用都很简便。它提供了一个功能齐全的控制平面，主要特点是：**服务发现、健康检查、键值存储、安全服务通信、多数据中心**。
+
+与其它分布式服务注册与发现的方案相比，Consul 的方案更“一站式”——内置了服务注册与发现框架、分布一致性协议实现、健康检查、Key/Value 存储、多数据中心方案，不再需要依赖其它工具。Consul 本身使用 go 语言开发，具有跨平台、运行高效等特点，也非常方便和 Docker 配合使用。
+
+#### Consul的安装与使用
+
+##### 安装
+
+下载地址：https://www.consul.io/downloads
+
+##### 运行
+
+* 查看版本信息
+
+````sh
+consul --version
+````
+
+* 使用开发模式启动
+
+```sh
+consul agent -dev
+```
+
+* 访问Consul地址：http://localhost:8500/
+
+![image-20220410170258065](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117521.png)
+
+#### 服务提供者
+
+##### 新建module
+
+![image-20220410192418611](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117522.png)
+
+![image-20220410195145268](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117523.png)
+
+##### 改pom
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-consul-discovery</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.atguigu.springcloud</groupId>
+        <artifactId>cloud-api-commons</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <!--spring boot 2.2.2-->
+    <!--图形化监控展现-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <!--mybatis-->
+    <dependency>
+        <groupId>org.mybatis.spring.boot</groupId>
+        <artifactId>mybatis-spring-boot-starter</artifactId>
+    </dependency>
+    <!-- druid-->
+    <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>druid-spring-boot-starter</artifactId>
+        <version>1.1.10</version>
+    </dependency>
+    <!--mysql-connector-java-->
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+    <!--jdbc-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+```
+
+##### 写yml
+
+```yaml
+server:
+  port: 8006 # 端口号
+
+spring:
+  application:
+    name: cloud-payment-service # 应用名称
+  datasource: # 数据库
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db2020?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+  # consul注册中心地址
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.atguigu.springcloud.entities # 所有Entity别名类所在包
+```
+
+##### 主启动
+
+```java
+@SpringBootApplication
+@EnableDiscoveryClient
+public class PaymentMain8006 {
+    public static void main(String[] args) {
+        SpringApplication.run(PaymentMain8006.class,args);
+    }
+}
+```
+
+##### Controller
+
+参考其他的`provider8001`工程项目。
+
+```java
+@RestController
+@Slf4j
+public class PaymentController {
+
+    @Resource
+    private PaymentService paymentService;
+
+    @Value("${server.port}")
+    private String serverPort;
+
+    @Resource
+    private DiscoveryClient discoveryClient;
+
+    @GetMapping("/payment/discovery")
+    public Object discovery(){
+        // 获取服务列表名单
+        List<String> services = discoveryClient.getServices();
+        for(String service:services)
+            log.info("当前服务service："+service);
+
+        // 获取具体服务名称下的所有实例以及其所有信息
+        List<ServiceInstance> instances = discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE");
+        for(ServiceInstance serviceInstance:instances)
+            log.info("当前实例instance ID："+serviceInstance.getInstanceId() +";端口号："+serviceInstance.getPort());
+
+        return discoveryClient;
+    }
+
+    @PostMapping("/payment/create")
+    public CommonResult create(Payment payment){
+
+        int result = paymentService.create(payment);
+        log.info("插入结果:"+result);
+
+        int code = 404;
+        String message = "当前端口号:"+serverPort;
+
+        if(result > 0){
+            code = 200;
+            message += "插入成功";
+        }else {
+            code = 444;
+            message += "插入数据库失败";
+        }
+
+        return new CommonResult(code,message,result);
+    }
+
+    @GetMapping("/payment/get/{id}")
+    public CommonResult getPaymentById(@PathVariable("id") Long id){
+
+        Payment payment = paymentService.getPaymentById(id);
+        log.info("查询结果:"+payment);
+
+        int code = 404;
+        String message = "当前端口号:"+serverPort;
+
+        if(payment != null ){
+            code = 200;
+            message += "查询成功";
+        }else {
+            code = 444;
+            message += "查询数据库失败";
+        }
+
+        return new CommonResult(code,message,payment);
+    }
+}
+```
+
+![image-20220410205902619](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117524.png)
+
+#### 服务消费者
+
+##### 新建module
+
+##### 改写pom
+
+```xml
+<dependencies>
+
+    <dependency>
+        <groupId>com.atguigu.springcloud</groupId>
+        <artifactId>cloud-api-commons</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-consul-discovery</artifactId>
+    </dependency>
+</dependencies>
+```
+
+##### 写yaml
+
+```yaml
+server:
+  port: 80
+
+spring:
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
+  application:
+    name: cloud-consumer-order
+```
+
+##### 主启动
+
+```java
+@SpringBootApplication
+@EnableDiscoveryClient
+public class OrderMain80 {
+    public static void main(String[] args) {
+        SpringApplication.run(OrderMain80.class,args);
+    }
+}
+```
+
+##### Config
+
+```java
+@Configuration
+public class ApplicationContextConfig {
+    
+    @Bean
+    @LoadBalanced
+    public RestTemplate getRestTemplate(){
+        return new RestTemplate();
+    }
+    
+}
+```
+
+##### Controller
+
+```java
+@RestController
+@Slf4j
+public class OrderController {
+
+    public static final String PAYMENT_URL = "http://CLOUD-PAYMENT-SERVICE";
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @GetMapping("/consumer/payment/create")
+    public CommonResult<Payment> create(Payment payment){
+        return restTemplate.postForObject(PAYMENT_URL+"/payment/create",payment,CommonResult.class);
+
+    }
+
+    @GetMapping("/consumer/payment/get/{id}")
+    public CommonResult<Payment> getPayment(@PathVariable("id") Long id){
+        return restTemplate.getForObject(PAYMENT_URL+"/payment/get/"+id,CommonResult.class);
+    }
+
+}
+```
+
+![image-20220410210820752](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117525.png)
+
+![image-20220410210832362](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117526.png)
+
+### Eureka、Zookeeper与Consul注册中心的异同点
+
+| 组件名    | 语言 | CAP  | 健康检查 | 对外暴露接口 | Spring Cloud 集成 |
+| --------- | ---- | ---- | -------- | ------------ | ----------------- |
+| Eureka    | Java | AP   | 可配支持 | HTTP         | 已集成            |
+| Consul    | Go   | CP   | 支持     | HTTP/DNS     | 已集成            |
+| ZooKeeper | Java | CP   | 支持     | 客户端       | 已集成            |
+
+### CAP理论
+
+- Consistency：强一致性
+
+- Availability：可用性
+
+- Partition tolerance：分区容错性
+
+CAP关注的粒度是数据，而不是整个系统CAP理论的定义和解释上，用的都是system、node这类的系统级概念，容易给我们造成误解，认为系统只能选择AP或者CP。 但是在实际设计中，系统不可能只处理一种数据，有的数据需要使用AP，有的数据需要使用CP。
+
+**最多只能同时较好的满足两个**。
+CAP理论的核心是：**一个分布式系统不可能同时很好的满足一致性，可用性和分区容错性这三个需求**，因此，根据CAP原理将NoSQL数据库分成了满足CA原则、满足CР原则和满足AP原则三大类：
+
+- CA-单点集群，满足—致性，可用性的系统，通常在可扩展性上不太强大。
+
+- CP -满足—致性，分区容忍必的系统，通常性能不是特别高。
+
+- AP–满足可用性，分区容忍性的系统，通常可能对—致性要求低一些。
+
+> 先保证AP，再CP
 
 ## 服务调用
 
 ### Ribbon负载均衡服务调用
+
+#### Ribbon概述
+
+##### 什么是Ribbon
+
+Spring Cloud Ribbon是基于Netflix Ribbon实现的一套客户端负载均衡的工具。
+
+简单的说，Ribbon是Netflix发布的开源项目，主要功能是提供客户端的软件负载均衡算法和服务调用。Ribbon客户端组件提供一系列完善的配置项如连接超时，重试等。简单的说，就是在配置文件中列出Load Balancer(简称LB)后面所有的机器，Ribbon会自动的帮助你基于某种规则(如简单轮询，随机连接等）去连接这些机器。我们很容易使用Ribbon实现自定义的负载均衡算法。
+
+##### Ribbon官网
+
+官网：https://github.com/Netflix/ribbon/wiki/Getting-Started
+
+目前Ribbon进入维护模式中。
+
+##### Ribbon能做什么
+
+###### LB负载均衡(Load Balance)是什么
+
+简单的说就是将用户的请求平摊的分配到多个服务上，从而达到系统的HA（高可用)。常见的负载均衡有软件Nginx，LVS，硬件F5等。
+
+###### Ribbon本地负载均衡客户端 VS Nginx服务端负载均衡区别
+
+Nginx是服务器负载均衡，客户端所有请求都会交给nginx，然后由nginx实现转发请求。即负载均衡是由服务端实现的。（集中式LB）
+
+Ribbon本地负载均衡，在调用微服务接口时候，会在注册中心上获取注册信息服务列表之后缓存到JVM本地，从而在本地实现RPC远程服务调用技术。（进程式LB）
+
+#### Ribbon负载均衡演示
+
+Ribbon其实就是一个软负载均衡的客户端组件, 他可以和其他所需请求的客户端结合使用，和eureka结合只是其中一个实例。
+
+> 说白了就是通过负载均衡+RestTemplate调用
+
+##### 架构说明
+
+![在这里插入图片描述](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117527.png)
+
+##### pom
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+```
+
+eureka包就已经整合了ribbon的包。
+
+##### RestTemplate使用
+
+语法文档：https://docs.spring.io/spring-framework/docs/5.2.2.RELEASE/javadoc-api/org/springframework/web/client/RestTemplate.html
+
+前面已经写过配置类
+
+```java
+@Configuration
+public class ApplicationContextConfig {
+
+    @Bean
+    @LoadBalanced // 使用@LoadBalanced注解赋予RestTemplate负载均衡的能力
+    public RestTemplate getRestTemplate(){
+        return new RestTemplate();
+    }
+
+}
+```
+
+![image-20220410235447730](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117528.png)
+
+
+
+`restTemplate.getForObject`：返回对象为响应体中数据转化成的对象，基本上可以理解为json
+
+`restTemplate.getForEntity`：返回对象为ResponseEntity对象，包含了响应中的一些重要信息，比如响应头、响应状态码、响应体。
+
+```java
+@RestController
+@Slf4j
+public class OrderController {
+
+    public static final String PAYMENT_URL = "http://CLOUD-PAYMENT-SERVICE";
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @GetMapping("/consumer/payment/create")
+    public CommonResult<Payment> create(Payment payment){
+        return restTemplate.postForObject(PAYMENT_URL+"/payment/create",payment,CommonResult.class);
+
+    }
+
+    @GetMapping("/consumer/payment/get/{id}")
+    public CommonResult<Payment> getPayment(@PathVariable("id") Long id){
+        return restTemplate.getForObject(PAYMENT_URL+"/payment/get/"+id,CommonResult.class);
+    }
+
+    @GetMapping("/consumer/payment2/get/{id}")
+    public CommonResult<Payment> getPayment2(@PathVariable("id") Long id){
+        ResponseEntity<CommonResult> entity = restTemplate.getForEntity(PAYMENT_URL+"/payment/get/"+id,CommonResult.class);
+
+        if(entity.getStatusCode().is2xxSuccessful()){
+            return entity.getBody();
+        }else{
+            return new CommonResult<>(444,"操作失败");
+        }
+    }
+
+    @GetMapping("/consumer/payment2/create")
+    public CommonResult<Payment> create2(Payment payment){
+
+        ResponseEntity<CommonResult> entity = restTemplate.postForEntity(PAYMENT_URL+"/payment/create",payment,CommonResult.class);
+
+        if (entity.getStatusCode().is2xxSuccessful()){
+            return entity.getBody();
+        }else{
+            return new CommonResult<>(400,"操作失败");
+        }
+
+    }
+
+}
+```
+
+#### Ribbon核心组件IRule
+
+
+
+#### Ribbon负载均衡算法
 
 ### OpenFeign服务接口调用
 

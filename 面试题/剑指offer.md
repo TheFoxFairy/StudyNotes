@@ -2803,4 +2803,141 @@ max在右边类似。
 a = a+a = cdabcdab => 可以发现b=abcd是a的子串，因此采用kmp算法。
 ```
 
-咖啡杯问题：
+咖啡杯问题：1）arr[3,2,7]中每个数字表示每个咖啡机冲咖啡的时间。（可以串行）
+
+2）n代表有多少人要喝咖啡，每个人只喝一杯。所有人要等咖啡做好后，才可以喝咖啡。
+
+3）a时间，只有一台洗咖啡的机器，一次只能洗一个杯子。
+
+4）b表示咖啡挥发变干净的时间。
+
+* 思路
+
+```tex
+第一步：先不考虑洗，先考虑所有人拿到咖啡的时间
+当前咖啡机所需要的时间:[3,2,7]
+
+使用小根堆=>根据第一位+第二位的大小进行排序的
+(0,2)
+(0,3)
+(0,7) =>第一位表示0时刻，第二位表示冲咖啡花费的时间
+
+比如当前有10个人，
+第0个人取小根堆的堆顶数据(0,2)，一共花费2分钟，然后更新(2,2)放回小根堆
+第1个人取小根堆的堆顶数据(0,3)，一共花费3分钟，然后更新(3,3)放回小根堆
+第2个人取小根堆的堆顶数据(2,2)，一共花费2分钟，然后更新(4,2)放回小根堆
+第3个人取小根堆的堆顶数据(4,2)，一共花费2分钟，然后更新(6,2)放回小根堆
+...
+最后拿到最后的一个数据，即可，就是所有人花费的时间。
+
+第二步，考虑干净的时刻
+每次+i*a ，然后记录当前时刻cur
+
+cur - 每个人泡完咖啡时间 >= b
+```
+
+```java
+PriorityQueue<Node> minHeap = new PriorityQueue<>((o1, o2) -> o1.freeTime + o1.requireTime - o2.freeTime - o2.requireTime);
+
+//将所有咖啡机打包放入堆中
+for (int i = 0; i < arr.length; i++) {
+    //刚开始，每台咖啡机都是0点开始
+    minHeap.add(new Node(0, arr[i]));
+}
+
+int[] drinks = new int[N]; //N是总人数
+for (int i = 0; i < N; i++) {
+    Node node = minHeap.poll();
+    drinks[i] = node.freeTime + node.requireTime;
+    node.freeTime = drinks[i]; //更新空闲时间
+    minHeap.add(node); //再次压入堆中
+}
+
+
+/**
+drinks是每个人洗杯子的时间点
+a 是机器洗一个杯子的时间
+b是自然晾干一个杯子的时间
+index指向drinks数组
+washLine表示洗杯子的机器什么时候才是空闲状态
+*/
+public static int process(int[] drinks, int a, int b, int index, int washLine) {
+    if (index == drinks.length - 1) {
+        //机器洗完这个杯子的时间
+        int wash = Math.max(drinks[index], washLine) + a;
+        int autoDry = drinks[index] + b; //自然晾干的时间
+        return Math.min(wash, autoDry);
+    }
+    
+    //机器洗完当前杯子的时间
+    int wash = Math.max(drinks[index], washLine) + a;
+    //剩下的杯子去递归，计算出最优结果。传递是刚计算出来的wash
+    int next = process(drinks, a, b, index + 1, wash); 
+    int p1 = Math.min(wash, next); //机器洗，最优的结果
+    
+    //自然晾干的时间
+    int autoDry = drinks[index] + b;
+    //剩下的杯子去递归，计算出最优结果。传递的还是原washLine
+    next = process(drinks, a, b, index + 1, washLine);
+    int p2 = Math.min(autoDry, next); //自然晾干，最优的结果
+    
+    //机器洗和自然晾干两种结果，取最优返回
+    return Math.min(p1, p2);
+}
+
+
+//动态规划版本
+public static int process(int[] drinks, int a, int b) {
+    int index = drinks.length;
+    int washLine = 0;
+    for (int i = 0; i < index; i++) {
+        int tmp = Math.max(washLine, drinks[i]) + a;
+        washLine += tmp;
+    }
+    
+    int[][] dp = new int[index][washLine];
+    //根据递归的所有结束条件，来填dp表
+    //index = drinks,length -1。也就是最后一行 
+    for (int i = 0; i < washLine; i++) {
+        //机器洗和自然洗，取最优的结果
+        dp[index -1][i] = Math.min(Math.max(drinks[index - 1], i) + a, 
+                                  drinks[index - 1] + b);
+    }
+    
+    //填好最后一行后，剩下的就是普通位置的填写
+    //i就是index，j就是当前洗杯子的机器的空闲时间
+    for (int i = N - 2; i >= 0; i--) {
+        for (int j = 0; j < washLine; j++) {
+            int wash = Math.max(drinks[i], j) + a;
+            int next = 0;
+            if (wash < washLine) {
+                next = dp[i + 1][wash]; //子过程
+            }
+            dp[i][j] = Math.max(wash, next);
+            
+            int autoDry = drinks[i] + b;
+            next = dp[i + 1][j]; //子过程
+            //机器洗和自然晾干，两种可能性取最优
+            dp[i][j] = Math.min(dp[i][j], Math.max(autoDry, next));
+        }
+    }
+    return dp[0][0]; //返回左上角的结果即可
+}
+```
+
+
+
+
+
+![image-20220410224046129](../../../../../Pictures/assets/剑指offer/image-20220410224046129.png)
+
+* 思路
+
+```tex
+统计奇数（a个）、偶数（包含一个2因子（b个）或者4因子的数（c个））
+
+1） b == 0，（奇4奇4...）=> a==1&&c>=1 ，a > 1 && c >= a-1
+2） b != 0，2因子的放在一起，放4，然后就放（奇4奇4）
+=> (a==1&&c>=1 ，a > 1 && c >= a)(a >1 && c>= a) ,a==0,c>=0
+```
+
