@@ -48,38 +48,38 @@
 
 ### SSM框架
 
-| 学习内容板块   | 用途                     | 学习地址 | 是否完成           | 学习时长 |
-| -------------- | ------------------------ | -------- | ------------------ | -------- |
-| Mybatis        |                          |          | :heavy_check_mark: |          |
-| Spring         | 一个轻量级的Java开源框架 |          | :heavy_check_mark: |          |
-| SpringMVC      |                          |          | :heavy_check_mark: |          |
-| Spring         |                          |          | :heavy_check_mark: |          |
-| Fluent Mybatis |                          |          |                    |          |
+| 学习内容板块   | 用途                     | 学习地址                                    | 是否完成           | 学习时长 |
+| -------------- | ------------------------ | ------------------------------------------- | ------------------ | -------- |
+| Mybatis        |                          | https://www.bilibili.com/video/BV1NE411Q7Nx | :heavy_check_mark: |          |
+| Spring         | 一个轻量级的Java开源框架 | https://www.bilibili.com/video/BV1WE411d7Dv | :heavy_check_mark: |          |
+| SpringMVC      |                          | https://www.bilibili.com/video/BV1aE41167Tu | :heavy_check_mark: |          |
+| Fluent Mybatis |                          |                                             |                    |          |
 
 ### 微服务开发
 
 | 学习内容板块                      | 用途 | 学习地址                                                     | 是否完成           | 学习时长 |
 | --------------------------------- | ---- | ------------------------------------------------------------ | ------------------ | -------- |
-| Spring Boot                       |      |                                                              | :heavy_check_mark: |          |
-| Spring Security                   |      |                                                              | :heavy_check_mark: |          |
-| Shiro                             |      |                                                              | :heavy_check_mark: |          |
-| Spring Cloud/Spring Cloud Alibaba |      |                                                              |                    |          |
-| Swagger                           |      |                                                              | :heavy_check_mark: |          |
+| Spring Boot                       |      | https://www.bilibili.com/video/BV1PE411i7CV                  | :heavy_check_mark: |          |
+| Spring Security                   |      | https://www.bilibili.com/video/BV1KE411i7bC                  | :heavy_check_mark: |          |
+| Shiro                             |      | https://www.bilibili.com/video/BV1NE411i7S8                  | :heavy_check_mark: |          |
+| Spring Cloud/Spring Cloud Alibaba |      | https://www.bilibili.com/video/BV18E411x7eT                  |                    |          |
+| Swagger                           |      | https://www.bilibili.com/video/BV1Y441197Lw                  | :heavy_check_mark: |          |
 | Zookeeper                         |      | [https://www.bilibili.com/video/BV1Ph411n7Ep](https://www.bilibili.com/video/BV1Ph411n7Ep) | :heavy_check_mark: | 3h       |
 | dubbo                             |      | [https://www.bilibili.com/video/BV1VE411q7dX](https://www.bilibili.com/video/BV1VE411q7dX) | :heavy_check_mark: | 3h       |
 
 ### 常用中间件
 
-| 学习内容板块  | 用途 | 学习地址 | 是否完成 | 学习时长 |
-| ------------- | ---- | -------- | -------- | -------- |
-| RabbitMQ      |      |          |          |          |
-| RocketMQ      |      |          |          |          |
-| ElasticSearch |      |          |          |          |
-| MyCat         |      |          |          |          |
-| Kafka         |      |          |          |          |
-| isearch       |      |          |          |          |
-| netty         |      |          |          |          |
-| memcache      |      |          |          |          |
+| 学习内容板块                                               | 用途 | 学习地址                                    | 是否完成 | 学习时长 |
+| ---------------------------------------------------------- | ---- | ------------------------------------------- | -------- | -------- |
+| [RabbitMQ](.\编程笔记\Java笔记\常用中间件\RabbitMQ笔记.md) |      | https://www.bilibili.com/video/BV1cb4y1o7zz |          |          |
+| ActiveMQ                                                   |      |                                             |          |          |
+| RocketMQ                                                   |      |                                             |          |          |
+| Kafka                                                      |      |                                             |          |          |
+| MyCat                                                      |      |                                             |          |          |
+| ElasticSearch                                              |      |                                             |          |          |
+| isearch                                                    |      |                                             |          |          |
+| netty                                                      |      |                                             |          |          |
+| memcache                                                   |      |                                             |          |          |
 
 ### 服务网格
 

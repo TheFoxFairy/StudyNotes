@@ -193,7 +193,7 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
    }
    ```
 
-![image-20220209000050375](../../../../../../../Pictures/assets/MybatisPlus笔记/image-20220209000050375.png)
+![image-20220209000050375](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212863.png)
 
 ## 配置日志
 
@@ -204,7 +204,7 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 mybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 ```
 
-![image-20220209000309323](../../../../../../../Pictures/assets/MybatisPlus笔记/image-20220209000309323.png)
+![image-20220209000309323](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212865.png)
 
 ## CRUD操作
 
@@ -224,7 +224,7 @@ public void testInsert(){
 }
 ```
 
-![image-20220209000807330](../../../../../../../Pictures/assets/MybatisPlus笔记/image-20220209000807330.png)
+![image-20220209000807330](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212866.png)
 
 > 数据库插入的id的默认值为：全局的唯一id
 
@@ -253,11 +253,11 @@ public class User {
 alter table user modify id bigint(20) auto_increment;
 ```
 
-![image-20220209002258304](../../../../../../../Pictures/assets/MybatisPlus笔记/image-20220209002258304.png)
+![image-20220209002258304](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212867.png)
 
 * 测试
 
-![image-20220209002415444](../../../../../../../Pictures/assets/MybatisPlus笔记/image-20220209002415444.png)
+![image-20220209002415444](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212868.png)
 
 * `IdType`其他类型字段
 
@@ -294,7 +294,7 @@ public void testUpdate(){
 }
 ```
 
-![image-20220209003034209](../../../../../../../Pictures/assets/MybatisPlus笔记/image-20220209003034209.png)
+![image-20220209003034209](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212869.png)
 
 * `update(Object,Wrapper)`根据指定Wrapper参数进行更新Object
 
@@ -319,7 +319,7 @@ public void testUpdate(){
 }
 ```
 
-![image-20220209004439728](../../../../../../../Pictures/assets/MybatisPlus笔记/image-20220209004439728.png)
+![image-20220209004439728](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212870.png)
 
 ### 自动填充
 
@@ -336,7 +336,7 @@ alter table user add create_time datetime DEFAULT CURRENT_TIMESTAMP;
 alter table user add update_time datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 ```
 
-![image-20220209005015060](../../../../../../../Pictures/assets/MybatisPlus笔记/image-20220209005015060.png)
+![image-20220209005015060](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212871.png)
 
 * 再次测试插入方法，我们需要先把实体类同步！
 
@@ -349,7 +349,7 @@ public class User{
 
 * 再次更新查看结果
 
-![image-20220209005200817](../../../../../../../Pictures/assets/MybatisPlus笔记/image-20220209005200817.png)
+![image-20220209005200817](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212872.png)
 
 #### 方式二：代码级别
 
@@ -363,7 +363,7 @@ alter table user add create_time datetime;
 alter table user add update_time datetime;
 ```
 
-![image-20220209010508716](../../../../../../../Pictures/assets/MybatisPlus笔记/image-20220209010508716.png)
+![image-20220209010508716](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212873.png)
 
 * 实体类字段属性上需要增加注解
 
@@ -408,7 +408,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
 
 * 测试更新、观察时间即可！
 
-![image-20220209010532704](../../../../../../../Pictures/assets/MybatisPlus笔记/image-20220209010532704.png)
+![image-20220209010532704](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212874.png)
 
 ### 乐观锁
 
@@ -444,7 +444,7 @@ where id = 2 and version = 1
 alter table user add version int default 1;
 ```
 
-![image-20220209010941335](../../../../../../../Pictures/assets/MybatisPlus笔记/image-20220209010941335.png)
+![image-20220209010941335](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212875.png)
 
 2. 实体类加对应的字段
 
@@ -510,7 +510,7 @@ public void testOptimisticLocker2(){
 }
 ```
 
-![image-20220209012440209](../../../../../../../Pictures/assets/MybatisPlus笔记/image-20220209012440209.png)
+![image-20220209012440209](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212876.png)
 
 ### 查询操作
 
@@ -664,7 +664,7 @@ public void testDel(){
 alter table user add deleted int default 0;
 ```
 
-![image-20220209014952154](../../../../../../../Pictures/assets/MybatisPlus笔记/image-20220209014952154.png)
+![image-20220209014952154](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212877.png)
 
 * 实体类中增加相应属性
 
@@ -694,7 +694,7 @@ mybatis-plus.global-config.db-config.logic-not-delete-value=0
 
 * 测试下删除
 
-![image-20220209015842535](../../../../../../../Pictures/assets/MybatisPlus笔记/image-20220209015842535.png)
+![image-20220209015842535](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212878.png)
 
 发现，现在没有实行删除了，而是进行了更新操作。
 
@@ -754,7 +754,7 @@ outagedetectioninterval=2
 
 * 运行查询测试
 
-![image-20220209021443611](../../../../../../../Pictures/assets/MybatisPlus笔记/image-20220209021443611.png)
+![image-20220209021443611](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212879.png)
 
 ## 条件构造器
 

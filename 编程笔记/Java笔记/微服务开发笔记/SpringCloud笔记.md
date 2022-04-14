@@ -4612,7 +4612,95 @@ public class ConfigClientController {
 
 ### Config客户端之动态刷新
 
+为了避免每次更新配置都要重启客户端微服务3355。采用如下步骤，进行动态刷新。
+
+* 首先修改3355模块
+* 在pom引入actuator监控
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+* 修改yaml，暴露监控端口
+
+```yaml
+server:
+  port: 3355
+
+spring:
+  application:
+    name: config-client
+  cloud:
+    config:
+      label: main # 分支名称
+      name: config # 配置文件名称
+      profile: dev # 读取后缀名称，这三个加起来就是main分支上的config-dev.yml配置文件
+      uri: http://localhost:3344 # 配置中心地址
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+```
+
+* `@RefreshScope`业务类controller修改
+
+```java
+@RestController
+@RefreshScope
+public class ConfigClientController {
+
+    @Value("${config.info}")
+    private String configInfo;
+
+    @GetMapping("/configInfo")
+    public String getConfigInfo(){
+        return configInfo;
+    }
+}
+```
+
+* 此时修改github->3344->3355
+
+![image-20220414141338435](../../../../../../../Pictures/assets/SpringCloud笔记/image-20220414141338435.png)
+
+还需要发送post请求，对3355进行刷新，就是手动激活3355….
+
+```sh
+curl -X POST "http://localhost:3355/actuator/refresh" 
+```
+
+
+
+访问地址1：http://localhost:3344/main/config-dev.yml
+
+![image-20220414141348266](../../../../../../../Pictures/assets/SpringCloud笔记/image-20220414141348266.png)
+
+访问地址2：http://localhost:3355/configInfo
+
+![image-20220414141734702](../../../../../../../Pictures/assets/SpringCloud笔记/image-20220414141734702.png)
+
+现在就已经成功更新了。避免了服务重启。
+
 ## SpringCloud Bus消息总线
+
+### 概述
+
+### RabbitMQ环境配置
+
+### SpringCloud Bus动态刷新全局广播
+
+### SpringCloud Bus动态刷新定点通知
 
 ## SpringCloud Stream消息驱动
 
