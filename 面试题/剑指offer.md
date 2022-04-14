@@ -1,4 +1,4 @@
-# 剑指offer
+剑指offer
 
 ## 算法面试介绍
 
@@ -2941,3 +2941,164 @@ public static int process(int[] drinks, int a, int b) {
 => (a==1&&c>=1 ，a > 1 && c >= a)(a >1 && c>= a) ,a==0,c>=0
 ```
 
+#### 第六课
+
+![image-20220412164701349](../../../../../Pictures/assets/剑指offer/image-20220412164701349.png)
+
+* 思路
+
+```tex
+有n个字符长度，在第i字符时，后续的i-1可以为1或者0，如果为1，继续这样，但是为0的话，i-2必须为1，i-3和i-1一样。
+f(i) = f(i-1) + f(i-2)`
+
+前提：斐波拉契数列
+
+这是有一个严格的递归公式，一般f(n) = f(n-1) + f(n-2)有一个严格的求法
+就是，其中f(0),f(1)已知，
+f(2) = f(1) + f(0)
+f(3) = f(2) + f(1)
+
+因此可以得到该通用公式[f(3),f(2)] = [f(2),f(1)]*[?]
+
+=> 可以得到
+[f(n),f(n-1)] = [f(2),f(1)]*[?]^(n-2)
+```
+
+![image-20220412170113553](../../../../../Pictures/assets/剑指offer/image-20220412170113553.png)
+
+```java
+public class FibonacciSeries {
+
+    public void first(int n) {
+
+        int[] dp = new int[n + 1];
+        for (int i = 0; i <= n; i++) {
+            if (i == 0) dp[i] = 0;
+            else if (i <= 2) dp[i] = 1;
+            else dp[i] = dp[i - 1] + dp[i - 2];
+        }
+
+        System.out.println(dp[n]);
+    }
+
+    //除了初始项以外，后面的递归式才满足
+    public int second(int n) {
+
+        if (n < 1) return 0;
+        else if (n <= 2) return 1;
+
+        int[][] base = {
+                {1, 1},
+                {1, 0}
+        };
+
+        int[][] dp = matrixPower(base,n-2);
+        
+        System.out.println(dp[0][0] + dp[1][0]);
+        return dp[0][0] + dp[1][0];
+
+    }
+
+    public int[][] matrixPower(int[][] m, int p) {
+
+        int[][] res = new int[m.length][m[0].length];
+        for (int i = 0; i < res.length; i++)
+            res[i][i] = 1;
+
+        int[][] tmp = m;
+
+        for (; p != 0; p >>= 1) {
+
+            if ((p & 1) != 0)
+                res = multiMatrix(res, tmp);
+            tmp = multiMatrix(tmp, tmp);
+        }
+        return res;
+    }
+
+    public int[][] multiMatrix(int[][] a, int[][] b) {
+
+        int[][] c = new int[a.length][b[0].length];
+
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < b[0].length; j++) {
+                for (int k = 0; k < b.length; k++) {
+                    c[i][j] += a[i][k] * b[k][j];
+                }
+            }
+        }
+
+        return c;
+
+    }
+
+    public static void main(String[] args) {
+        FibonacciSeries solution = new FibonacciSeries();
+        solution.second(3);
+    }
+
+}
+```
+
+拓展如何求$n^p$？
+
+```tex
+比如p = ,75
+n^75 => 8 = 1001011
+
+记录二进制只为1的数，进行相乘
+```
+
+![image-20220412191042148](../../../../../Pictures/assets/剑指offer/image-20220412191042148.png)
+
+```tex
+尝试求出一个有效解即可。
+```
+
+ 
+
+![image-20220412195132497](../../../../../Pictures/assets/剑指offer/image-20220412195132497.png)
+
+* 思路
+
+```tex
+背包问题的变体。
+```
+
+![image-20220412200100320](../../../../../Pictures/assets/剑指offer/image-20220412200100320.png)
+
+* 思路
+
+```tex
+有序表，根据工作难度，从小到大排序；然后在根据难度从小到大的升序，将不满足的删除。
+
+那么选择合适自己难度的那个就可以了。
+```
+
+![image-20220412200715751](../../../../../Pictures/assets/剑指offer/image-20220412200715751.png)
+
+![image-20220412201016028](../../../../../Pictures/assets/剑指offer/image-20220412201016028.png)
+
+* 思路
+
+```tex
+溢出条件有两个，一个是大于整数最大值MAX_VALUE，另一个是小于整数最小值MIN_VALUE，设当前计算结果为ans，下一位为pop。  
+sss
+从ans * 10 + pop > MAX_VALUE这个溢出条件来看
+当出现 ans > MAX_VALUE / 10 且 还有pop需要添加 时，则一定溢出
+当出现 ans == MAX_VALUE / 10 且 pop > 7(7,8,9) 时，则一定溢出，7是2^31 - 1的个位数
+
+从ans * 10 + pop < MIN_VALUE这个溢出条件来看
+当出现 ans < MIN_VALUE / 10 且 还有pop需要添加 时，则一定溢出
+当出现 ans == MIN_VALUE / 10 且 (-8,/-9)pop < -8 时，则一定溢出，8是-2^31的个位数
+```
+
+#### 第七课
+
+#### 第八课
+
+#### 第九课
+
+#### 第十课
+
+### 高级提神
