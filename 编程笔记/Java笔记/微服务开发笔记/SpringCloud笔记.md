@@ -4726,7 +4726,7 @@ Spring Cloud Bus 使用轻量级的消息代理来连接微服务架构中的各
 
 ### RabbitMQ环境配置
 
-[RabbitMQ笔记](\常用中间件\RabbitMQ笔记.md)
+[RabbitMQ笔记](/常用中间件/RabbitMQ笔记.md)
 
 ### SpringCloud Bus动态刷新全局广播
 
