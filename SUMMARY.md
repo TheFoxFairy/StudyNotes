@@ -223,8 +223,10 @@
       * [Spring笔记](编程笔记/Java笔记/SSM框架笔记/Spring笔记.md)
     - 常用中间件
       * [ElasticSearch笔记](编程笔记/Java笔记/常用中间件/ElasticSearch笔记.md)
+      * [kafka笔记](编程笔记/Java笔记/常用中间件/kafka笔记.md)
       * [Netty笔记](编程笔记/Java笔记/常用中间件/Netty笔记.md)
       * [RabbitMQ笔记](编程笔记/Java笔记/常用中间件/RabbitMQ笔记.md)
+      * [RocketMQ笔记](编程笔记/Java笔记/常用中间件/RocketMQ笔记.md)
       * [ShardingJDBC笔记](编程笔记/Java笔记/常用中间件/ShardingJDBC笔记.md)
     - 常用第三方技术
       * [CDN技术笔记](编程笔记/Java笔记/常用第三方技术/CDN技术笔记.md)
@@ -253,6 +255,9 @@
       * [ShardingSphere笔记](编程笔记/Java笔记/服务网格笔记/ShardingSphere笔记.md)
       * [TiDB笔记](编程笔记/Java笔记/服务网格笔记/TiDB笔记.md)
       * [Zabbix笔记](编程笔记/Java笔记/服务网格笔记/Zabbix笔记.md)
+    - 核心技术及源码剖析笔记
+      * [Netty核心技术及源码剖析笔记](编程笔记/Java笔记/核心技术及源码剖析笔记/Netty核心技术及源码剖析笔记.md)
+    - [面试题笔记](编程笔记/Java笔记/面试题笔记/面试题笔记.md)
   - Linux运维笔记
     * [Docker笔记](编程笔记/Linux运维笔记/Docker笔记.md)
     * [Linux笔记](编程笔记/Linux运维笔记/Linux笔记.md)

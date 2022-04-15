@@ -4680,8 +4680,6 @@ public class ConfigClientController {
 curl -X POST "http://localhost:3355/actuator/refresh" 
 ```
 
-
-
 访问地址1：http://localhost:3344/main/config-dev.yml
 
 ![image-20220414141348266](../../../../../../../Pictures/assets/SpringCloud笔记/image-20220414141348266.png)
@@ -4696,7 +4694,39 @@ curl -X POST "http://localhost:3355/actuator/refresh"
 
 ### 概述
 
+Spring Cloud Bus 使用轻量级的消息代理来连接微服务架构中的各个服务，可以将其用于广播状态更改（例如配置中心配置更改）或其他管理指令。
+
+通常会使用消息代理来构建一个主题，然后把微服务架构中的所有服务都连接到这个主题上去，当我们向该主题发送消息时，所有订阅该主题的服务都会收到消息并进行消费。
+
+使用 Spring Cloud Bus 可以方便地构建起这套机制，所以 **Spring Cloud Bus 又被称为消息总线**。
+
+**Spring Cloud Bus 配合 Spring Cloud Config 使用可以实现配置的动态刷新。**
+
+目前 Spring Cloud Bus 支持两种消息代理：**RabbitMQ 和 Kafka。**
+
+![image-20220415132606002](../../../../../../../Pictures/assets/SpringCloud笔记/image-20220415132606002.png)
+
+
+
+但是该图不合适，原因如下：
+
+- 破坏了微服务间的职责单一性，因为微服务 3355 本身是业务模块，他本不应该承担配置刷新的职责
+
+- 破坏了微服务各节点的对等性，3355 不能特殊，不能和 3366 不一样，得藏拙
+
+- 有一定的局限性，例如：微服务在迁移时，他的网络地址常常会发生变化，此时如果想要做到自动刷新，那就会增加更多修
+
+![image-20220415133234722](../../../../../../../Pictures/assets/SpringCloud笔记/image-20220415133234722.png)
+
+为什么被称为总线？
+
+在微服务架构的系统中，通常会使用**轻量级的消息代理**来构建一个**共用的消息主题**，并让系统中所有微服务实例都连接上来。由于**该主题中产生的消息会被所有实例监听和消费，所以称它为消息总线**。在总线上的各个实例，都可以方便地广播一些需要让其他连接在该主题上的实例都知道的消息。
+
+基本原理：ConfigClient实例都监听MQ中同一个topic(默认是springCloudBus)。当一个服务刷新数据的时候，它会把这个信息放入到Topic中，这样其它监听同一Topic的服务就能得到通知，然后去更新自身的配置。
+
 ### RabbitMQ环境配置
+
+[RabbitMQ笔记](..\常用中间件\RabbitMQ笔记.md)
 
 ### SpringCloud Bus动态刷新全局广播
 
