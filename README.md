@@ -1,20 +1,19 @@
 # 前言 
 
-**学习笔记：记录学习的笔记！！！[个人学习笔记地址](https://luoran.gitbook.io/)**<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201090108807.jpg" width=25% align=right hspace="5" vspace="5"/>
+**学习笔记：记录学习的笔记！！！但是我想躺啊！！！太麻烦的我都不想干！！！[个人学习笔记地址](https://luoran.gitbook.io/)**
+
+**冲啊冲啊！！！学不死往死里学！！！**
+
+<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201090108807.jpg" width=25% align=right hspace="5" vspace="5"/>
 
 ## 当前学习内容板块
 
 | 学习内容板块 | 是否完成     |
 | ------------ | ------------ |
-| Linux        |              |
-| Ngnix        |              |
-| 注射与反解   | :baby_chick: |
-| I/O          |              |
-| NIO          |              |
-| 多线程       | :baby_chick: |
-| JVM          |              |
-| GUI编程      |              |
-| RabbitMQ     |              |
+| Linux        | :baby_chick: |
+| RabbitMQ     | :baby_chick: |
+| SpringCloud  | :baby_chick: |
+| JVM          | :baby_chick: |
 
 ## Java学习阶段
 
