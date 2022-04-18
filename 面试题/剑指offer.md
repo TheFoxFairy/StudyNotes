@@ -1,4 +1,4 @@
-剑指offer
+# 剑指offer
 
 ## 算法面试介绍
 
@@ -3095,10 +3095,176 @@ sss
 
 #### 第七课
 
+![image-20220415205004840](../../../../../Pictures/assets/剑指offer/image-20220415205004840.png)
+
+* 思路
+
+```tex
+ 利用前缀树，配合TreeMap存储每个路径节点的值
+ 之后就可以通过dfs，方便访问打印
+```
+
+![image-20220415222141336](../../../../../Pictures/assets/剑指offer/image-20220415222141336.png)
+
+* 思路
+
+```tex
+搜索二叉树，左小右大；
+
+左子树.left<-根节点.left<-右子树.left
+左子树.next->根节点.next->右子树.next
+
+先序遍历：左中右（符合）
+中序遍历：中左右
+后序遍历：左右中
+```
+
+![image-20220415222818737](../../../../../Pictures/assets/剑指offer/image-20220415222818737.png)
+
+* 思路
+
+```tex
+左右进行判断当前是否搜索二叉子树，是就记录当前节点个数
+
+先序遍历，一直递归到子问题，然后判断当前最小的二叉树是否满足，满足就一直往上就找。
+
+左子树满足 右子树满足 => 左<=根<右
+
+需要记录当前左最大，右最小
+```
+
+* 代码
+
+````java
+public static class Node{
+    int value;
+    Node left;
+    Node right;
+}
+
+public static class Info{
+
+    public Node maxBSTHead;
+    public boolean isBST;
+    public int minValue;
+    public int maxValue;
+    public int maxBSTSize;
+
+    public Info(Node maxBSTHead, boolean isBST, int minValue, int maxValue, int maxBSTSize) {
+        this.maxBSTHead = maxBSTHead;
+        this.isBST = isBST;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+        this.maxBSTSize = maxBSTSize;
+    }
+}
+````
+
+![image-20220415232324144](../../../../../Pictures/assets/剑指offer/image-20220415232324144.png)
+
+* 思路
+
+```tex
+这个就是一个最大连续子序和问题....
+```
+
+* 代码
+
+```java
+public static int maxSum(int[] arr){
+
+    int ans = Integer.MIN_VALUE;
+    int sum = 0;
+
+    for(int i=0;i<arr.length;i++){
+
+        sum += arr[i];
+        ans = Math.max(sum,ans);
+        sum = Math.max(sum, 0);
+
+    }
+    return ans;
+}
+```
+
+![image-20220415234954243](../../../../../Pictures/assets/剑指offer/image-20220415234954243.png)
+
+* 思路
+
+```tex
+-5 		3 		6 		4
+-7 		9 		-5 		3
+-10 	100 	-200 	4
+
+=> 3 + 9 + 100
+
+=> 层数累计，计算每一层 => 子矩阵问题转化为子数组问题
+```
+
 #### 第八课
+
+![image-20220417211537429](../../../../../Pictures/assets/剑指offer/image-20220417211537429.png)
+
+* 思路
+
+```tex
+X..X...XXX..X => X处不需要照亮，.的地方需要照亮，然后一盏灯可以照亮(左，当前位置，右)三个位置。
+
+上述一共三盏灯。
+
+由于X位置不要等，因此可以跳过，遇到.的位置，尝试放下一盏灯。
+
+1. 如果当前位置为.，下一位置也为.那么直接i+=3，跳过当前三格，因为没必要判断了。
+2. 如果当前位置为.，下一位置不为.，那么当前直接放灯，跳过下一个，直接滑到i+2
+```
+
+* 代码
+
+```java
+for(int i=0;i<s.length();i++){
+    if(s.charAt(i) == '.'){
+        ans++;
+        i = (i+1<s.length() && s.charAt(i) == '.')?i+2:i+1;
+    }
+}
+```
+
+ ![image-20220417215456980](../../../../../Pictures/assets/剑指offer/image-20220417215456980.png)
+
+* 思路
+
+```tex
+先序遍历：左中右
+中序遍历：中左右
+后序遍历：左右中（中右左）
+
+先序遍历与中序遍历:先根据中序遍历找根节点，然后根据先序遍历划分左右子树；中序遍历划分子树，需要知道先遍历中子树的长度。
+
+// 通过一个数组，存起来即可。
+1 => pre-{{2,4,5},{3,6,7}};in-{{4,2,5},{6,3,7}}
+1,3,7,6,2,5,4 => 4,5,2,6,7,3,1
+```
+
+![image-20220417224220221](../../../../../Pictures/assets/剑指offer/image-20220417224220221.png)
+
+* 思路
+
+```tex
+业务类问题。重点是数字转换，读写法问题，以及英文对应问题。
+```
+
+![image-20220417232446026](../../../../../Pictures/assets/剑指offer/image-20220417232446026.png)
+
+* 思路
+
+```tex
+完全二叉树节点.... => 整颗树的深度 
+```
+
+
 
 #### 第九课
 
 #### 第十课
 
-### 高级提神
+### 高级提升
