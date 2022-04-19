@@ -14,6 +14,26 @@
 | RabbitMQ     | :baby_chick: |
 | SpringCloud  | :baby_chick: |
 | JVM          | :baby_chick: |
+| Nginx        |              |
+| 设计模式     |              |
+| MySQL高级    |              |
+| Docker       |              |
+| Netty        |              |
+
+## 复习内容板块
+
+| 学习内容板块     | 是否完成           |
+| ---------------- | ------------------ |
+| Mybatis          |                    |
+| Spring           | :heavy_check_mark: |
+| SpringMVC        |                    |
+| SpringBoot       |                    |
+| SpringCloud      |                    |
+| JUC              |                    |
+| 多线程           |                    |
+| 集合框架以及泛型 |                    |
+| 反射与注解       |                    |
+| Java基础         |                    |
 
 ## Java学习阶段
 
@@ -25,11 +45,10 @@
 | 面向对象编程   |      |          | :heavy_check_mark: |          |
 | Java常用类学习 |      |          | :heavy_check_mark: |          |
 | I/O            |      |          | :heavy_check_mark: |          |
-| NIO            |      |          |                    |          |
-| 多线程         |      |          | :checkered_flag:   |          |
+| 多线程         |      |          | :heavy_check_mark: |          |
 | 网络编程       |      |          | :heavy_check_mark: |          |
 | GUI编程        |      |          |                    |          |
-| JUC并发编程    |      |          |                    |          |
+| JUC并发编程    |      |          | :heavy_check_mark: |          |
 | JVM详解        |      |          |                    |          |
 
 ### JavaWeb
@@ -77,20 +96,19 @@
 | MyCat                                                      |      |                                             |          |          |
 | ElasticSearch                                              |      |                                             |          |          |
 | isearch                                                    |      |                                             |          |          |
-| netty                                                      |      |                                             |          |          |
+| netty                                                      |      | https://www.bilibili.com/video/BV1DJ411m7NR |          |          |
 | memcache                                                   |      |                                             |          |          |
 
 ### 服务网格
 
-| 学习内容板块         | 用途 | 学习地址 | 是否完成 | 学习时长 |
-| -------------- | -- | ---- | ---- | ---- |
-| ELK            |    |      |      |      |
-| Fercar         |    |      |      |      |
-| Istio          |    |      |      |      |
-| Kubernetes     |    |      |      |      |
-| ShardingSphere |    |      |      |      |
-| TiDB           |    |      |      |      |
-| Zabbix         |    |      |      |      |
+| 学习内容板块   | 用途 | 学习地址 | 是否完成 | 学习时长 |
+| -------------- | ---- | -------- | -------- | -------- |
+| ELK            |      |          |          |          |
+| Fercar         |      |          |          |          |
+| Istio          |      |          |          |          |
+| Kubernetes     |      |          |          |          |
+| ShardingSphere |      |          |          |          |
+| TiDB           |      |          |          |          |
 
 ### 企业常用第三方技术
 
@@ -121,8 +139,8 @@
 | 学习内容板块 | 用途 | 学习地址                                                     | 是否完成         | 学习时长 |
 | ------------ | ---- | ------------------------------------------------------------ | ---------------- | -------- |
 | Linux        |      | [https://www.bilibili.com/video/BV16Q4y1y7xS](https://www.bilibili.com/video/BV16Q4y1y7xS) |                  | 15h      |
-| Ngnix        |      | [https://www.bilibili.com/video/BV1W44y1J74a](https://www.bilibili.com/video/BV1W44y1J74a) | :checkered_flag: | 9h       |
-| Docker       |      |                                                              |                  |          |
+| Ngnix        |      | [https://www.bilibili.com/video/BV1W44y1J74a](https://www.bilibili.com/video/BV1W44y1J74a)；https://www.bilibili.com/video/BV12F411871i | :checkered_flag: | 9h       |
+| Docker       |      | https://www.bilibili.com/video/BV1og4y1q7M4                  |                  |          |
 | Jenkins      |      |                                                              |                  |          |
 | Zabbix       |      |                                                              |                  |          |
 | Nexus        |      |                                                              |                  |          |
@@ -163,25 +181,25 @@
 
 ## 数据库学习阶段
 
-| 学习内容       | 用途 | 学习地址 | 是否完成           | 学习时长 |
-| -------------- | ---- | -------- | ------------------ | -------- |
-| **mysql**      |      |          | :heavy_check_mark: |          |
-| **redis**      |      |          | :heavy_check_mark: |          |
-| **Hbase**      |      |          |                    |          |
-| 分布式文件系统 |      |          |                    |          |
-| **mongodb**    |      |          |                    |          |
-| **Neo4j**      |      |          |                    |          |
+| 学习内容       | 用途 | 学习地址                                    | 是否完成           | 学习时长 |
+| -------------- | ---- | ------------------------------------------- | ------------------ | -------- |
+| **mysql**      |      | https://www.bilibili.com/video/BV1KW411u7vy | :heavy_check_mark: |          |
+| **redis**      |      | https://www.bilibili.com/video/BV1S54y1R7SB | :heavy_check_mark: |          |
+| **Hbase**      |      |                                             |                    |          |
+| 分布式文件系统 |      |                                             |                    |          |
+| **mongodb**    |      |                                             |                    |          |
+| **Neo4j**      |      |                                             |                    |          |
 
 ## 算法学习阶段
 
 > 这里学习基本的
 
-| 学习内容      | 用途 | 学习地址 | 是否完成 | 学习时长 |
-| --------- | -- | ---- | ---- | ---- |
-| ==数据结构==  |    |      |      |      |
-| ==机器学习==  |    |      |      |      |
-| ==深度学习==  |    |      |      |      |
-| ==图神经网络== |    |      |      |      |
+| 学习内容       | 用途 | 学习地址                                                     | 是否完成 | 学习时长 |
+| -------------- | ---- | ------------------------------------------------------------ | -------- | -------- |
+| ==数据结构==   |      | https://www.bilibili.com/video/BV1fq4y1a7AL；https://www.bilibili.com/video/av504917493 |          |          |
+| ==机器学习==   |      |                                                              |          |          |
+| ==深度学习==   |      |                                                              |          |          |
+| ==图神经网络== |      |                                                              |          |          |
 
 ## 专项学习阶段
 

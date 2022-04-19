@@ -10,9 +10,9 @@ Spring 框架是一个开源的 Java 平台，它最初是由 Rod Johnson 编写
 
 Spring 框架的核心特性是可以用于开发任何 Java 应用程序，但是在 Java EE 平台上构建 web 应用程序是需要扩展的。 Spring 框架的目标是使 J2EE 开发变得更容易使用，通过启用基于 POJO 编程模型来促进良好的编程实践。
 
-> SSH:Struct2 + Spring  + Hibernate
+> SSH：Struct2 + Spring  + Hibernate
 >
-> SSM:SpringMVC + Spring + Mybatis
+> SSM：SpringMVC + Spring + Mybatis
 
 ### 相关资料
 
@@ -785,7 +785,7 @@ xmlns:c="http://www.springframework.org/schema/c"
 <bean id="user2" class="com.easy.pojo.User" c:age="18" c:name="勇者" scope="prototype"/>
 ```
 
-* 其余的request（请求）、session（会话）、application（全局），这些只能在web开发中使用
+* 其余的request（请求）、session（会话）、application（全局），这些只能在web开发中使用。
 
 ## Bean的自动装配
 
@@ -932,7 +932,7 @@ public class Mytest {
 </bean>
 ```
 
-该方法会自动在容器上下文中查找，和自己对象set方法后面的值对应的**bean.id**
+该方法会自动在容器上下文中查找，和自己对象set方法后面的值对应的**bean.id**。
 
 #### autowire byType (按类型自动装配)
 
@@ -947,14 +947,13 @@ NoUniqueBeanDefinitionException
 ```xml
 <bean id="cat2" class="com.easy.pojo.Cat" />
 <bean id="dog2" class="com.easy.pojo.Dog" />
-
 <bean id="people" class="com.easy.pojo.People" autowire="byType">
     <property name="name" value="小明" />
 </bean>
 ```
 
 > 1. byname的时候，需要保证所有bean的id唯一，并且这个bean需要和自动注入的属性的set方法值一致。
-> 2. bytype的时候，需要保证所有bean的class唯一，并且这个bean需要和自动注入的属性的类型一致
+> 2. bytype的时候，需要保证所有bean的class唯一，并且这个bean需要和自动注入的属性的类型一致。
 
 #### 使用注解实现自动装配
 
@@ -974,7 +973,6 @@ jdk1.5开始支持注解，spring2.5开始全面支持注解。
         https://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
         https://www.springframework.org/schema/context/spring-context.xsd">
-
     
     <!-- 开启注解支持 -->
     <context:annotation-config />
@@ -1302,7 +1300,7 @@ public class User {
 }
 ```
 
-* 创建配置文件**com.easy.config.appConfig.java**
+* 创建配置文件**com.easy.config.AppConfig.java**
 
 ```java
 package com.easy.config;

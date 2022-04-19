@@ -6071,4 +6071,406 @@ nginx -s reload
 
 ## SpringCloud Alibaba Sentinel实现熔断与限流
 
+### 概述
+
+#### 文档
+
+Github中文文档：https://github.com/alibaba/Sentinel/wiki/%E4%BB%8B%E7%BB%8D
+
+SpringCloud Alibaba：https://spring-cloud-alibaba-group.github.io/github-pages/greenwich/spring-cloud-alibaba.html#_spring_cloud_alibaba_sentinel
+
+#### Sentinel是什么
+
+随着微服务的流行，服务和服务之间的稳定性变得越来越重要。Sentinel 以流量为切入点，从流量控制、熔断降级、系统负载保护等多个维度保护服务的稳定性。
+
+Sentinel 具有以下特征:
+
+- **丰富的应用场景**：Sentinel 承接了阿里巴巴近 10 年的双十一大促流量的核心场景，例如秒杀（即突发流量控制在系统容量可以承受的范围）、消息削峰填谷、集群流量控制、实时熔断下游不可用应用等。
+- **完备的实时监控**：Sentinel 同时提供实时的监控功能。您可以在控制台中看到接入应用的单台机器秒级数据，甚至 500 台以下规模的集群的汇总运行情况。
+- **广泛的开源生态**：Sentinel 提供开箱即用的与其它开源框架/库的整合模块，例如与 Spring Cloud、Apache Dubbo、gRPC、Quarkus 的整合。您只需要引入相应的依赖并进行简单的配置即可快速地接入 Sentinel。同时 Sentinel 提供 Java/Go/C++ 等多语言的原生实现。
+- **完善的 SPI 扩展机制**：Sentinel 提供简单易用、完善的 SPI 扩展接口。您可以通过实现扩展接口来快速地定制逻辑。例如定制规则管理、适配动态数据源等。
+
+Sentinel 的主要特性：
+
+![Sentinel-features-overview](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300624.png)
+
+Sentinel 分为两个部分:
+
+- 核心库（Java 客户端）不依赖任何框架/库，能够运行于所有 Java 运行时环境，同时对 Dubbo / Spring Cloud 等框架也有较好的支持。
+- 控制台（Dashboard）基于 Spring Boot 开发，打包后可以直接运行，不需要额外的 Tomcat 等应用容器。默认使用8080端口。
+
+#### 下载
+
+github：https://github.com/alibaba/Sentinel/releases
+
+#### 运行
+
+默认端口运行
+
+```sh
+java -jar sentinel-dashboard-1.8.4.jar
+```
+
+指定端口运行
+
+```sh
+java -Dserver.port=9999 -Dcsp.sentinel.dashboard.server=localhost:9999 -Dproject.name=sentinel-dashboard -jar sentinel-dashboard-1.8.4.jar
+```
+
+访问sentinel管理界面，默认用户和密码为：sentinel。
+
+![image-20220419122638107](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300625.png)
+
+### 初始化演示工程
+
+#### 启动服务
+
+启动nacos以及sentinel。
+
+#### 新建module
+
+新建一个`cloudalibaba-sentinel-service8401`
+
+#### pom
+
+```xml
+<dependencies>
+    <!--SpringCloud ailibaba nacos -->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+    </dependency>
+    <!--SpringCloud ailibaba sentinel-datasource-nacos 后续做持久化用到-->
+    <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-datasource-nacos</artifactId>
+    </dependency>
+    <!--SpringCloud ailibaba sentinel -->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+    </dependency>
+
+</dependencies>
+```
+
+#### yaml
+
+````yaml
+server:
+  port: 8401
+
+spring:
+  application:
+    name: cloudalibaba-sentinel-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        dashboard: localhost:9999
+        port: 8719
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+````
+
+#### 主启动
+
+```java
+@SpringBootApplication
+@EnableDiscoveryClient
+public class SentinelMain8401 {
+    public static void main(String[] args) {
+        SpringApplication.run(SentinelMain8401.class,args);
+    }
+}
+```
+
+#### 业务类
+
+```java
+@RestController
+@Slf4j
+public class FlowLimitController {
+    @GetMapping("/testA")
+    public String testA() {
+        return "------testA";
+    }
+
+    @GetMapping("/testB")
+    public String testB() {
+        log.info(Thread.currentThread().getName() + "\t" + "...testB");
+        return "------testB";
+    }
+}
+```
+
+#### 启动微服务
+
+启动微服务8401，然后访问请求，刷新sentinel，可以在控制平台看到此请求。
+
+> sentinel使用的是懒加载机制，需要先访问请求，刷新。
+
+* http://localhost:8401/testA
+* http://localhost:8401/testB
+
+![image-20220419140852119](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300626.png)
+
+### 流控规则
+
+#### 基本介绍
+
+![image-20220419141425234](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300627.png)
+
+- 资源名：唯一名称，默认请求路径
+- 针对来源：Sentinel 可以针对调用者进行限流，填写微服务名，默认 default（不区分来源）
+- 阈值类型/单机阈值：
+  - QPS（Queries-per-second，每秒钟的请求数量）：当调用该 api 的 QPS 达到阈值的时候，进行限流
+  - 线程数：当调用该 api 的线程数达到阈值的时候，进行限流
+- 是否集群：不需要集群
+- 流控模式：
+  - 直接：api达到限流条件时，直接限流
+  - 关联：当关联的资源达到阈值时，就限流自己
+  - 链路：只记录指定链路上的流量（指定资源从入口资源进来的流量，如果达到阈值，就进行限流）【api 级别的针对来源 】
+- 流控效果：
+  - 快速失败：直接失败，抛异常
+  - Warm Up：根据 codeFactor（冷加載因子，默认3）的值，从阈值/codefactor，经过预热时长，才达到设置的 QPS 阈值
+  - 排队等待：匀速排队，让请求以匀速的速度通过，阈值类型必须设置为 QPS，否则无效
+
+#### 流控模式
+
+##### 直接（默认）
+
+######  QPS直接失败
+
+![image-20220419141745857](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300628.png)
+
+快速刷新访问 `http://localhost:8401/testA`，出现 Sentinel 提示：
+
+```tex
+Blocked by Sentinel (flow limiting)
+```
+
+###### 线程数直接失败
+
+![image-20220419142318197](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300629.png)
+
+在业务代码中增加延时，之后操作如上，也会出现 Sentinel 提示
+
+```java
+Blocked by Sentinel (flow limiting)
+```
+
+##### 关联
+
+###### 什么是关联
+
+- 当关联的资源达到阈值时，就限流自己
+- 当与A关联的资源B达到阈值后，就限流自己
+- B惹事，A挂了
+
+###### QPS-关联-快速失败
+
+![image-20220419143443253](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300630.png)
+
+是否流控 `/testA` 取决于 `/testB` 的 QPS，如果超过阈值，访问 `/testA` 会出现 Sentinel 提示信息，而 `/testB` 不受影响。
+
+使 `/testB` QPS 超过阈值，可以使用 Postman 的 【Run Collection】 功能。也即是模拟并发访问。
+
+![image-20220419144502230](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300631.png)
+
+之后访问`testA`，发现被限制了。
+
+##### 链路
+
+多个请求调用了同一个微服务。
+
+添加相关依赖
+
+```xml
+<dependency>
+    <groupId>com.alibaba.csp</groupId>
+    <artifactId>sentinel-web-servlet</artifactId>
+    <version>1.7.0</version>
+</dependency>
+```
+
+添加配置
+
+```java
+@Configuration
+public class FilterContextConfig {
+    @Bean
+    public FilterRegistrationBean sentinelFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new CommonFilter());
+        registration.addUrlPatterns("/*");
+        // 入口资源关闭聚合
+        registration.addInitParameter(CommonFilter.WEB_CONTEXT_UNIFY, "false");
+        registration.setName("sentinelFilter");
+        registration.setOrder(1);
+        return registration;
+    }
+}
+```
+
+然后在yml文件中，添加如下：
+
+```properties
+spring.cloud.sentinel.filter.enabled=false
+```
+
+链路流控模式指的是，当从某个接口过来的资源达到限流条件时，就开启限流；
+
+![image-20220419145753933](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300632.png)
+
+然后进行访问测试。
+
+举个例子：/test1接口去调用/test2接口，调用QPS超出阈值了，此时对/test1进行限流。总结就是针对上级接口。
+
+#### 流控效果
+
+##### 直接->快速失败（默认的流控处理）
+
+直接失败，抛出异常
+
+```tex
+Blocked by Sentinel (flow limiting)
+```
+
+源码
+
+```tex
+com.alibaba.csp.sentinel.slots.block.flow.controller.DefaultController
+```
+
+##### 预热
+
+**公式**：阈值会经过变化，开始为阈值除以coldFactor（默认值为3），经过预热时长后才会达到阈值。
+
+![image-20220419153154584](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300633.png)
+
+```tex
+com.alibaba.csp.sentinel.slots.block.flow.controller.WarmUpController
+```
+
+Warm up ( Ruleconstant.cONTROL_BEHAVIOR_MAR_uP )方式，即预热/冷启动方式。当系统长期处于低水位的情况下，当流星突然增加时，直接把系统拉升到高水位可能瞬间把系统压垮。通过"冷启动"，让通过的流呈缓慢增加，在一定时间内逐渐增加到阈值上限，给冷系统一个预热的时间，避免冷系统被压垮。
+
+> 案例：阈值为10，预热市场 5s
+>
+> 系统初始化阈值为 10/3，约等于 3，即阈值开始为 3；经过 5s 后阈值慢慢升高，恢复到 10
+
+应用场景：
+
+如：**秒杀系统**在开启的瞬间，会有很多流量上来，很有可能把系统打死，预热方式就是把为了保护系统，可慢慢的把流量放进来，慢慢的把阀值增长到设置的阀值。
+
+##### 排队等待
+
+匀速排队，阈值必须设置为 QPS
+
+```tex
+com.alibaba.csp.sentinel.slots.block.flow.controller.RateLimiterController
+```
+
+匀速排队( Ruleconstant.CONTROL_EEHAVIOR_RATE_LIMITER ）方式会严格控制请求通过的间隔时间，也即是让请求以均匀的速度通过，对应的是漏桶算法。
+
+![image-20220419153638448](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300634.png)
+
+### 熔断降级
+
+#### 概述
+
+Sentinel 提供以下几种熔断策略：
+
+- 慢调用比例 (`SLOW_REQUEST_RATIO`)：选择以慢调用比例作为阈值，需要设置允许的慢调用 RT（即最大的响应时间），请求的响应时间大于该值则统计为慢调用。当单位统计时长（`statIntervalMs`）内请求数目大于设置的最小请求数目，并且慢调用的比例大于阈值，则接下来的熔断时长内请求会自动被熔断。经过熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求响应时间小于设置的慢调用 RT 则结束熔断，若大于设置的慢调用 RT 则会再次被熔断。
+- 异常比例 (`ERROR_RATIO`)：当单位统计时长（`statIntervalMs`）内请求数目大于设置的最小请求数目，并且异常的比例大于阈值，则接下来的熔断时长内请求会自动被熔断。经过熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求成功完成（没有错误）则结束熔断，否则会再次被熔断。异常比率的阈值范围是 `[0.0, 1.0]`，代表 0% - 100%。
+- 异常数 (`ERROR_COUNT`)：当单位统计时长内的异常数目超过阈值之后会自动进行熔断。经过熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求成功完成（没有错误）则结束熔断，否则会再次被熔断。
+
+![image-20220419154736467](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300635.png)
+
+#### 熔断降级策略
+
+##### 慢调用比例
+
+慢调用比例 (`SLOW_REQUEST_RATIO`)：选择以慢调用比例作为阈值，需要设置允许的慢调用 RT（即最大的响应时间），请求的响应时间大于该值则统计为慢调用。当单位统计时长（`statIntervalMs`）内请求数目大于设置的最小请求数目（默认为5），并且慢调用的比例大于阈值，则接下来的熔断时长内请求会自动被熔断。经过熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求响应时间小于设置的慢调用 RT 则结束熔断，若大于设置的慢调用 RT 则会再次被熔断。
+
+![image-20220419164950384](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300636.png)
+
+解读：RT超过200ms的调用是慢调用，统计最近1000ms内的请求，如果请求量超过5次，并且有80%的接口超过了200ms的时间，则触发熔断，熔断时长为10秒。然后进入half-open状态（半开路状态），放行一次请求做测试。
+
+也可以这样说：在1ms内请求数目大于5，并且慢调用的比例大于80%，则接下来的熔断时长内请求会自动被熔断，熔断时长是10秒，10秒之后会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求响应时间小于200ms， 则结束熔断，若大于200ms 则会再次被熔断。
+
+为了更直观的观察学习，在代码层添加时间进行模拟延时。
+
+```java
+@GetMapping("/testD")
+public String testD() {
+
+    try {
+        TimeUnit.SECONDS.sleep(1);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+    log.info("慢调用测试");
+    return "-----------testD-------------";
+}
+```
+
+然后通过使用jmeter进行多线程访问测试：
+
+![image-20220419165101440](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300637.png)
+
+然后在访问http://localhost:8401/testD。可以看到被限制了。
+
+##### 异常比例
+
+异常比例或异常数：统计指定时间内的调用，如果调用次数超过指定请求数，并且出现异常的比例达到设定的比例阈值（或超过指定异常数），则触发熔断。例如：
+
+![image-20220419163540024](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300638.png)
+
+解读：统计最近1000ms内的请求，如果请求量超过10次，并且异常比例不低于0.4，则触发熔断，熔断时长为5秒。然后进入half-open状态，放行一次请求做测试。
+
+然后修改代码：
+
+```java
+@GetMapping("/testD")
+public String testD() {
+    int age = 10 / 0;
+    log.info("慢调用测试");
+    return "-----------testD-------------";
+}
+```
+
+之后，进行访问测试：http://localhost:8401/testD，如果失败，就重新配置规则。
+
+##### 异常数
+
+异常数 (`ERROR_COUNT`)：当单位统计时长内的异常数目超过阈值之后会自动进行熔断。经过熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求成功完成（没有错误）则结束熔断，否则会再次被熔断。
+
+### 热点参数限流
+
+### 系统规则
+
+### @SentinelResource
+
+### 规则持久化
+
 ## SpringCloud Alibaba Seata处理分布式事务
+

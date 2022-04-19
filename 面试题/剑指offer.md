@@ -740,7 +740,7 @@ public Node reverseEdge(Node from){
 // 树型DP，都是根据左树和右树找，然后进行合并
 ```
 
-![image-20220304225016479](../../../../../Pictures/assets/剑指offer/image-20220304225016479.png)
+![image-20220304225016479](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234387.png)
 
 <img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092316499.png" alt="image-20220304230306601" style="zoom:33%;" />
 
@@ -760,7 +760,7 @@ public Node reverseEdge(Node from){
 
 ![image-20220304234744805](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092316036.png)
 
-<img src="../../../../../Pictures/assets/剑指offer/image-20220304234826995.png" alt="image-20220304234826995" style="zoom:33%;" />
+<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234388.png" alt="image-20220304234826995" style="zoom:33%;" />
 
 * 思路
 
@@ -778,7 +778,7 @@ public Node reverseEdge(Node from){
 
 ![image-20220305000721159](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204092316915.png)
 
-<img src="../../../../../Pictures/assets/剑指offer/image-20220305000831007.png" alt="image-20220305000831007" style="zoom:33%;" />
+<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234389.png" alt="image-20220305000831007" style="zoom:33%;" />
 
 * 思路
 
@@ -904,19 +904,19 @@ x 不参与
 
 * 父为黑
 
-![image-20220302145556586](../../../../../Pictures/assets/剑指offer/image-20220302145556586.png)
+![image-20220302145556586](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234390.png)
 
 插入后无需任何操作。由于黑节点个数至少为红节点的两倍，因此父为黑的情况较多，而这种情况在插入后无需任何调整，这就是红黑树比AVL树插入效率高的原因！
 
 * 父为红
 
-![image-20220302145621918](../../../../../Pictures/assets/剑指offer/image-20220302145621918.png)
+![image-20220302145621918](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234391.png)
 
 父为红的情况破坏了红黑树的性质，此时需要根据叔叔的颜色来做不同的处理。
 
 1. 叔叔为红 
 
-![image-20220302145742412](../../../../../Pictures/assets/剑指offer/image-20220302145742412.png)
+![image-20220302145742412](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234392.png)
 
 
 
@@ -928,7 +928,7 @@ x 不参与
 此时较为复杂，分如下四种情况： 
 **a）爸爸在左、叔叔在右、我在左** (右旋转)
 
-![image-20220302150432119](../../../../../Pictures/assets/剑指offer/image-20220302150432119.png)
+![image-20220302150432119](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234393.png)
 
 
 
@@ -936,20 +936,20 @@ x 不参与
 
 **b）爸爸在左、叔叔在右、我在右** （左右旋转）
 
-![image-20220302150558398](../../../../../Pictures/assets/剑指offer/image-20220302150558398.png)
+![image-20220302150558398](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234394.png)
 
 先以我为根节点，进行一次L旋转； 再以我为根节点，进行一次R旋转。 
 
 **c）叔叔在左、爸爸在右、我在左** （右左旋转）
 
-![image-20220302150926831](../../../../../Pictures/assets/剑指offer/image-20220302150926831.png)
+![image-20220302150926831](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234395.png)
 
 先以我为根节点，进行一次R旋转； 
 再以我为根节点，进行一次L旋转。 
 
 **d）叔叔在左、爸爸在右、我在右** 
 
-![image-20220302151121696](../../../../../Pictures/assets/剑指offer/image-20220302151121696.png)
+![image-20220302151121696](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234396.png)
 
 以爸爸为根节点，进行一次L旋转。
 
@@ -971,29 +971,29 @@ x 不参与
 
 S 为红色，其他节点为黑色。这种情况下可以对 N 的父节点进行左旋操作，然后互换 P 与 S 颜色。但这并未结束，经过节点 P 和 N 的路径删除前有3个黑色节点（`P -> X -> N`），现在只剩两个了（`P -> N`）。比未经过 N 的路径少一个黑色节点，性质5仍不满足，还需要继续调整。不过此时可以按照情况四、五、六进行调整。
 
-![640?wx_fmt=jpeg](../../../../../Pictures/assets/剑指offer/afba258b8b1f76871981906bc95bfc86.png)
+![640?wx_fmt=jpeg](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234397.png)
 
 ###### 情况三：
 
 N 的父节点，兄弟节点 S 和 S 的孩子节点均为黑色。这种情况下可以简单的把 S 染成红色，所有经过 S 的路径比之前少了一个黑色节点，这样经过 N 的路径和经过 S 的路径黑色节点数量一致了。但经过 P 的路径比不经过 P 的路径少一个黑色节点，此时需要从情况一开始对 P 进行平衡处理。
 
-![640?wx_fmt=jpeg](../../../../../Pictures/assets/剑指offer/e58a6a2a6fed17464bacca704d108e2f.png)
+![640?wx_fmt=jpeg](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234398.png)
 
 ##### 情况四：
 
 N 的父节点是红色，S 和 S 孩子为黑色。这种情况比较简单，我们只需交换 P 和 S 颜色即可。这样所有通过 N 的路径上增加了一个黑色节点，所有通过 S 的节点的路径必然也通过 P 节点，由于 P 与 S 只是互换颜色，并不影响这些路径。
 
-![640?wx_fmt=jpeg](../../../../../Pictures/assets/剑指offer/ea1e8b91e8b939d6139a1395410180fc.png)
+![640?wx_fmt=jpeg](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234399.png)
 
 这里需要特别说明一下，上图中的节点 N 并非是新插入的节点。当 P 为红色时，P 有两个孩子节点，且孩子节点均为黑色，这样从 G 出发到各叶子节点路径上的黑色节点数量才能保持一致。既然 P 已经有两个孩子了，所以 N 不是新插入的节点。情况四是由以 N 为根节点的子树中插入了新节点，经过调整后，导致 N 被变为红色，进而导致了情况四的出现。考虑下面这种情况（PR 节点就是上图的 N 节点）：
 
-![640?wx_fmt=jpeg](../../../../../Pictures/assets/剑指offer/0059a042d3bfa4c927144065c0c94e6d.png)
+![640?wx_fmt=jpeg](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234400.png)
 
 ##### 情况五：
 
 S 为黑色，S 的左孩子为红色，右孩子为黑色。N 的父节点颜色可红可黑，且 N 是 P 左孩子。这种情况下对 S 进行右旋操作，并互换 S 和 SL 的颜色。此时，所有路径上的黑色数量仍然相等，N 兄弟节点的由 S 变为了 SL，而 SL 的右孩子变为红色。接下来我们到情况六继续分析。
 
-![640?wx_fmt=jpeg](../../../../../Pictures/assets/剑指offer/f7608901e07e183bb8d01bb6f07d0def.png)
+![640?wx_fmt=jpeg](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234401.png)
 
 ##### 情况六：
 
@@ -1002,7 +1002,7 @@ S 为黑色，S 的右孩子为红色。N 的父节点颜色可红可黑，且 N
 1. 该路径经过 N 新的兄弟节点 SL ，那它之前必然经过 S 和 P。而 S 和 P 现在只是交换颜色，对于经过 SL 的路径不影响。
 2. 该路径经过 N 新的叔叔节点 SR，那它之前必然经过 P、 S 和 SR，而现在它只经过 S 和 SR。在对 P 进行左旋，并与 S 换色后，经过 SR 的路径少了一个黑色节点，性质5被打破。另外，由于 S 的颜色可红可黑，如果 S 是红色的话，会与 SR 形成连续的红色节点，打破性质4（每个红色节点必须有两个黑色的子节点）。此时仅需将 SR 由红色变为黑色即可同时恢复性质4和性质5（从任一节点到其每个叶子的所有简单路径都包含相同数目的黑色节点。）。
 
-![640?wx_fmt=jpeg](../../../../../Pictures/assets/剑指offer/3fc373511b51a906887e62a60482ad14.png)
+![640?wx_fmt=jpeg](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234402.png)
 
 ##### 删除总结
 
@@ -1010,7 +1010,7 @@ S 为黑色，S 的右孩子为红色。N 的父节点颜色可红可黑，且 N
 
 和大家一样，我刚开始看的时候也有这样的困惑，直到我把所有情况对应的图形画在一起时，拨云见日，一切都明了了。此时天空中出现了4个字，原来如此、原来如此、原来如此。所以，请看图吧：
 
-![640?wx_fmt=jpeg](../../../../../Pictures/assets/剑指offer/5aeeaf096931a84a86808ee29257bc98.png)
+![640?wx_fmt=jpeg](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234403.png)
 
 
 
@@ -1645,7 +1645,7 @@ public int kmp(String str1,String str2){
 
 ### Manacher算法
 
-![image-20220319151220329](../../../../../Pictures/assets/剑指offer/image-20220319151220329.png)
+![image-20220319151220329](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234404.png)
 
 传统算法：对于源字符串中插入`#`字符，这样就很好进行判断，最后除以2就是当前的回文字符串长度。时间复杂度为$Big\ O(N^2)$
 
@@ -1768,7 +1768,7 @@ C的左孩子由A来接管
 
 介绍树的右旋
 
-![image-20220327205455445](../../../../../Pictures/assets/剑指offer/image-20220327205455445.png)
+![image-20220327205455445](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234405.png)
 
 ```tex
 右旋：头节点倒向右边
@@ -1824,7 +1824,7 @@ RL
 
 ## 并查集
 
-![image-20220318101021823](../../../../../Pictures/assets/剑指offer/image-20220318101021823.png)
+![image-20220318101021823](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234406.png)
 
 ```java
 public class UnionFind {
@@ -1927,9 +1927,9 @@ public class UnionFind {
 然后hash值一样会在统一个表中，然后再使用hashmap进行统计，这样内存就不会爆掉了
 ```
 
-![image-20220317150604389](../../../../../Pictures/assets/剑指offer/image-20220317150604389.png)
+![image-20220317150604389](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234407.png)
 
-![image-20220317151610022](../../../../../Pictures/assets/剑指offer/image-20220317151610022.png)
+![image-20220317151610022](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234408.png)
 
 ```tex
 用来解决去重问题...
@@ -2319,7 +2319,7 @@ kog
     一次次尝试
 ```
 
-![image-20220302202148622](../../../../../Pictures/assets/剑指offer/image-20220302202148622.png)
+![image-20220302202148622](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234409.png)
 
 * 思路：
 
@@ -2329,7 +2329,7 @@ kog
 第一种，子矩阵是长方形，需要通过上下两个点来固定长方形，由于上下两个点，都有n^2种可能，因此O(n^4)的复杂度
 ```
 
-![image-20220302202938225](../../../../../Pictures/assets/剑指offer/image-20220302202938225.png)
+![image-20220302202938225](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234410.png)
 
 ```html
 第二种，子矩阵是正方形，先找到一个A点，但是由于正方形是被固定的，长宽一样的，只需围绕着A找出正方形即可，因此只需要遍历n次找到B的可能，因此为O(n^3)。
@@ -2341,13 +2341,13 @@ kog
 	通过设置一个与原数组大小一样的数组down，该数组记录包括自己在内下边有多少个1。
 ```
 
-![image-20220302230604649](../../../../../Pictures/assets/剑指offer/image-20220302230604649.png)
+![image-20220302230604649](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234411.png)
 
-![image-20220302230726829](../../../../../Pictures/assets/剑指offer/image-20220302230726829.png)
+![image-20220302230726829](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234412.png)
 
 **二进制拼接：**
 
-![image-20220302230911398](../../../../../Pictures/assets/剑指offer/image-20220302230911398.png)
+![image-20220302230911398](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234413.png)
 
 * 思路
 
@@ -2369,11 +2369,11 @@ kog
 
 **动态规划**：
 
-![image-20220303180959375](../../../../../Pictures/assets/剑指offer/image-20220303180959375.png)
+![image-20220303180959375](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234414.png)
 
 * 思路
 
-<img src="../../../../../Pictures/assets/剑指offer/image-20220303181205816.png" alt="image-20220303181205816" style="zoom:50%;" />
+<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234415.png" alt="image-20220303181205816" style="zoom:50%;" />
 
 ```html
 1. 左子树没有节点，右子树有n-1个节点
@@ -2767,9 +2767,9 @@ public class TopKFrequent {
 使用一维数组，进行更新，因为看一行或者第一列就知道只与一方有关系
 ```
 
-![image-20220409233234540](../../../../../Pictures/assets/剑指offer/image-20220409233234540.png)
+![image-20220409233234540](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234416.png)
 
-<img src="../../../../../Pictures/assets/剑指offer/image-20220409233509130.png" alt="image-20220409233509130" style="zoom:50%;" />
+<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234417.png" alt="image-20220409233509130" style="zoom:50%;" />
 
 * 思路
 
@@ -2783,7 +2783,7 @@ public class TopKFrequent {
 => 使用双指针，高度矮的先计算
 ```
 
-![image-20220409234800141](../../../../../Pictures/assets/剑指offer/image-20220409234800141.png)
+![image-20220409234800141](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234418.png)
 
 * 思路
 
@@ -2795,7 +2795,7 @@ max在右边类似。
 因此max - min(arr[0],arr[n-1])
 ```
 
-![image-20220409235348858](../../../../../Pictures/assets/剑指offer/image-20220409235348858.png)
+![image-20220409235348858](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234419.png)
 
 * 思路
 
@@ -2929,7 +2929,7 @@ public static int process(int[] drinks, int a, int b) {
 
 
 
-![image-20220410224046129](../../../../../Pictures/assets/剑指offer/image-20220410224046129.png)
+![image-20220410224046129](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234420.png)
 
 * 思路
 
@@ -2943,7 +2943,7 @@ public static int process(int[] drinks, int a, int b) {
 
 #### 第六课
 
-![image-20220412164701349](../../../../../Pictures/assets/剑指offer/image-20220412164701349.png)
+![image-20220412164701349](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234421.png)
 
 * 思路
 
@@ -2964,7 +2964,7 @@ f(3) = f(2) + f(1)
 [f(n),f(n-1)] = [f(2),f(1)]*[?]^(n-2)
 ```
 
-![image-20220412170113553](../../../../../Pictures/assets/剑指offer/image-20220412170113553.png)
+![image-20220412170113553](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234422.png)
 
 ```java
 public class FibonacciSeries {
@@ -3049,7 +3049,7 @@ n^75 => 8 = 1001011
 记录二进制只为1的数，进行相乘
 ```
 
-![image-20220412191042148](../../../../../Pictures/assets/剑指offer/image-20220412191042148.png)
+![image-20220412191042148](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234423.png)
 
 ```tex
 尝试求出一个有效解即可。
@@ -3057,7 +3057,7 @@ n^75 => 8 = 1001011
 
  
 
-![image-20220412195132497](../../../../../Pictures/assets/剑指offer/image-20220412195132497.png)
+![image-20220412195132497](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234424.png)
 
 * 思路
 
@@ -3065,7 +3065,7 @@ n^75 => 8 = 1001011
 背包问题的变体。
 ```
 
-![image-20220412200100320](../../../../../Pictures/assets/剑指offer/image-20220412200100320.png)
+![image-20220412200100320](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234425.png)
 
 * 思路
 
@@ -3075,9 +3075,9 @@ n^75 => 8 = 1001011
 那么选择合适自己难度的那个就可以了。
 ```
 
-![image-20220412200715751](../../../../../Pictures/assets/剑指offer/image-20220412200715751.png)
+![image-20220412200715751](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234426.png)
 
-![image-20220412201016028](../../../../../Pictures/assets/剑指offer/image-20220412201016028.png)
+![image-20220412201016028](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234427.png)
 
 * 思路
 
@@ -3095,7 +3095,7 @@ sss
 
 #### 第七课
 
-![image-20220415205004840](../../../../../Pictures/assets/剑指offer/image-20220415205004840.png)
+![image-20220415205004840](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234428.png)
 
 * 思路
 
@@ -3104,7 +3104,7 @@ sss
  之后就可以通过dfs，方便访问打印
 ```
 
-![image-20220415222141336](../../../../../Pictures/assets/剑指offer/image-20220415222141336.png)
+![image-20220415222141336](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234429.png)
 
 * 思路
 
@@ -3119,7 +3119,7 @@ sss
 后序遍历：左右中
 ```
 
-![image-20220415222818737](../../../../../Pictures/assets/剑指offer/image-20220415222818737.png)
+![image-20220415222818737](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234430.png)
 
 * 思路
 
@@ -3160,7 +3160,7 @@ public static class Info{
 }
 ````
 
-![image-20220415232324144](../../../../../Pictures/assets/剑指offer/image-20220415232324144.png)
+![image-20220415232324144](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234431.png)
 
 * 思路
 
@@ -3187,7 +3187,7 @@ public static int maxSum(int[] arr){
 }
 ```
 
-![image-20220415234954243](../../../../../Pictures/assets/剑指offer/image-20220415234954243.png)
+![image-20220415234954243](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234432.png)
 
 * 思路
 
@@ -3203,7 +3203,7 @@ public static int maxSum(int[] arr){
 
 #### 第八课
 
-![image-20220417211537429](../../../../../Pictures/assets/剑指offer/image-20220417211537429.png)
+![image-20220417211537429](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234433.png)
 
 * 思路
 
@@ -3229,7 +3229,7 @@ for(int i=0;i<s.length();i++){
 }
 ```
 
- ![image-20220417215456980](../../../../../Pictures/assets/剑指offer/image-20220417215456980.png)
+ ![image-20220417215456980](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234434.png)
 
 * 思路
 
@@ -3245,7 +3245,7 @@ for(int i=0;i<s.length();i++){
 1,3,7,6,2,5,4 => 4,5,2,6,7,3,1
 ```
 
-![image-20220417224220221](../../../../../Pictures/assets/剑指offer/image-20220417224220221.png)
+![image-20220417224220221](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234435.png)
 
 * 思路
 
@@ -3253,17 +3253,302 @@ for(int i=0;i<s.length();i++){
 业务类问题。重点是数字转换，读写法问题，以及英文对应问题。
 ```
 
-![image-20220417232446026](../../../../../Pictures/assets/剑指offer/image-20220417232446026.png)
+![image-20220417232446026](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234436.png)
 
 * 思路
 
 ```tex
-完全二叉树节点.... => 整颗树的深度 
+完全二叉树节点.... => 整颗树的深度h，往左遍历
+
+1. 查看当前节点的右子树的最左节点的深度与左子树相同，左子树一定是满二叉树
+2. 查看当前节点的右子树的最左节点的深度与左子树不相同，右子树一定是满二叉树，只是高度比左子树小1。
+```
+
+* 代码
+
+```java
+public int bs(Node node,int level,int h){
+    if(level == h) return 1;
+    if(mostLeftLevel(node.right,level+1) == h)
+        return (1 << (h - level)) + bs(node.right,level+1,h);
+    else{
+        return (1 << (h - level - 1)) + bs(node.left,level+1, h);
+    }
+}
+public int mostLeftLevel(Node node,int level){
+    while (node != null){
+        level++;
+        node = node.left;
+    }
+    return level;
+}
+```
+
+![image-20220418181206932](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234437.png)
+
+* 思路
+
+```tex
+[3,1,2,6,3,4] => 最长递增子序列 => 1,2,3,4
+遍历当前i位置前面是否有符合的数，只需要遍历到倒数第二个即可。
+
+3 => 1
+1 => 1
+2 => 2
+6 => 3
+3 => 3
+4 => 4
+
+但是时间复杂度为O(n^2)
+=====================================
+
+第二种方法：利用了单调性
+```
+
+* 代码
+
+```java
+public int longestIncreasingSubsequenceProblem(int[] arr){
+
+    int ans = 0;
+    int[] dp =new int[arr.length];
+    int[] ends = new int[arr.length];
+    int end = 0;
+
+    for(int i=0;i<arr.length;i++){
+
+        if(i == 0){
+            ends[end++] = arr[i];
+            dp[i] = 1;
+        }else if(ends[end-1] < arr[i]){
+            ends[end++] = arr[i];
+            dp[i] = end;
+        }else{
+            for(int j=0;j<end;j++){
+                if(arr[i] <= ends[j]) {
+                    ends[j] = arr[i];
+                    dp[i] = j+1;
+                    break;
+                }
+            }
+        }
+        ans = Math.max(ans,dp[i]);
+    }
+
+    for(int i=0;i<dp.length;i++)
+        System.out.println(dp[i]);
+
+    //        System.out.println(ans);
+
+    return ans;
+}
+```
+
+![image-20220418191135903](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234438.png)
+
+* 思路
+
+```tex
+如上 
+```
+
+#### 第九课
+
+![image-20220418210206631](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234439.png)
+
+* 思路
+
+```tex
+长度为7
+
+数值：3 2 1 6 2 7 5
+下标：0 1 2 3 4 5 6
+
+1<=arr[i]<=7
+
+正确i位置放得是i+1 
+```
+
+![image-20220418211640775](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234440.png)
+
+* 思路
+
+```tex
+x => +2
+y => *2
+z => -2
+
+x = 3
+y = 100
+z = 1
+
+start = 2 ,end = 6 => 4
+
+类似于硬币问题，递归问题（需要做出限制）。但是可能会超时。
+算出平凡解，为递归加限制。
+```
+
+* 代码
+
+```java
+public static int minCcoins3(int add, int times, int del, int start, int end) {
+    if(start>end){
+        return -1;
+    }
+    int limitPopularity=2*end;
+    int limitCoin=((end-start)/2)*add;
+    return dfs(0,start,add,times,del,end,limitPopularity,limitCoin);
+}
+/**
+     *
+     * @param preMoney	之前已经花了多少钱 可变
+     * @param cur	当前来到的人气	可变
+     * @param add	点赞花费
+     * @param times		送礼花费
+     * @param del	私聊花费
+     * @param aim	目标人气
+     * @param limitPopularity 人气大到什么程度就不需要再尝试了 固定
+     * @param limitCoin 已经使用的币大到什么程度就不需要再尝试了 固定
+     * @return 返回最小币数
+     */
+public static int dfs(int preMoney,int cur,int add,int times,int del,int aim,int limitPopularity, int limitCoin){
+    //之前已经花的钱大于了最大钱数
+    if(preMoney>limitCoin){
+        return Integer.MAX_VALUE;
+    }
+    //人气值小于0
+    if(cur<0){
+        return Integer.MAX_VALUE;
+    }
+    //当前人气值超过了目标人气值的2倍
+    if(cur>limitPopularity){
+        return Integer.MAX_VALUE;
+    }
+    //当前人气值等于目标人气值
+    if(cur==aim){
+        return preMoney;
+    }
+    int min=Integer.MAX_VALUE;
+    int p1=dfs(preMoney+add,cur+2,add,times,del,aim,limitPopularity,limitCoin);
+    int p2=dfs(preMoney+times,cur*2,add,times,del,aim,limitPopularity,limitCoin);
+    int p3=dfs(preMoney+del,cur-2,add,times,del,aim,limitPopularity,limitCoin);
+    return Math.min(Math.min(p1,p2),p3);
+}
+```
+
+![image-20220418214603224](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234441.png)
+
+
+
+![image-20220418215816494](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234442.png)
+
+* 思路
+
+```tex
+从最后一个节点，往前更新数据。
+
+每个节点都有一个map记录当前的耗时信息，以及奖励。最后合表。
+
+有序的TreeMap。。。（天数增加，奖励也需要增加）
+```
+
+![image-20220418220808416](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234443.png)
+
+* 思路
+
+![image-20220418223343826](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234444.png)
+
+![image-20220418223355572](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204182234445.png)
+
+
+
+考虑了左中右，从中间划分范围递归。
+
+![image-20220418224905750](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300339.png)
+
+* 思路
+
+```tex
+滑动窗口 + 双指针
+```
+
+![image-20220418233458871](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300341.png)
+
+* 思路
+
+```tex
+有点像最长公共子序列。
+
+1) str1[0...i-2,i-1]与str2[0...j-2,j-1]
+
+将str1[0...i-2]变成str2[0...j-2,j-1]
+
+str1:a 1 b c k
+str2:a b c
+
+=> str1:a b c k => 删除k => a b c => dp[i-1][j] + del
+
+
+2) str1[0...i-2,i-1]与str2[0...j-2,j-1]
+
+将str1[0...i-2,i-1]变成str2[0...j-2]，然后加上str2[j-1]
+
+str1: a b c d
+str2: a 2 c d e
+
+=> str1: a 2 c d [e] => dp[i][j-1] + add
+
+3) str1[0...i-2,i-1]与str2[0...j-2,j-1]
+
+将str1[0...i-2]变成str2[0...j-2]，然后替换最后一个
+
+str1: a b c d s
+str2: a 2 c d t
+
+=> str1: a 2 c d t => dp[i-1][j-1] + replace
+
+4) str1[0...i-2,i-1]与str2[0...j-2,j-1]
+
+如果str1[i-1] == str2[j-1]
+将str1[0...i-2]变成str2[0...j-2]
+
+str1: a b c d e
+str2: a b c d e
+
+=> str1: a 2 c d t => dp[i-1][j-1] => 可以和第三个整合一下。
+```
+
+![image-20220419215333160](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300342.png)
+
+* 思路
+
+```tex
+t a a b c b a b c t
+=> 
+做一个map，记录
+a:3
+b:3
+c:2
+t:2
+
+然后遍历，直到map中有一个词频为0
+a:0
+b:1
+c:1
+t:1
+
+t a a b c b a
+发现到这里遍历到a了
+然后选取这串字符中，最小的字符a，将a字符左边的字符全部删除
+
+剩下a a b c b a b c t，并且删除剩下字符中，包含的字符a
+剩下 b c b b c t  
+周而复始操作，直到完毕。
 ```
 
 
 
-#### 第九课
+
 
 #### 第十课
 
