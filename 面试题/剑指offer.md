@@ -3546,10 +3546,115 @@ t a a b c b a
 周而复始操作，直到完毕。
 ```
 
-
-
-
-
 #### 第十课
 
+![image-20220420195908763](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204202150847.png)
+
+* 思路
+
+```tex
+coding 题目，跳过
+```
+
+![image-20220420200002295](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204202150848.png)
+
+* 思路
+
+```tex
+前面讲过了，这是一个当前位置i，就该放数i，如果做不到的，就是缺的数。
+```
+
+![image-20220420200856616](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204202150849.png)
+
+* 思路
+
+```tex
+题目意思是=>
+a -> 1
+b -> 2
+c -> 3
+... 按照字典序，得到对应序号也就是编码
+但是有个规则必须保持字典序，不能出现ba，只能ab这样才有编号
+a ab ac .. bc
+b ac
+c ad
+d ae
+=> 计算当前长度为k的字符有多少个 f
+=> 以这个字符开头总长度为len的字符有多少个 g(chr,len)
+
+1)先拿到当前len长度字符串，其len-1字符串的长度
+2)然后从当前len长度字符串，从第1个字符到第len个字符，拿到小于当前i字符的长度的所有子字符串长度。然后全部加起来。
+```
+
+* 代码
+
+```java
+// 第i个字符开头，长度为len的字符串有多少个
+public int g(int i, int len) {
+    int ans = 0;
+    if (len == 1) return 1;
+
+    for (int j = i + 1; j <= 26; j++)
+        ans += g(j, len - 1);
+
+    return ans;
+}
+
+// 长度为len的字符有多少个
+public int f(int len) {
+    int ans = 0;
+    for (int i = 1; i <= 26; i++)
+        ans += g(i, len);
+    return ans;
+}
+
+public int kth(String s) {
+
+    int ans = 0;
+
+    int len = s.length();
+    char[] chr = s.toCharArray();
+
+    for (int i = 0; i < len; i++) {
+        ans += f(i);
+    }
+
+    int first = chr[0] - 'a' + 1;//第一个字符
+    for (int i = 1; i < first; i++)
+        ans += g(i, len);
+
+    int pre = first;
+    for (int i = 1; i < first; i++) {
+
+        int cur = chr[i] - 'a' + 1;
+        for (int j = pre+1; j < cur; j++) {
+            ans += g(j, len - 1);
+        }
+        pre = cur;
+    }
+
+    return ans + 1;
+}
+```
+
 ### 高级提升
+
+#### 第一课
+
+#### 第二课
+
+#### 第三课
+
+#### 第四课
+
+#### 第五课
+
+#### 第六课
+
+#### 第七课
+
+#### 第八课
+
+#### 第九课
+
+#### 第十课
