@@ -6464,11 +6464,206 @@ public String testD() {
 
 异常数 (`ERROR_COUNT`)：当单位统计时长内的异常数目超过阈值之后会自动进行熔断。经过熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求成功完成（没有错误）则结束熔断，否则会再次被熔断。
 
+#### 服务熔断
+
+sentinel整合ribbon+openFeign+fallback
+
+##### Ribbon系列
+
+###### 启动服务
+
+启动nacos和sentinel
+
+###### 新建module
+
+- 生产者：``cloudalibaba-provider-payment9003``、``cloudalibaba-provider-payment9004``
+- 消费者：``cloudalibaba-consumer-nacos-order84``
+
+##### Feign系列
+
+#### 熔断框架比较
+
 ### 热点参数限流
+
+#### 什么是热点参数限流
+
+何为热点？热点即经常访问的数据。很多时候我们希望统计某个热点数据中访问频次最高的 Top K 数据，并对其访问进行限制。比如：
+
+- 商品 ID 为参数，统计一段时间内最常购买的商品 ID 并进行限制
+- 用户 ID 为参数，针对一段时间内频繁访问的用户 ID 进行限制
+
+热点参数限流会统计传入参数中的热点参数，并根据配置的限流阈值与模式，对包含热点参数的资源调用进行限流。热点参数限流可以看做是一种特殊的流量控制，仅对包含热点参数的资源调用生效。
+
+```java
+com.alibaba.csp.sentinel.slots.block.BlockException
+```
+
+#### 承上启下
+
+承接 Hystrix，能够实现兜底方法，分为系统默认和客户自定义，两种
+
+之前的case，限流出问题后，都是用 sentinel 系统默认的提示：**Blocked by Sentinel (flow limiting)**。
+
+**`@SentinelResource` 只管 Sentinel 配置违规，不处理代码异常**。
+
+#### 代码
+
+```java
+@GetMapping("/testHotKey")
+@SentinelResource(value = "testHotKey",blockHandler = "dealTestHostKey")
+public String testHotKey(@RequestParam(value = "p1", required = false) String p1,
+                         @RequestParam(value = "p2", required = false) String p2){
+    return "testHotKey：p1="+p1+",p2="+p2;
+}
+public String dealTestHostKey(String p1, String p2, BlockException blockException){
+    return "dealTestHostKey：p1="+p1+",p2="+p2;
+}
+```
+
+如果使用了 `@SentinelResource` ，但是没有配置 `blockHandler` 属性，违反热点规则会出现错误页面，而不是 Sentinel 默认的错误提示。
+
+#### 参数例外项
+
+上述案例演示了第一个参数p1，当QPS超过1秒1次点击后马上被限流
+
+![image-20220420121148491](../../../../../../../Pictures/assets/SpringCloud笔记/image-20220420121148491.png)
+
+热点参数的注意点，参数必须是基本类型或者String
+
+特殊情况：
+
+- 普通：超过1秒钟一个后，达到阈值1后马上被限流
+
+- 我们期望p1参数当它是某个特殊值时，它的限流值和平时不一样
+- 特例：假如当p1的值等于5时，它的阈值可以达到200
+
+访问：
+
+* http://localhost:8401/testHotKey?p1=2
+* http://localhost:8401/testHotKey?p1=5
+
+![image-20220420122448800](../../../../../../../Pictures/assets/SpringCloud笔记/image-20220420122448800.png)
+
+> @SentinelResource主管配置出错，运行出错该走异常走异常。
 
 ### 系统规则
 
+![image-20220420124323245](../../../../../../../Pictures/assets/SpringCloud笔记/image-20220420124323245.png)
+
+系统保护规则是从应用级别的入口流量进行控制，从单台机器的 load、CPU 使用率、平均 RT、入口 QPS 和并发线程数等几个维度监控应用指标，让系统尽可能跑在最大吞吐量的同时保证系统整体的稳定性。
+
+系统保护规则是应用整体维度的，而不是资源维度的，并且**仅对入口流量生效**。入口流量指的是进入应用的流量（`EntryType.IN`），比如 Web 服务或 Dubbo 服务端接收的请求，都属于入口流量。
+
+系统规则支持以下的模式：
+
+- **Load 自适应**（仅对 Linux/Unix-like 机器生效）：系统的 load1 作为启发指标，进行自适应系统保护。当系统 load1 超过设定的启发值，且系统当前的并发线程数超过估算的系统容量时才会触发系统保护（BBR 阶段）。系统容量由系统的 `maxQps * minRt` 估算得出。设定参考值一般是 `CPU cores * 2.5`。
+- **CPU usage**（1.5.0+ 版本）：当系统 CPU 使用率超过阈值即触发系统保护（取值范围 0.0-1.0），比较灵敏。
+- **平均 RT**：当单台机器上所有入口流量的平均 RT 达到阈值即触发系统保护，单位是毫秒。
+- **并发线程数**：当单台机器上所有入口流量的并发线程数达到阈值即触发系统保护。
+- **入口 QPS**：当单台机器上所有入口流量的 QPS 达到阈值即触发系统保护。
+
 ### @SentinelResource
+
+#### 按资源名称限流+后续处理
+
+* 启动服务
+
+启动Nacos+Sentinel
+
+* 在`cloudalibaba-sentinel-service8401`中引入自定义的依赖
+
+```xml
+<dependency>
+    <groupId>com.atguigu.springcloud</groupId>
+    <artifactId>cloud-api-commons</artifactId>
+    <version>${project.version}</version>
+</dependency>
+```
+
+* 创建`RateLimitController.java`
+
+```java
+@RestController
+public class RateLimitController {
+
+    @GetMapping("/byResource")
+    @SentinelResource(value = "byResource", blockHandler = "handleException")
+    public CommonResult<Payment> byResource(){
+        return new CommonResult<Payment>(200,"按资源名称限流测试OK",new Payment(1L,"serial001"));
+    }
+    public CommonResult handleException(BlockException blockException){
+        return new CommonResult(444,blockException.getClass().getCanonicalName());
+    }
+
+}
+```
+
+![image-20220420130945447](../../../../../../../Pictures/assets/SpringCloud笔记/image-20220420130945447.png)
+
+#### 按照Url地址限流+后续处理
+
+配置资源名为 `/rateLimit/byUrl` 的流控规则，没有配置 `blockHandler`，返回 Sentinel 默认的提示信息。
+
+```java
+@GetMapping("/rateLimit/byUrl")
+@SentinelResource(value = "byUrl")
+public CommonResult byUrl(){
+    return new CommonResult(200,"按url限流测试ok",new Payment(1L,"serial002"));
+}
+```
+
+![image-20220420132042047](../../../../../../../Pictures/assets/SpringCloud笔记/image-20220420132042047.png)
+
+#### 上面兜底方案面临的问题
+
+1. 系统默认的，没有体现我们自己的业务要求。
+2. 依照现有条件，我们自定义的处理方法又和业务代码耦合在一块，不直观。
+3. 每个业务方法都添加一个兜底的，代码膨胀加剧。
+4. 全局统一的处理方法没有体现。
+
+#### 客户自定义限流处理逻辑
+
+* 创建`handler.CustomerBlockHandler`
+
+```java
+public class CustomerBlockHandler {
+    public static CommonResult handleException(BlockException blockException){
+        return new CommonResult(444,"按客户自定义,global handlerException --------- 1");
+    }
+
+    public static CommonResult handleException2(BlockException blockException){
+        return new CommonResult(444,"按客户自定义,global handlerException --------- 2");
+    }
+}
+```
+
+* 业务类中，添加方法
+
+```java
+@GetMapping("/rateLimit/customerBlockHandler")
+@SentinelResource(value = "customerBlockHandler",blockHandlerClass = CustomerBlockHandler.class,blockHandler = "handleException2")
+public CommonResult customerBlockHandler(){
+    return new CommonResult(200,"客户自定义",new Payment(1L,"serial003"));
+}
+```
+
+`@SentinelResource(value = "customerBlockHandler",blockHandlerClass = CustomerBlockHandler.class,blockHandler = "handleException2")`中`blockHandlerClass `用于指定自定义的兜底类，`blockHandler `用于指定当前指定类中的方法。
+
+现在测试，限流。
+
+![image-20220420134623803](../../../../../../../Pictures/assets/SpringCloud笔记/image-20220420134623803.png)
+
+> 如果是通过url进行降级，那么只会触发默认降级方法。
+
+#### 更多注解属性说明 
+
+[Sentinel更多注解属性](https://github.com/alibaba/Sentinel/wiki/%E6%B3%A8%E8%A7%A3%E6%94%AF%E6%8C%81)
+
+Sentinel 主要有三个核心 API：
+
+- `SphU` 定义资源
+- `Tracer` 定义统计
+- `ContextUtil` 定义了上下文
 
 ### 规则持久化
 
