@@ -7065,16 +7065,1045 @@ json说明：
 
 ## SpringCloud Alibaba Seata处理分布式事务
 
-### 分布式事务问题的由来
+### 概述
 
-### Seata术语
+#### 分布式事务问题
 
-### 安装
+一次业务操作需要跨多个数据源或需要跨多个系统进行远程调用，就会产生分布式事务问题。
+
+#### Seata术语
+
+Seata是一款开源的分布式事务解决方案，致力于在微服务架构下提供高性能和简单易用的分布式事务服务。
+
+#### 一个典型的分布式事务过程
+
+##### 分布式事务处理过程的-ID + 三组件模型
+
+3 组件概念：
+
+- Transaction Coordinator（TC）：事务协调者，维护全局事务的运行状态，负责协调并驱动全局事务的提交或回滚;
+- Transaction Manager（TM）：事务管理器，定义全局事务的范围，开始全局事务、提交或回滚全局事务。
+- Resource Manager（RM）：资源管理器，管理分支事务处理的资源，与TC交谈以注册分支事务和报告分支事务的状态，并驱动分支事务提交或回滚。
+
+##### 处理过程
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204211815620.png)
+
+1. TM 向 TC 申请开启一个全局事务，全局事务创建成功并生成一个全局唯一的 XID
+2. XID 在微服务调用链路的上下文中传播
+3. RM 向 TC 注册分支事务，将其纳入 XID 对应全局事务的管辖
+4. TM 向 TC 发起针对 XD 的全局提交或回滚決议
+5. TC 调度 XID 下管辖的全部分支事务完成提交或回滚请求
+
+#### 怎么用
+
+- 本地 `@Transactional`
+
+- 全局 `@GlobalTransactional`
+
+#### 安装
+
+* 官网地址：http://seata.io/zh-cn/
+* 下载地址：https://github.com/seata/seata/releases
+
+seata建表，一定要先在mysql里建表。sql语句地址：https://github.com/seata/seata/blob/develop/script/server/db/mysql.sql。直接运行即可。因为seata表自动创建好了。
+
+````mysql
+-- -------------------------------- The script used when storeMode is 'db' --------------------------------
+-- the table to store GlobalSession data
+CREATE TABLE IF NOT EXISTS `global_table`
+(
+    `xid`                       VARCHAR(128) NOT NULL,
+    `transaction_id`            BIGINT,
+    `status`                    TINYINT      NOT NULL,
+    `application_id`            VARCHAR(32),
+    `transaction_service_group` VARCHAR(32),
+    `transaction_name`          VARCHAR(128),
+    `timeout`                   INT,
+    `begin_time`                BIGINT,
+    `application_data`          VARCHAR(2000),
+    `gmt_create`                DATETIME,
+    `gmt_modified`              DATETIME,
+    PRIMARY KEY (`xid`),
+    KEY `idx_status_gmt_modified` (`status` , `gmt_modified`),
+    KEY `idx_transaction_id` (`transaction_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+-- the table to store BranchSession data
+CREATE TABLE IF NOT EXISTS `branch_table`
+(
+    `branch_id`         BIGINT       NOT NULL,
+    `xid`               VARCHAR(128) NOT NULL,
+    `transaction_id`    BIGINT,
+    `resource_group_id` VARCHAR(32),
+    `resource_id`       VARCHAR(256),
+    `branch_type`       VARCHAR(8),
+    `status`            TINYINT,
+    `client_id`         VARCHAR(64),
+    `application_data`  VARCHAR(2000),
+    `gmt_create`        DATETIME(6),
+    `gmt_modified`      DATETIME(6),
+    PRIMARY KEY (`branch_id`),
+    KEY `idx_xid` (`xid`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+-- the table to store lock data
+CREATE TABLE IF NOT EXISTS `lock_table`
+(
+    `row_key`        VARCHAR(128) NOT NULL,
+    `xid`            VARCHAR(128),
+    `transaction_id` BIGINT,
+    `branch_id`      BIGINT       NOT NULL,
+    `resource_id`    VARCHAR(256),
+    `table_name`     VARCHAR(32),
+    `pk`             VARCHAR(36),
+    `status`         TINYINT      NOT NULL DEFAULT '0' COMMENT '0:locked ,1:rollbacking',
+    `gmt_create`     DATETIME,
+    `gmt_modified`   DATETIME,
+    PRIMARY KEY (`row_key`),
+    KEY `idx_status` (`status`),
+    KEY `idx_branch_id` (`branch_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `distributed_lock`
+(
+    `lock_key`       CHAR(20) NOT NULL,
+    `lock_value`     VARCHAR(20) NOT NULL,
+    `expire`         BIGINT,
+    primary key (`lock_key`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+INSERT INTO `distributed_lock` (lock_key, lock_value, expire) VALUES ('HandleAllSession', ' ', 0);
+````
+
+ 下载后解压到指定目录并修改conf目录下的``file.conf``配置文件，完整的配置在`file.conf.example`中：对`service`和`store`模块进行了相关修改。
+
+```properties
+mode = "db" # 修改为 db即可
+
+  ## database store property
+  db {
+    datasource = "druid"
+    dbType = "mysql"
+    driverClassName = "com.mysql.cj.jdbc.Driver"
+    url = "jdbc:mysql://localhost:3306/seata?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai"
+    user = "root"
+    password = "123456"
+  }
+```
+
+修改解压后conf下registry.conf配置文件的registry 和config，修改下`nacos`的密码和用户以及类型即可。
+
+```properties
+registry {
+  # file 、nacos 、eureka、redis、zk、consul、etcd3、sofa
+  type = "nacos"
+
+  nacos {
+    application = "seata-server"
+    serverAddr = "127.0.0.1:8848" # nacos地址
+    group = "SEATA_GROUP"
+    namespace = "b84c0fd8-d1d9-477f-a8e6-b4fb50d6bdcf"
+    cluster = "default"
+    username = "nacos"
+    password = "nacos"
+  }
+}
+
+config {
+  # file、nacos 、apollo、zk、consul、etcd3
+  type = "nacos"
+
+  nacos {
+    serverAddr = "127.0.0.1:8848"
+    namespace = "b84c0fd8-d1d9-477f-a8e6-b4fb50d6bdcf"
+    group = "SEATA_GROUP" 
+    username = "nacos"
+    password = "nacos"
+    dataId = "seataServer.properties"
+  }
+}
+
+```
+
+然后在nacos中创建空间，并且修改上面的namespace以及group
+
+![image-20220421171637082](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204211815622.png)
+
+然后运行seata
+
+```sh
+seata-server.bat -m db
+```
+
+之后，下载：https://github.com/seata/seata/tree/1.4.2，
+
+seata使用1.4.2版本，新建的data id文件类型选择properties。若是使用seata1.4.2之前的版本，以下的每个配置项在nacos中就是一个条目，需要使用script/config-center/nacos/下的nacos-config.sh（linux或者windows下装git）或者nacos-config.py（python脚本）执行上传注册。
+
+先修改seata-1.4.2\seata-1.4.2\script\config-center\config.txt。
+
+![在这里插入图片描述](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439971.png)
+
+注意上传的版本必须将所有注释#都直接删除掉，否则上传失败，还有必须将=后边给值，没有值的话给""；
+
+**使用script/config-center/nacos/下的nacos-config.sh（linux或者windows下装git）或者nacos-config.py（python脚本）执行上传注册:**
+
+```sh
+-h nacos地址
+-p 端口
+-t 命名空间不写默认public
+-u 用户名
+-p 密码
+
+sh nacos-config.sh -h 192.168.7.231 -p 8848 -g SEATA_GROUP -t 73164d7c-6ea7-491c-b5a5-0da02d9d2d65 -u nacos -w nacos
+```
+
+**然后我们看我们的配置是否推送上来到nacos：**
+
+![image-20220422123943949](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439973.png)
 
 ### 业务数据库准备
 
+#### 业务说明
+
+这里我们会创建三个服务，一个订单服务，一个库存服务，一个账户服务。
+
+当用户下单时，会在订单服务中创建一个订单，然后通过远程调用库存服务来扣减下单商品的库存，再通过远程调用账户服务来扣减用户账户里面的余额，最后在订单服务中修改订单状态为已完成。
+
+该操作跨越三个数据库，有两次远程调用，很明显会有分布式事务问题。
+
+#### 创建数据库
+
+注意数据库中，应该会创建好了，如果没有创建好，自己配置。
+
+* seata_order库下建t_order表
+
+```mysql
+CREATE TABLE t_order(
+    `id` BIGINT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user_id` BIGINT(11) DEFAULT NULL COMMENT '用户id',
+    `product_id` BIGINT(11) DEFAULT NULL COMMENT '产品id',
+    `count` INT(11) DEFAULT NULL COMMENT '数量',
+    `money` DECIMAL(11,0) DEFAULT NULL COMMENT '金额',
+    `status` INT(1) DEFAULT NULL COMMENT '订单状态：0：创建中; 1：已完结'
+) ENGINE=INNODB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+ 
+SELECT * FROM t_order;
+```
+
+* seata_storage库下建t_storage表
+
+```mysql
+CREATE TABLE t_storage(
+    `id` BIGINT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `product_id` BIGINT(11) DEFAULT NULL COMMENT '产品id',
+   `'total` INT(11) DEFAULT NULL COMMENT '总库存',
+    `used` INT(11) DEFAULT NULL COMMENT '已用库存',
+    `residue` INT(11) DEFAULT NULL COMMENT '剩余库存'
+) ENGINE=INNODB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+ 
+INSERT INTO seata_storage.t_storage(`id`,`product_id`,`total`,`used`,`residue`)
+VALUES('1','1','100','0','100');
+ 
+SELECT * FROM t_storage;
+```
+
+* seata_account库下建t_account表
+
+```mysql
+CREATE TABLE t_account(
+    `id` BIGINT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'id',
+    `user_id` BIGINT(11) DEFAULT NULL COMMENT '用户id',
+    `total` DECIMAL(10,0) DEFAULT NULL COMMENT '总额度',
+    `used` DECIMAL(10,0) DEFAULT NULL COMMENT '已用余额',
+    `residue` DECIMAL(10,0) DEFAULT '0' COMMENT '剩余可用额度'
+) ENGINE=INNODB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+ 
+INSERT INTO seata_account.t_account(`id`,`user_id`,`total`,`used`,`residue`) VALUES('1','1','1000','0','1000')
+ 
+SELECT * FROM t_account;
+```
+
+#### 按照上述3库分别建对应的回滚日志表
+
+sql地址：https://github.com/seata/seata/blob/develop/script/client/at/db/mysql.sql
+
+````mysql
+-- for AT mode you must to init this sql for you business database. the seata server not need it.
+CREATE TABLE IF NOT EXISTS `undo_log`
+(
+    `branch_id`     BIGINT       NOT NULL COMMENT 'branch transaction id',
+    `xid`           VARCHAR(128) NOT NULL COMMENT 'global transaction id',
+    `context`       VARCHAR(128) NOT NULL COMMENT 'undo_log context,such as serialization',
+    `rollback_info` LONGBLOB     NOT NULL COMMENT 'rollback info',
+    `log_status`    INT(11)      NOT NULL COMMENT '0:normal status,1:defense status',
+    `log_created`   DATETIME(6)  NOT NULL COMMENT 'create datetime',
+    `log_modified`  DATETIME(6)  NOT NULL COMMENT 'modify datetime',
+    UNIQUE KEY `ux_undo_log` (`xid`, `branch_id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8mb4 COMMENT ='AT transaction mode undo table';
+````
+
 ### 业务微服务准备
+
+#### 业务需求
+
+下订单>减库存>扣余额>改（订单）状态。
+
+#### 新建Order-Module
+
+##### 新建module
+
+新建一个seata-order-service2001
+
+##### pom
+
+```xml
+<dependencies>
+    <!--nacos-->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+    </dependency>
+    <!--seata-->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+        <exclusions>
+            <exclusion>
+                <artifactId>seata-all</artifactId>
+                <groupId>io.seata</groupId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+    <dependency>
+        <groupId>io.seata</groupId>
+        <artifactId>seata-spring-boot-starter</artifactId>
+        <version>1.4.2</version>
+    </dependency>
+    <dependency>
+        <groupId>io.seata</groupId>
+        <artifactId>seata-all</artifactId>
+        <version>1.4.2</version>
+    </dependency>
+    <!--feign-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-openfeign</artifactId>
+    </dependency>
+    <!--web-actuator-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <!--mysql-druid-->
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>5.1.37</version>
+    </dependency>
+    <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>druid-spring-boot-starter</artifactId>
+        <version>1.1.10</version>
+    </dependency>
+    <dependency>
+        <groupId>org.mybatis.spring.boot</groupId>
+        <artifactId>mybatis-spring-boot-starter</artifactId>
+        <version>2.0.0</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+</dependencies>
+```
+
+##### yaml
+
+```yaml
+server:
+  port: 2001
+
+spring:
+  application:
+    name: seata-order-service
+  cloud:
+    #nacos配置
+    nacos:
+      discovery:
+        #nacos服务地址
+        server-addr: localhost:8848
+        namespace: "96b901a3-98ee-49c8-8185-7a48de400cc2"
+        group: SEATA_GROUP  #seata分组名称
+
+    alibaba:
+      #事务群组，要和下方vgroup-mapping保持一致（可以每个应用独立取名，也可以使用相同的名字），
+      #要与服务端nacos-config.txt中service.vgroup_mapping中存在,并且要保证多个群组情况下后缀名要保持一致-tx_group
+      seata:
+        tx-service-group: my_test_tx_group
+
+  datasource:  #druid数据源连接池
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/seata_order?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+#seata配置
+seata:
+  application-id: ${spring.application.name}
+  enable-auto-data-source-proxy: true  #是否开启数据源自动代理,默认为true
+  #（1）事务群组（可以每个应用独立取名，也可以使用相同的名字），
+  #要与服务端nacos-config.txt中service.vgroupMapping.my_test_tx_group=default,并且要保证多个群组情况下后缀名要保持一致-tx_group
+  service:
+    vgroup-mapping:
+      my_test_tx_group: default
+  # （2）seata配置中心
+  config:
+    type: nacos
+    nacos:
+      namespace: 96b901a3-98ee-49c8-8185-7a48de400cc2  #nacos命名空间ID
+      serverAddr: 127.0.0.1:8848  #nacos服务的地址
+      group: SEATA_GROUP    #seata分组名称
+      username: "nacos"  #nacos服务登录名称
+      password: "nacos"  #nacos服务登录密码
+  # （3）seata的注册中心
+  registry:  #registry根据seata服务端的registry配置
+    type: nacos
+    nacos:
+      application: seata-server #配置自己的seata服务
+      server-addr: 127.0.0.1:8848  #nacos服务的地址
+      group: SEATA_GROUP  #seata分组名称
+      namespace: 96b901a3-98ee-49c8-8185-7a48de400cc2  #nacos命名空间ID
+      username: "nacos"  #nacos服务登录名称
+      password: "nacos"  #nacos服务登录密码
+
+
+# feign组件超时设置，用于查看seata数据库中的临时数据内容
+feign:
+#  client:
+#    config:
+#      default:
+#        connect-timeout: 10000
+#        read-timeout: 10000
+  hystrix:
+    enabled: false
+
+logging:
+  level:
+    io:
+      seata: info
+
+#mybatis的配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.atguigu.springcloud.domain # 所有Entity别名类所在包
+```
+
+##### domain
+
+###### Order
+
+```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Order
+{
+    private Long id;
+
+    private Long userId;
+
+    private Long productId;
+
+    private Integer count;
+
+    private BigDecimal money;
+
+    private Integer status; //订单状态：0：创建中；1：已完结
+}
+```
+
+###### CommonResult
+
+```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class CommonResult<T>
+{
+    private Integer code;
+    private String  message;
+    private T       data;
+
+    public CommonResult(Integer code, String message)
+    {
+        this(code,message,null);
+    }
+}
+```
+
+##### dao接口及实现
+
+###### OrderDao
+
+```java
+@Mapper
+public interface OrderDao
+{
+    //新建订单
+    void create(Order order);
+
+    //修改订单状态，从零改为1
+    void update(@Param("userId") Long userId,@Param("status") Integer status);
+}
+```
+
+###### OrderMapper
+
+resources文件夹下新建mapper文件夹后添加OrderMapper.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.atguigu.springcloud.dao.OrderDao">
+
+    <resultMap id="BaseResultMap" type="com.atguigu.springcloud.domain.Order">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="product_id" property="productId" jdbcType="BIGINT"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="money" property="money" jdbcType="DECIMAL"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <insert id="create">
+        insert into seata_order.t_order (id,user_id,product_id,count,money,status)
+        values (null,#{userId},#{productId},#{count},#{money},0);
+    </insert>
+
+
+    <update id="update">
+        update seata_order.t_order set status = 1
+        where user_id=#{userId} and status = #{status};
+    </update>
+
+</mapper>
+```
+
+##### service接口及实现
+
+###### OrderService
+
+```java
+public interface OrderService {
+    void create(Order order);
+}
+```
+
+###### StorageService
+
+```java
+@FeignClient(value = "seata-storage-service")
+public interface StorageService{
+    @PostMapping(value = "/storage/decrease")
+    CommonResult decrease(@RequestParam("productId") Long productId, @RequestParam("count") Integer count);
+}
+```
+
+###### AccountService
+
+```java
+@FeignClient(value = "seata-account-service")
+public interface AccountService{
+    @PostMapping(value = "/account/decrease")
+    CommonResult decrease(@RequestParam("userId") Long userId, @RequestParam("money") BigDecimal money);
+}
+```
+
+###### OrderServiceImpl
+
+```java
+@Service
+@Slf4j
+public class OrderServiceImpl implements OrderService
+{
+    @Resource
+    private OrderDao orderDao;
+    @Resource
+    private StorageService storageService;
+    @Resource
+    private AccountService accountService;
+
+    /**
+     * 创建订单->调用库存服务扣减库存->调用账户服务扣减账户余额->修改订单状态
+     */
+
+    @Override
+    @GlobalTransactional(name = "fsp-create-order",rollbackFor = Exception.class)
+    public void create(Order order){
+        log.info("----->开始新建订单");
+        //新建订单
+        orderDao.create(order);
+
+        //扣减库存
+        log.info("----->订单微服务开始调用库存，做扣减Count");
+        storageService.decrease(order.getProductId(),order.getCount());
+        log.info("----->订单微服务开始调用库存，做扣减end");
+
+        //扣减账户
+        log.info("----->订单微服务开始调用账户，做扣减Money");
+        accountService.decrease(order.getUserId(),order.getMoney());
+        log.info("----->订单微服务开始调用账户，做扣减end");
+
+
+        //修改订单状态，从零到1代表已经完成
+        log.info("----->修改订单状态开始");
+        orderDao.update(order.getUserId(),0);
+        log.info("----->修改订单状态结束");
+
+        log.info("----->下订单结束了");
+
+    }
+}
+```
+
+##### controller
+
+```java
+@RestController
+public class OrderController {
+    @Resource
+    private OrderService orderService;
+
+    @GetMapping("/order/create")
+    public CommonResult create(Order order)
+    {
+        orderService.create(order);
+        return new CommonResult(200,"订单创建成功");
+    }
+}
+```
+
+##### 主启动
+
+```java
+@SpringBootApplication
+@EnableFeignClients
+@EnableDiscoveryClient
+public class SeataOrderMain2001 {
+    public static void main(String[] args) {
+        SpringApplication.run(SeataOrderMain2001.class,args);
+    }
+}
+```
+
+#### 新建Storage-Module
+
+##### 新建module
+
+新建一个`seata-storage-service2002`
+
+##### pom
+
+与2001一样
+
+##### yaml
+
+与2001类似
+
+##### domain
+
+###### Storage
+
+```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Storage {
+    private Long id;
+    private Long productId; // 产品ID
+    private Integer total; // 总库存
+    private Integer used; // 已用库存
+    private Integer residue; // 剩余库存
+}
+```
+
+###### CommonResult
+
+与2001一样。
+
+##### dao接口及实现
+
+###### StorageDao
+
+```java
+@Mapper
+public interface StorageDao {
+
+    //扣减库存
+    void decrease(@Param("productId") Long productId, @Param("count") Integer count);
+}
+```
+
+###### StorageMapper
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.atguigu.springcloud.dao.StorageDao">
+
+    <resultMap id="BaseResultMap" type="com.atguigu.springcloud.domain.Storage">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="product_id" property="productId" jdbcType="BIGINT"/>
+        <result column="total" property="total" jdbcType="INTEGER"/>
+        <result column="used" property="used" jdbcType="INTEGER"/>
+        <result column="residue" property="residue" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <update id="decrease">
+        UPDATE
+            seata_storage.t_storage
+        SET
+            used = used + #{count},residue = residue - #{count}
+        WHERE
+            product_id = #{productId}
+    </update>
+
+</mapper>
+```
+
+##### service接口及实现
+
+###### StorageService
+
+```java
+public interface StorageService {
+    /**
+     * 扣减库存
+     */
+    void decrease(Long productId, Integer count);
+}
+```
+
+###### StorageServiceImpl
+
+```java
+@Service
+public class StorageServiceImpl implements StorageService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StorageServiceImpl.class);
+
+    @Resource
+    private StorageDao storageDao;
+
+    /**
+     * 扣减库存
+     */
+    @Override
+    public void decrease(Long productId, Integer count) {
+        LOGGER.info("------->storage-service中扣减库存开始");
+        storageDao.decrease(productId,count);
+        LOGGER.info("------->storage-service中扣减库存结束");
+    }
+}
+```
+
+##### controller
+
+```java
+@RestController
+public class StorageController {
+
+    @Autowired
+    private StorageService storageService;
+
+    /**
+     * 扣减库存
+     */
+    @RequestMapping("/storage/decrease")
+    public CommonResult decrease(Long productId, Integer count) {
+        storageService.decrease(productId, count);
+        return new CommonResult(200,"扣减库存成功！");
+    }
+}
+```
+
+#### 新建Account-Module
+
+##### yaml
+
+与2001类似
+
+##### domain-Account
+
+```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Account {
+
+    private Long id;
+    private Long userId; // 用户id
+    private BigDecimal total; // 总额度
+    private BigDecimal used; // 已用额度
+    private BigDecimal residue; // 剩余额度
+}
+```
+
+##### dao接口及实现
+
+###### AccountDao
+
+```java
+@Mapper
+public interface AccountDao {
+
+    /**
+     * 扣减账户余额
+     */
+    void decrease(@Param("userId") Long userId, @Param("money") BigDecimal money);
+}
+```
+
+###### AccountMapper
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.atguigu.springcloud.dao.AccountDao">
+
+    <resultMap id="BaseResultMap" type="com.atguigu.springcloud.domain.Account">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="total" property="total" jdbcType="DECIMAL"/>
+        <result column="used" property="used" jdbcType="DECIMAL"/>
+        <result column="residue" property="residue" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <update id="decrease">
+        UPDATE seata_account.t_account
+        SET residue = residue - #{money},used = used + #{money}
+        WHERE user_id = #{userId};
+    </update>
+
+</mapper>
+```
+
+##### service接口及实现
+
+###### AccountService
+
+```java
+public interface AccountService {
+
+    /**
+     * 扣减账户余额
+     * @param userId 用户id
+     * @param money 金额
+     */
+    void decrease(@RequestParam("userId") Long userId, @RequestParam("money") BigDecimal money);
+}
+```
+
+###### AccountServiceImpl
+
+```java
+@Service
+public class AccountServiceImpl implements AccountService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountServiceImpl.class);
+
+
+    @Resource
+    AccountDao accountDao;
+
+    /**
+     * 扣减账户余额
+     */
+    @Override
+    public void decrease(Long userId, BigDecimal money) {
+        LOGGER.info("------->account-service中扣减账户余额开始");
+        accountDao.decrease(userId,money);
+        LOGGER.info("------->account-service中扣减账户余额结束");
+    }
+}
+```
+
+##### controller
+
+```java
+@RestController
+public class AccountController {
+
+    @Resource
+    AccountService accountService;
+
+    /**
+     * 扣减账户余额
+     */
+    @RequestMapping("/account/decrease")
+    public CommonResult decrease(@RequestParam("userId") Long userId, @RequestParam("money") BigDecimal money){
+        accountService.decrease(userId,money);
+        return new CommonResult(200,"扣减账户余额成功！");
+    }
+}
+```
 
 ### @GlobalTransaction验证
 
+#### 正常下单
+
+下订单 -> 减库存 -> 扣余额 -> 改（订单）状态。
+
+数据库初始化情况：
+
+![image-20220422115800280](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439974.png)
+
+启动nacos、seata、2001、2002、2003，进行测试访问：正常下单 - http://localhost:2001/order/create?userId=1&productId=1&count=10&money=100
+
+![image-20220422133859604](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439975.png)
+
+#### **超时异常，没加@GlobalTransactional**
+
+模拟AccountServiceImpl添加超时
+
+```java
+@Override
+public void decrease(Long userId, BigDecimal money) {
+
+    try {
+        TimeUnit.SECONDS.sleep(20);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+
+    LOGGER.info("------->account-service中扣减账户余额开始");
+    accountDao.decrease(userId,money);
+    LOGGER.info("------->account-service中扣减账户余额结束");
+}
+```
+
+另外，OpenFeign的调用默认时间是1s以内，所以最后会抛异常。
+
+![image-20220422134958773](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439976.png)
+
+现在查看下数据库情况。
+
+![image-20220422140651508](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439977.png)
+
+**故障情况**
+
+- 当库存和账户金额扣减后，订单状态并没有设置为已经完成，没有从零改为1
+- 而且由于feign的重试机制，账户余额还有可能被多次扣减
+
+#### **超时异常，加了@GlobalTransactional**
+
+用@GlobalTransactional标注OrderServiceImpl的create()方法。
+
+```java
+@Override
+@GlobalTransactional(name = "fsp-create-order",rollbackFor = Exception.class,timeoutMills = 60000)
+//    @Transactional
+public void create(Order order){
+    ....
+}
+```
+
+还是模拟AccountServiceImpl添加超时，下单后数据库数据并没有任何改变，记录都添加不进来，**达到出异常，数据库回滚的效果**。
+
 ### Seata原理简介
+
+2019年1月份蚂蚁金服和阿里巴巴共同开源的分布式事务解决方案。
+
+Simple Extensible Autonomous Transaction Architecture，简单可扩展自治事务框架。
+
+2020起始，用1.0以后的版本。Alina Gingertail
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439978.png)
+
+##### 分布式事务的执行流程
+
+- TM开启分布式事务(TM向TC注册全局事务记录) ;
+
+- 按业务场景，编排数据库、服务等事务内资源(RM向TC汇报资源准备状态) ;
+
+- TM结束分布式事务，事务一阶段结束(TM通知TC提交/回滚分布式事务) ;
+
+- TC汇总事务信息，决定分布式事务是提交还是回滚；
+
+- TC通知所有RM提交/回滚资源，事务二阶段结束。
+
+
+
+##### AT模式如何做到对业务的无侵入
+
+###### 前提
+
+* 基于支持本地 ACID 事务的关系型数据库。
+
+* Java 应用，通过 JDBC 访问数据库。
+
+###### 整体机制
+
+两阶段提交协议的演变：
+
+* 一阶段：业务数据和回滚日志记录在同一个本地事务中提交，释放本地锁和连接资源。
+* 二阶段：
+  * 提交异步化，非常快速地完成。
+  * 回滚通过一阶段的回滚日志进行反向补偿。
+
+###### 一阶段加载
+
+在一阶段，Seata会拦截“业务SQL”
+
+- 解析SQL语义，找到“业务SQL" 要更新的业务数据，在业务数据被更新前，将其保存成"before image”
+
+
+- 执行“业务SQL" 更新业务数据，在业务数据更新之后,
+
+
+- 其保存成"after image”，最后生成行锁。
+
+
+以上操作全部在一个数据库事务内完成, 这样保证了一阶段操作的原子性。
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439979.png)
+
+###### 二阶段提交
+
+二阶段如果顺利提交的话，因为"业务SQL"在一阶段已经提交至数据库，所以Seata框架只需将一阶段保存的快照数据和行锁删掉，完成数据清理即可。
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439980.png)
+
+###### 二阶段回滚
+
+二阶段如果是回滚的话，Seata 就需要回滚一阶段已经执行的 “业务SQL"，还原业务数据。
+
+回滚方式便是用"before image"还原业务数据；但在还原前要首先要校验脏写，对比“数据库当前业务数据”和"after image"。
+
+如果两份数据完全一致就说明没有脏写， 可以还原业务数据，如果不一致就说明有脏写, 出现脏写就需要转人工处理。
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439981.png)
+
+补充：
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439982.png)
