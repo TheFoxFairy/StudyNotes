@@ -3641,6 +3641,8 @@ public int kth(String s) {
 
 #### 第一课
 
+![image-20220422181243874](../../../../../Pictures/assets/剑指offer/image-20220422181243874.png)
+
 #### 第二课
 
 #### 第三课
