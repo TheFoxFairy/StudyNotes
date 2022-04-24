@@ -120,7 +120,7 @@
   * [Gitbook使用](杂记记录/Gitbook使用.md)
   * [jenkins同步github](杂记记录/jenkins同步github.md)
   * [Linux系统安装Python3](杂记记录/Linux系统安装Python3.md)
-  * [node配置](杂记记录/node配置.md)
+  * [nodejs配置](杂记记录/nodejs配置.md)
   * [使用GithubPages+jekyll搭建自己的博客](杂记记录/使用GithubPages+jekyll搭建自己的博客.md)
   * [如何上传文件到github](杂记记录/如何上传文件到github.md)
   * [安装docker](杂记记录/安装docker.md)
@@ -140,7 +140,6 @@
   - Java笔记
     - JavaSE笔记
       * [01-java基础](编程笔记/Java笔记/JavaSE笔记/01-java基础.md)
-      * [02-注射与反解](编程笔记/Java笔记/JavaSE笔记/02-注射与反解.md)
       * [02-设计模式](编程笔记/Java笔记/JavaSE笔记/02-设计模式.md)
       * [03-注射与反解](编程笔记/Java笔记/JavaSE笔记/03-注射与反解.md)
       * [04-多线程详解](编程笔记/Java笔记/JavaSE笔记/04-多线程详解.md)
