@@ -12,13 +12,9 @@
 | ------------ | ------------ |
 | Linux        | :baby_chick: |
 | RabbitMQ     | :baby_chick: |
-| SpringCloud  | :baby_chick: |
 | JVM          | :baby_chick: |
-| Nginx        |              |
 | 设计模式     |              |
 | MySQL高级    |              |
-| Docker       |              |
-| Netty        |              |
 
 ## 复习内容板块
 

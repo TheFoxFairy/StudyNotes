@@ -70,7 +70,7 @@ JVM 即为 Java 虚拟机，提供了字节码文件(`.class`)的运行环境支
 
 ## JVM的体系结构
 
-![image-20220305124752709](../../../../../../../Pictures/assets/08-JVM原理/image-20220305124752709.png)
+![image-20220305124752709](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509355.png)
 
 > 程序计数器、方法栈、虚拟机栈一定没有垃圾回收。所谓JVM调优基本上都是调堆，方法区是特殊的堆区。
 
@@ -228,7 +228,7 @@ JVM规范定义了如下类型的类的加载器。
 
 #### 什么是虚拟栈（Java虚拟机）
 
-![image-20220217203811375](../../../../../../../Pictures/assets/04-JVM原理/image-20220217203811375.png)
+![image-20220217203811375](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509357.png)
 
 ##### **虚拟机栈**
 
@@ -313,13 +313,13 @@ Java 虚拟机使用局部变量在方法调用时传递参数。在类方法调
 
 #### 整体流程
 
-![image-20220217215120446](../../../../../../../Pictures/assets/04-JVM原理/image-20220217215120446.png)
+![image-20220217215120446](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509358.png)
 
 ## 垃圾回收与垃圾回收器
 
 ### 堆的分代模型
 
-![image-20220217214104471](../../../../../../../Pictures/assets/04-JVM原理/image-20220217214104471.png)
+![image-20220217214104471](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509359.png)
 
 **新生代**：刚new出来的那些对象
 

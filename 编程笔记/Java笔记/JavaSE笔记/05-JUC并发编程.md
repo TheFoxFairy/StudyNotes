@@ -1,17 +1,17 @@
-JUC并发编程
+# JUC并发编程
 
 ## 什么是JUC
 
 **源码+官方文档**
 
-![image-20220227104050720](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220227104050720.png)
+![image-20220227104050720](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509263.png)
 
 JUC是 在Java 5.0添加的 **java.util.concurrent**包的简称，目的就是为了更好的支持高并发任务， 让开发者利用这个包进行的多线程编程时可以有效的减少竞争条件和死锁线程。
 
 - 业务：普通的线程代码Thread
 - Runnable没有返回值，效率比Callable相对低。
 
-![image-20220227104407562](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220227104407562.png)
+![image-20220227104407562](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509264.png)
 
 JUC是继承Callable接口的。
 
@@ -197,11 +197,11 @@ class Ticket{
 
 ### Lock接口
 
-![image-20220227111519349](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220227111519349.png)
+![image-20220227111519349](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509265.png)
 
-![image-20220227111612827](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220227111612827.png)
+![image-20220227111612827](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509266.png)
 
-![image-20220227111945757](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220227111945757.png)
+![image-20220227111945757](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509267.png)
 
 公平锁：十分公平：可以先来后到 
 
@@ -317,7 +317,7 @@ class Data{ //资源
 
 这种问题会造成死锁问题。将`if`判断替换成`while`判断。
 
-![image-20220227232841412](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220227232841412.png)
+![image-20220227232841412](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509269.png)
 
 ```java
 /**
@@ -404,7 +404,7 @@ class Data{ //资源
 
 ### JUC版的生产者和消费者问题
 
-![image-20220227233153582](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220227233153582.png)
+![image-20220227233153582](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509270.png)
 
 ```java
 
@@ -871,7 +871,7 @@ private static final Object PRESENT = new Object(); // 不变得值！
 
 ### Map不安全
 
-![image-20220228153835218](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220228153835218.png)
+![image-20220228153835218](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509271.png)
 
 ```java
 public class MapTest {
@@ -895,17 +895,17 @@ public class MapTest {
 
 ## Callable
 
-![image-20220228161855884](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220228161855884.png)
+![image-20220228161855884](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509272.png)
 
 1. 可以有返回值
 2. 可以抛出异常
 3. 方法不同，run()/call()
 
-![image-20220228162344875](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220228162344875.png)
+![image-20220228162344875](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509273.png)
 
-![image-20220228162514092](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220228162514092.png)
+![image-20220228162514092](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509274.png)
 
-![image-20220228162542285](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220228162542285.png)
+![image-20220228162542285](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509275.png)
 
 ```java
 public class CallableTest {
@@ -946,7 +946,7 @@ class MyThread implements Callable<String> {
 
 ### CountDownLatch
 
-![image-20220301100447109](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220301100447109.png)
+![image-20220301100447109](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509276.png)
 
 - `countDownLatch.countDown()是数量减1`
 - `countDownLatch.await()用于等待计数器归零，然后向下执行`
@@ -980,7 +980,7 @@ public class CountDownLatchDemo {
 
 ### CyclicBarrier
 
-![image-20220301103255922](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220301103255922.png)
+![image-20220301103255922](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509277.png)
 
 类似于加法计数器。
 
@@ -1017,7 +1017,7 @@ public class CyclicBarrierDemo {
 
 ### Semaphre
 
-![image-20220301103757160](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220301103757160.png)
+![image-20220301103757160](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509278.png)
 
 semaphore：信号量
 
@@ -1152,19 +1152,19 @@ class MyCache{
 
 ## 阻塞队列
 
-![image-20220301112423794](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220301112423794.png)
+![image-20220301112423794](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509279.png)
 
 
 
 阻塞队列：
 
-![image-20220301112448849](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220301112448849.png)
+![image-20220301112448849](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509280.png)
 
-![image-20220301112503811](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220301112503811.png)
+![image-20220301112503811](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509281.png)
 
 **BlockingQueue** BlockingQueue 不是新的东西
 
-![image-20220301113111569](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220301113111569.png)
+![image-20220301113111569](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509282.png)
 
 **学会使用队列** 
 
@@ -1332,7 +1332,7 @@ public class SynchronousQueueDemo {
 
 ### 三大方法
 
-![image-20220301155045471](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220301155045471.png)
+![image-20220301155045471](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509283.png)
 
 * 创建单个线程：`newSingleThreadExecutor`
 * 创建固定线程池大小：`newFixedThreadPool`
@@ -1417,7 +1417,7 @@ public ThreadPoolExecutor(int corePoolSize, // 核心线程池大小
 }
 ```
 
-![image-20220301162244452](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220301162244452.png)
+![image-20220301162244452](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509284.png)
 
 ### 手动创建一个线程池
 
@@ -1516,7 +1516,7 @@ public interface Runnable {
 
 ### Function函数接口
 
-![image-20220302100830467](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220302100830467.png)
+![image-20220302100830467](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509285.png)
 
 ```java
 /*
@@ -1540,7 +1540,7 @@ public class demo1 {
 
 ### Predicate：断定型接口，有一个输入参数，返回值只能是布尔值
 
-![image-20220302101129560](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220302101129560.png)
+![image-20220302101129560](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509286.png)
 
 ```java
 // 断定型接口：有一个参数吗，返回值只能是布尔值
@@ -1562,7 +1562,7 @@ public class demo2 {
 
 ### Consumer消费型接口
 
-![image-20220302101635771](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220302101635771.png)
+![image-20220302101635771](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509287.png)
 
 ```java
 public class demo3 {
@@ -1585,7 +1585,7 @@ public class demo3 {
 
 ### Supplier供给型接口
 
-![image-20220302101916603](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220302101916603.png)
+![image-20220302101916603](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509288.png)
 
 ```java
 public class demo4 {
@@ -1707,17 +1707,17 @@ ForkJoin在JDK1.7出现的，并行执行任务！提高效率，适合大数据
 
 ForkJoin是将一个大任务拆分为多个子任务进行操作。就是分而治之思想。
 
-![image-20220302104603326](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220302104603326.png)
+![image-20220302104603326](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509289.png)
 
 ### ForkJoin特点：工作窃取
 
 这个里面维护的都是双端队列。
 
-![image-20220302104943515](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220302104943515.png)
+![image-20220302104943515](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509290.png)
 
-![image-20220302123459105](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220302123459105.png)
+![image-20220302123459105](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509291.png)
 
-![image-20220302123517176](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220302123517176.png)
+![image-20220302123517176](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509292.png)
 
 ```java
 public class ForkJoinDemo extends RecursiveTask<Long> {
@@ -1798,7 +1798,7 @@ public class ForkJoinDemo extends RecursiveTask<Long> {
 
 ### Future设计的初衷：对某个未来的事件结果进行建模，类似于ajax
 
-![image-20220302131442134](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220302131442134.png)
+![image-20220302131442134](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509293.png)
 
 ```java
 /**
@@ -1862,7 +1862,7 @@ JMM是java内存模型，不存在的东西，就是一个概念/约定。
 
 8种操作：
 
-![在这里插入图片描述](../../../../../../../Pictures/assets/07-JUC并发编程/20190807134933227.png)
+![在这里插入图片描述](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509294.png)
 
 **8种原子操作如下：**
 
@@ -1897,7 +1897,7 @@ JMM是java内存模型，不存在的东西，就是一个概念/约定。
 
 问题： 程序不知道主内存的值已经被修改过了
 
-![image-20220303102013332](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220303102013332.png)
+![image-20220303102013332](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509295.png)
 
 ## Volatile
 
@@ -1968,7 +1968,7 @@ public class demo02 {
 
 如果不加lock和synchronized，怎么保证原子性。
 
-![image-20220303103036113](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220303103036113.png)
+![image-20220303103036113](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509296.png)
 
 使用原子类，解决原子性问题
 
@@ -2019,9 +2019,9 @@ y = x * x; // 4
 
 所期望的是1234步骤进行顺序执行，但是计算机会进行指令重排（比如2134，1324也可以执行）
 
-![image-20220303104718976](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220303104718976.png)
+![image-20220303104718976](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509297.png)
 
-![image-20220303104734627](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220303104734627.png)
+![image-20220303104734627](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509298.png)
 
 volatile可以避免指令重排：
 
@@ -2031,7 +2031,7 @@ volatile可以避免指令重排：
 
 2、可以保证某些变量的内存可见性 （利用这些特性volatile实现了可见性）
 
-![image-20220303105352687](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220303105352687.png)
+![image-20220303105352687](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509299.png)
 
 volatile是可以保持可见性，不能保证原子性，由于内存屏障，可以保证避免指令重排的现象发生。
 
@@ -2195,7 +2195,7 @@ class Test{
 }
 ```
 
-![image-20220303150903189](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220303150903189.png)
+![image-20220303150903189](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509300.png)
 
 
 
@@ -2225,17 +2225,17 @@ public class CASDemo {
 
 ### Unsafe
 
-![image-20220304102147460](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220304102147460.png)
+![image-20220304102147460](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509301.png)
 
-![image-20220304102303291](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220304102303291.png)
+![image-20220304102303291](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509302.png)
 
-![image-20220304102338655](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220304102338655.png)
+![image-20220304102338655](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509303.png)
 
 ### CAS：什么是ABA问题
 
 ABA问题：A被一个线程修改成B然后又被另一个修改成A，实际对象已经发生改变，可以通过增加版本号来改变。
 
-![image-20220304103010273](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220304103010273.png)
+![image-20220304103010273](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509304.png)
 
 ```java
 public class CASDemo {
@@ -2294,7 +2294,7 @@ public ReentrantLock(boolean fair) {
 
 可重入锁（递归锁）
 
-![image-20220304105408547](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220304105408547.png)
+![image-20220304105408547](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509305.png)
 
 #### Sychronized
 
@@ -2441,7 +2441,7 @@ public class SpinLockDemo {
 
 #### 什么是死锁
 
-![image-20220304124255380](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220304124255380.png)
+![image-20220304124255380](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509306.png)
 
 ```java
 public class DeadLockDemo {
@@ -2491,7 +2491,7 @@ class MyThread implements Runnable {
 jps -l
 ```
 
-![image-20220304125747378](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220304125747378.png)
+![image-20220304125747378](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509307.png)
 
 2. 使用`jstack 进程号`找到死锁问题
 
@@ -2499,7 +2499,7 @@ jps -l
 jstack 19360
 ```
 
-![image-20220304125954076](../../../../../../../Pictures/assets/07-JUC并发编程/image-20220304125954076.png)
+![image-20220304125954076](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509308.png)
 
 排查问题：
 

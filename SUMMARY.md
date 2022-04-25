@@ -143,11 +143,8 @@
       * [02-设计模式](编程笔记/Java笔记/JavaSE笔记/02-设计模式.md)
       * [03-注射与反解](编程笔记/Java笔记/JavaSE笔记/03-注射与反解.md)
       * [04-多线程详解](编程笔记/Java笔记/JavaSE笔记/04-多线程详解.md)
-      * [05-集合框架](编程笔记/Java笔记/JavaSE笔记/05-集合框架.md)
-      * [06-网络编程](编程笔记/Java笔记/JavaSE笔记/06-网络编程.md)
-      * [07-JUC并发编程](编程笔记/Java笔记/JavaSE笔记/07-JUC并发编程.md)
-      * [08-JVM原理](编程笔记/Java笔记/JavaSE笔记/08-JVM原理.md)
-      * [09-数据库操作](编程笔记/Java笔记/JavaSE笔记/09-数据库操作.md)
+      * [05-JUC并发编程](编程笔记/Java笔记/JavaSE笔记/05-JUC并发编程.md)
+      * [06-JVM原理](编程笔记/Java笔记/JavaSE笔记/06-JVM原理.md)
     - SSM框架笔记
       * [FluentMybatis笔记](编程笔记/Java笔记/SSM框架笔记/FluentMybatis笔记.md)
       * [MybatisPlus笔记](编程笔记/Java笔记/SSM框架笔记/MybatisPlus笔记.md)
