@@ -407,7 +407,6 @@ class Data{ //资源
 ![image-20220227233153582](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509270.png)
 
 ```java
-
 /**
  * 线程之间的通信问题：生产者和消费者问题！等待唤醒、通知唤醒
  * 线程交替执行A、B操作同一个变量num=0

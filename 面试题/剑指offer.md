@@ -201,10 +201,8 @@ public void quickSort(int[] arr,int left,int right){
         quickSort(arr,p[1]+1,right);
     }
 }
-
 public void quickSort(int[] arr) {
     if(arr.length <= 1 || arr == null) return;
-
     quickSort(arr,0,arr.length-1);
 }
 ```
@@ -267,7 +265,7 @@ if(arr[p2] > arr[p1]){
 问题1：数组 3 5 6 7 4 3 5 8 ,数 5
     1) arr[i] <= num => arr[i]和小于等于num的下一个数交换，并右移，i++
     2) arr[i] > num,i++
-    
+
 问题2：3 5 6 3 4 5 2 6 9 0 ，数5
 》 使用双指针，大于5的放在右边，小于5的数放在左边
 
@@ -302,7 +300,7 @@ if(arr[p2] > arr[p1]){
 ```java
 // 大根堆：如果插入当前位置的节点，比父节点的值大，那么久和父节点交换。
 // 如果想建立小根堆，就和大根堆相反来，父节点是最小的，调整时，也要保持该结构
-public void heapInsert(int[] arr,int index){
+public void heapInsert(int[] arr,int index){ // 从下往上调整
     while(arr[index] > arr[(index-1)/2]){
         swap(arr,index,(index-1)/2);
         index = (index-1)/2;
@@ -310,7 +308,7 @@ public void heapInsert(int[] arr,int index){
 }
 
 // 调整当前index位置的堆结构
-public void heapify(int[] arr,int index,int heapSize){
+public void heapify(int[] arr,int index,int heapSize){ // 从上往下调整
     int left = 2*index + 1;// 左孩子的下标
 
     while (left < heapSize){
@@ -508,10 +506,6 @@ a = a ^ b = 甲^乙^甲=乙
 | 把右边第k位变成1 | 101001——101101 k=3 | x \| (1 << (k-1)) |
 | 把右边第k位变成0 | 101101——101001 k =3 | x & ~(1 << (k-1)) |
 | 右数第k位取反    | 101001——101101 k=3  | x ~ (1 << (k-1))  |
-| 取末三位         | 101101——101         | x & 7             |
-| 取末k位      | 关键是要找到末尾k个1    | x & (~(~0 << k))  |
-| 取右边第k位  |                         | x & (1 << ( k-1)) |
-| 把末k位变成1 | 找到末尾的1，然后或一下 | x \| ((1<<k) -1 ) |
 | 取最右边的1 |  | x & (~x + 1 )=x&(-x) |
 
 ## 链表
@@ -3643,9 +3637,184 @@ public int kth(String s) {
 
 ![image-20220422181243874](../../../../../Pictures/assets/剑指offer/image-20220422181243874.png)
 
+* 思维
+
+```tex
+要求不能用于非基于比较的排序。 找到相邻两数的最大差值。
+
+数组arr = {9,0,17,4,63,72,65,67,99}
+比如将数据分成（99/10+1）10份，然后将数据放在10个桶中，
+0~9,10~，20~，30~，...，90~99
+
+放进去，每个数，每个桶只要最大数和最小数。
+
+只关心每个桶与桶之间的差值。
+```
+
+![image-20220425125328294](../../../../../Pictures/assets/剑指offer/image-20220425125328294.png)
+
+![image-20220425130351554](../../../../../Pictures/assets/剑指offer/image-20220425130351554.png)
+
+* 思路
+
+```tex
+数组arr = {3,2,1,0,1,0,2,0,3,2,1,0,4,0}
+
+每个子区间的异或和需要为0:	异或和为0或者当前为0，就记录
+
+还可以使用前缀和思想，求前缀异或和进行解决问题。
+```
+
+* 代码
+
+![image-20220426140527180](../../../../../Pictures/assets/剑指offer/image-20220426140527180.png)
+
+```java
+public void solution(int[] arr){
+
+    int ans = 0;
+    int count = 0;
+    int[] dp = new int[arr.length+1];
+
+    for(int i=0;i<arr.length;i++){
+
+        ans ^= arr[i];
+
+        if(ans == 0){
+            count++;
+            dp[i+1] = dp[i] + 1;
+        }else{
+            dp[i+1] = dp[i] ;
+        }
+        if(i + 1 < arr.length && arr[i+1] == 0){
+            ans = 0;
+        }
+    }
+   
+    for(int i=1;i<=arr.length;i++)
+        System.out.println(dp[i]);
+    System.out.println(count);
+}
+```
+
 #### 第二课
 
+![image-20220426140647736](../../../../../Pictures/assets/剑指offer/image-20220426140647736.png)
+
+* 思路
+
+```tex
+n1:[3,2,5]，可以使用任意枚硬币
+n2:[1,2,4]，最多只能使用一次
+m=10
+
+1) a(0) , b(10) => a(0)*b(10)
+2) a(1) , b(9)
+......
+n) a(10), b(0) => a(10)*b(0)
+
+=> 预处理方法
+=> 背包问题，每种硬币的可能组成方法
+
+```
+
+* 思路
+
+```java
+public int[] coin1(int[] arr, int m) {
+    int[] dp = new int[m + 1];
+
+    dp[0] = 1;
+    for (int j = 0; j * arr[0] <= m; j++)
+        dp[arr[0] * j] = 1;
+    for (int i = 1; i < arr.length; i++) {
+        for (int j = 1; j <= m; j++) {
+            dp[j] += ((j - arr[i]) >= 0 ? dp[j - arr[i]] : 0);
+        }
+    }
+    return dp;
+}
+
+//    public int coin2(int[] arr,int index,int m){
+//
+//        if(m == 0) return 1;
+//        if(m < 0 || index == arr.length)  return 0;
+//
+//        int first = coin2(arr,index+1,m-arr[index]);
+//        int second = coin2(arr,index+1,m);
+//
+//        return first + second;
+//    }
+
+public int[] coin2(int[] arr, int m) {
+
+    int[] dp = new int[m + 1];
+
+    if (arr[0] <= m)
+        dp[arr[0]] = 1;
+    dp[0] = 1;
+    for (int i = 1; i < arr.length; i++) {
+        for (int j = m; j >=1; j--) {
+            dp[j] +=  ((j - arr[i]) >= 0 ? dp[j - arr[i]] : 0);
+        }
+    }
+    return dp;
+}
+
+public int solution(int[] n1, int[] n2, int m) {
+
+    int[] dp1 = this.coin1(n1, m);
+    int[] dp2 = this.coin2(n2, m);
+    System.out.println("+=========================+");
+    for (int i = 1; i < dp1.length; i++)
+        System.out.println(i + ":" + dp1[i] + ":" + dp2[i]);
+
+
+    int ans = 0;
+    for (int i = 1; i <= m; i++) {
+        ans += dp1[i] * dp2[m - i];
+    }
+
+    return ans;
+
+}
+```
+
+![image-20220426160406267](../../../../../Pictures/assets/剑指offer/image-20220426160406267.png)
+
+* 思路
+
+```tex
+第一种方式，使用二分，进行比较，以及当前前面有多少小的数。
+
+第二种方式：如果求第k小数，就直接找每个数组中的k/2位置，进行比较查找。
+如果已经确定了第k数不存在该范围，直接抛弃不合适范围的数。
+```
+
+* 代码
+
+```java
+public int findKth(int[] a, int la, int ra, int[] b, int lb, int rb, int k) {
+
+    if (a.length == 0 || la > ra) return b[lb + k - 1];
+    if (b.length == 0 || lb > rb) return a[la + k - 1];
+
+    if (k == 1) return Math.min(a[la + k - 1], b[lb + k - 1]);
+
+    int ka = Math.min(k / 2, ra - la + 1);
+    int kb = Math.min(k - ka, rb - lb + 1);
+
+    if (a[la + ka - 1] > b[lb + kb - 1]) {
+        return findKth(a, la, la + ka - 1, b, lb + kb, rb, k - kb);
+    } else {
+        return findKth(a, la + ka, ra, b, lb, lb + kb - 1, k - ka);
+    }
+}
+```
+
 #### 第三课
+
+
 
 #### 第四课
 
