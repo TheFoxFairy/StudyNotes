@@ -14,7 +14,7 @@
 - 新项目上线，对各种JVM参数设置一脸茫然，直接默认吧然后就JJ了
 - 每次面试之前都要重新背一遍JVM的一些原理概念性的东西，然而面试官却经常问你在实际项目中如何调优JVM参数，如何解决GC、OOM等问题，一脸懵逼。
 
-![image-20200704111417472](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202205170906865)
+![](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202205170906865)
 
 大部分Java开发人员，除会在项目中使用到与Java平台相关的各种高精尖技术，对于Java技术的核心Java虚拟机了解甚少。
 
@@ -26,7 +26,7 @@
 
 计算机系统体系对我们来说越来越远，在不了解底层实现方式的前提下，通过高级语言很容易编写程序代码。但事实上计算机并不认识高级语言。
 
-![image-20200704112119729](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202205170907407)
+![](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202205170907407)
 
 #### 架构师每天在思考什么？
 
