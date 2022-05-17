@@ -2912,11 +2912,188 @@ public class ObjectTest {
 
 缺点：在堆空间中开辟了一块空间作为句柄池，句柄池本身也会占用空间；通过两次指针访问才能访问到堆中的对象，效率低
 
-![img](../../../../../../../Pictures/assets/06-JVM原理/3b4817c0085d413f9227d315fdf9ca05)
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202205170921176)
 
 ##### 直接指针（HotSpot采用）
 
+优点：直接指针是局部变量表中的引用，直接指向堆中的实例，在对象实例中有类型指针，指向的是方法区中的对象类型数据
+
+缺点：对象被移动（垃圾收集时移动对象很普遍）时需要修改 reference 的值
+
+![第10章_方式2：使用直接指针访问](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202205170920470.png)
+
 ### 直接内存
+
+#### 直接内存概述
+
+不是虚拟机运行时数据区的一部分，也不是《Java虚拟机规范》中定义的内存区域。**直接内存是在Java堆外的、直接向系统申请的内存区间**，来源于NIO，通过存在堆中的DirectByteBuffer操作Native内存。
+
+通常，访问直接内存的速度会优于Java堆，即读写性能高。
+
+- 因此出于性能考虑，读写频繁的场合可能会考虑使用直接内存。
+- Java的NIO库允许Java程序使用直接内存，用于数据缓冲区
+
+使用下列代码，直接分配本地内存空间
+
+```java
+/**
+ *  IO:阻塞式                  NIO (New IO / Non-Blocking IO):非阻塞式
+ *  byte[] / char[]     Buffer
+ *  Stream              Channel
+ *
+ * 查看直接内存的占用与释放
+ */
+public class BufferTest {
+
+    private static final int BUFFER = 1024 * 1024 * 1024; //1GB
+
+    public static void main(String[] args){
+        //直接分配本地内存空间
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(BUFFER);
+        System.out.println("直接内存分配完毕，请求指示！");
+
+        Scanner scanner = new Scanner(System.in);
+        scanner.next();
+
+        System.out.println("直接内存开始释放！");
+        byteBuffer = null;
+        System.gc();
+        scanner.next();
+    }
+
+}
+```
+
+#### BIO与NIO
+
+##### 非直接缓冲区BIO
+
+原来采用BIO的架构，我们**需要从用户态切换成内核态**
+
+![image-20200709170907611](../../../../../../../Pictures/assets/06-JVM原理/a171a5aa08054d17a3e016fcae5cac7e)
+
+##### 直接缓冲区NIO
+
+使用NIO时，如下图。操作系统划出的直接缓存区可以被Java代码直接访问，只有一份。NIO适合对大文件的读写操作
+
+![Untitled](../../../../../../../Pictures/assets/06-JVM原理/d5fe006563629639c8adcfbbc2d639d8.png)
+
+代码测试：
+
+```java
+public class BufferTest1 {
+
+    private static final String TO = "F:\\test\\异界BD中字.mp4";
+    private static final int _100Mb = 1024 * 1024 * 100;
+
+    public static void main(String[] args) {
+        long sum = 0;
+        String src = "F:\\test\\异界BD中字.mp4";
+        for (int i = 0; i < 3; i++) {
+            String dest = "F:\\test\\异界BD中字_" + i + ".mp4";
+            // sum += io(src,dest); //54606
+            sum += directBuffer(src, dest); //50244
+        }
+
+        System.out.println("总花费的时间为：" + sum);
+    }
+
+    private static long directBuffer(String src, String dest) {
+        long start = System.currentTimeMillis();
+
+        FileChannel inChannel = null;
+        FileChannel outChannel = null;
+        try {
+            inChannel = new FileInputStream(src).getChannel();
+            outChannel = new FileOutputStream(dest).getChannel();
+
+            ByteBuffer byteBuffer = ByteBuffer.allocateDirect(_100Mb);
+            while (inChannel.read(byteBuffer) != -1) {
+                byteBuffer.flip(); //修改为读数据模式
+                outChannel.write(byteBuffer);
+                byteBuffer.clear(); //清空
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (inChannel != null) {
+                try {
+                    inChannel.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            if (outChannel != null) {
+                try {
+                    outChannel.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        long end = System.currentTimeMillis();
+        return end - start;
+    }
+
+    private static long io(String src, String dest) {
+        long start = System.currentTimeMillis();
+      
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        try {
+            fis = new FileInputStream(src);
+            fos = new FileOutputStream(dest);
+            byte[] buffer = new byte[_100Mb];
+            while (true) {
+                int len = fis.read(buffer);
+                if (len == -1) {
+                    break;
+                }
+                fos.write(buffer, 0, len);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+        long end = System.currentTimeMillis();
+
+        return end - start;
+    }
+}
+```
+
+#### 直接内存与OOM
+
+- 也可能导致OutOfMemoryError异常
+
+- 由于直接内存在Java堆外，因此它的大小不会直接受限于-xmx指定的最大堆大小，但是系统内存是有限的，Java堆和直接内存的总和依然受限于操作系统能给出的最大内存。 缺点
+  - 分配回收成本较高
+  - 不受JVM内存回收管理
+
+- 直接内存大小可以通过MaxDirectMemorySize设置
+
+- 如果不指定，默认与堆的最大值``-Xmx``参数值一致
+
+![image-20200709230647277](../../../../../../../Pictures/assets/06-JVM原理/3a47858459724743a272c6a2d5e4c9b5)
 
 ### 执行引擎
 
