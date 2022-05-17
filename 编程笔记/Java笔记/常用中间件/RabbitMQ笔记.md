@@ -978,39 +978,176 @@ public static void publishMessageAsync() throws Exception{
 
 ####  3 种发布确认速度对比 
 
-- 单独发布消息
+- **单独发布消息**：同步等待确认，简单，但吞吐量非常有限。
 
-  同步等待确认，简单，但吞吐量非常有限。
+- **批量发布消息**：批量同步等待确认，简单，合理的吞吐量，一旦出现问题但很难推断出是那条消息出现了问题。
 
-- 批量发布消息
-
-  批量同步等待确认，简单，合理的吞吐量，一旦出现问题但很难推断出是那条消息出现了问题。
-
-- 异步处理
-
-  最佳性能和资源使用，在出现错误的情况下可以很好地控制，但是实现起来稍微难些
+- **异步处理**：最佳性能和资源使用，在出现错误的情况下可以很好地控制，但是实现起来稍微难些
 
 ## 交换机
 
 ### Exchanges
 
+在这一部分中，我们将做一些完全不同的事情-我们将消息传达给多个消费者。这种模式 称为 ”发布/订阅”。
+
 #### Exchanges概念
+
+RabbitMQ 消息传递模型的核心思想是: **生产者生产的消息从不会直接发送到队列**。实际上，通常生产者甚至都不知道这些消息传递传递到了哪些队列中。
+
+相反，**生产者只能将消息发送到交换机(exchange)**，交换机工作的内容非常简单，一方面它接收来自生产者的消息，另一方面将它们推入队列。交换机必须确切知道如何处理收到的消息。是应该把这些消息放到特定队列还是说把他们到许多队列中还是说应该丢弃它们。这就的由交换机的类型来决定。
+
+![RabbitMQ-00000035](../../../../../../../Pictures/assets/RabbitMQ笔记/RabbitMQ-00000035.png)
 
 #### Exchanges类型
 
+- **直接(direct)（路由）**
+- **主题(topic)**
+- 标题(headers)
+- **扇出(fanout)（发布订阅）**
+
 #### 无名Exchanges
+
+在前面部分我们对 exchange 一无所知，但仍然能够将消息发送到队列。之前能实现的 原因是因为我们使用的是默认交换，我们通过空字符串(“”)进行标识。
+
+```java
+channel.basicPublish("",queueName,null,message.getBytes());
+```
+
+第一个参数是交换机的名称。空字符串表示默认或无名称交换机：消息能路由发送到队列中其实是由 routingKey(bindingkey)绑定 key 指定的，如果它存在的话。
 
 ### 临时队列
 
+之前的章节我们使用的是具有特定名称的队列(还记得 hello 和 ack_queue 吗？)。队列的名称我们来说至关重要，我们需要指定我们的消费者去消费哪个队列的消息。
+
+每当我们连接到 Rabbit 时，我们都需要一个全新的空队列，为此我们可以创建一个具有**随机名称的队列**，或者能让服务器为我们选择一个随机队列名称那就更好了。其次一旦我们断开了消费者的连接，队列将被自动删除。
+
+创建临时队列的方式如下：
+
+```java
+String queueName = channel.queueDeclare().getQueue();
+```
+
+![RabbitMQ-00000037](../../../../../../../Pictures/assets/RabbitMQ笔记/RabbitMQ-00000037.png)
+
 ### 绑定(bindings)
 
-### Fanout
+什么是 bingding 呢，binding 其实是 exchange 和 queue 之间的桥梁，它告诉我们 exchange 和那个队列进行了绑定关系。比如说下面这张图告诉我们的就是 X 与 Q1 和 Q2 进行了绑定。
+
+![RabbitMQ-00000038](../../../../../../../Pictures/assets/RabbitMQ笔记/RabbitMQ-00000038.png)
+
+> 生产者通过将交换机与队列绑定，能够区别对待，想使用那个队列就是用那个队列。
+
+![image-20210627203918539](../../../../../../../Pictures/assets/RabbitMQ笔记/image-20210627203918539.png)
+
+### Fanout（发布订阅）
 
 #### Fanout介绍
 
+Fanout 这种类型非常简单。正如从名称中猜到的那样，它是将接收到的所有消息广播到它知道的 所有队列中。系统中默认有些 exchange 类型。
+
+![RabbitMQ-00000039](../../../../../../../Pictures/assets/RabbitMQ笔记/RabbitMQ-00000039.png)
+
 #### Fanout实战
 
+![RabbitMQ-00000040](../../../../../../../Pictures/assets/RabbitMQ笔记/RabbitMQ-00000040.png)
+
+Logs 和临时队列的绑定关系如下图：
+
+![image-20220427182357813](../../../../../../../Pictures/assets/RabbitMQ笔记/image-20220427182357813.png)
+
+为了说明这种模式，我们将构建一个简单的日志系统。它将由两个程序组成:第一个程序将发出日志消息，第二个程序是消费者。其中我们会启动两个消费者，其中一个消费者接收到消息后把日志存储在磁盘，ReceiveLogs 将接收到的消息打印在控制台：
+
+```java
+public class ReceiveLogs {
+
+    // 交换机的名称
+    private static final String exchangeName = "logs";
+
+    public void consumer() throws IOException, TimeoutException {
+        Channel channel = RabbitMqUtils.getChannel();
+
+        // 声明一个交换机 - 发布订阅模式
+        channel.exchangeDeclare(exchangeName,"fanout");
+
+        // 声明一个队列，临时队列 - 队列的名称是随机的，当消费者与队列连接的时候，队列就自动删除
+        String queueName = channel.queueDeclare().getQueue();
+
+        // 绑定交换机与队列 - (队列名称，交换机名称，routingKey)
+        channel.queueBind(queueName,exchangeName,"");
+        System.out.println(Thread.currentThread().getName()+"等待接收消息，把接收消息打印在屏幕上...");
+
+        // 函数回调
+        DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+            String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+            System.out.println(Thread.currentThread().getName()+"控制台打印接收到的消息" + message);
+        };
+
+        CancelCallback cancelCallback = (deliver) -> {};
+
+        channel.basicConsume(queueName,true,deliverCallback, cancelCallback);
+    }
+
+    public static void main(String[] args) throws Exception{
+        for(int i=0;i<2;i++){
+            new Thread(()->{
+                ReceiveLogs receive = new ReceiveLogs();
+                try {
+                    receive.consumer();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+    }
+}
+```
+
+EmitLog 发送消息给两个消费者接收：
+
+```java
+public class EmitLog {
+
+    private static final String exchangeName = "logs";
+
+    public static void main(String[] args) throws Exception {
+        Channel channel = RabbitMqUtils.getChannel();
+        channel.exchangeDeclare(exchangeName,"fanout");
+
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNext()){
+
+            String message = scanner.next();
+
+            channel.basicPublish(exchangeName,"",null,message.getBytes(StandardCharsets.UTF_8));
+            System.out.println("生产者发出消息："+message);
+
+        }
+    }
+
+}
+```
+
+> 即使生产者上，添加了routingKey，只要在同一个交换机中，就会被广播到。但是在消费者端添加routingKey会报错，是因为发布订阅模式，禁用routingKey。
+
 ### Direct Exchange
+
+次来回顾一下什么是 bindings，绑定是交换机和队列之间的桥梁关系。也可以这么理解： **队列只对它绑定的交换机的消息感兴趣**。绑定用参数：routingKey 来表示也可称该参数为 binding key， 创建绑定我们用代码：channel.queueBind(queueName, exchangeName, "routingKey");
+
+绑定之后的意义由其交换类型决定。
+
+#### Direct介绍
+
+上一节中的我们的日志系统将所有消息广播给所有消费者，对此我们想做一些改变，例如我们希 望将日志消息写入磁盘的程序仅接收严重错误(errros)，而不存储哪些警告(warning)或信息(info)日志 消息避免浪费磁盘空间。Fanout 这种交换类型并不能给我们带来很大的灵活性-它只能进行无意识的 广播，在这里我们将使用 direct 这种类型来进行替换，这种类型的工作方式是，消息只去到它绑定的 routingKey 队列中去。
+
+![RabbitMQ-00000042](../../../../../../../Pictures/assets/RabbitMQ笔记/RabbitMQ-00000042.png)
+
+在上面这张图中，我们可以看到 X 绑定了两个队列，绑定类型是 direct。队列Q1 绑定键为 orange， 队列 Q2 绑定键有两个:一个绑定键为 black，另一个绑定键为 green。
+
+在这种绑定情况下，生产者发布消息到 exchange 上，绑定键为 orange 的消息会被发布到队列 Q1。绑定键为 blackgreen 和的消息会被发布到队列 Q2，其他消息类型的消息将被丢弃。 
+
+#### 多重绑定
+
+#### Direct实战
 
 ### Topics
 

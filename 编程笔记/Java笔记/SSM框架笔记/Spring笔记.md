@@ -572,6 +572,7 @@ public class MyTest {
     <property name="name" value="逗比" />
 </bean>
 ```
+
 ##### Bean注入
 
 ```xml
@@ -584,6 +585,7 @@ public class MyTest {
     <property name="address" ref="addr"/>
 </bean>
 ```
+
 ##### 数组注入
 
 ```xml

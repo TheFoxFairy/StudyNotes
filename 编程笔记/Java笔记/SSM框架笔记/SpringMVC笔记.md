@@ -1,6 +1,8 @@
 # SpringMVC笔记
 
-## 回顾MVC<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201090108807.jpg" width=20% align=right hspace="5" vspace="5"/>
+## 回顾MVC
+
+<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201090108807.jpg" width=20% align=right hspace="5" vspace="5"/>
 
 ### 什么是MVC
 

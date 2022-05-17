@@ -3789,6 +3789,8 @@ public int solution(int[] n1, int[] n2, int m) {
 
 第二种方式：如果求第k小数，就直接找每个数组中的k/2位置，进行比较查找。
 如果已经确定了第k数不存在该范围，直接抛弃不合适范围的数。
+
+时间复杂度为log(mn)
 ```
 
 * 代码
@@ -3801,7 +3803,7 @@ public int findKth(int[] a, int la, int ra, int[] b, int lb, int rb, int k) {
 
     if (k == 1) return Math.min(a[la + k - 1], b[lb + k - 1]);
 
-    int ka = Math.min(k / 2, ra - la + 1);
+    int ka = Math.min(k / 2, ra - la + 1); // 避免k过大，超过数组长度
     int kb = Math.min(k - ka, rb - lb + 1);
 
     if (a[la + ka - 1] > b[lb + kb - 1]) {
@@ -3814,7 +3816,61 @@ public int findKth(int[] a, int la, int ra, int[] b, int lb, int rb, int k) {
 
 #### 第三课
 
+![image-20220426160406267](../../../../../Pictures/assets/剑指offer/image-20220426160406267.png)
 
+* 思路
+
+```tex
+上一课的最后一个题目。
+这个题目思路很棒。
+```
+
+ ![image-20220427132754183](../../../../../Pictures/assets/剑指offer/image-20220427132754183.png)
+
+* 思路
+
+```tex
+约瑟夫环问题。
+第一种：循环遍历
+
+第二种：当前长度为i，编号为*，想通过
+f(i,*,m) 求出i+1的编号A
+
+=>
+7:1 2 3 4 5 6 7
+6:5 6 _ 1 2 3 4
+5:2 3 _ 4 5 _ 1
+4:4 _ _ 1 2 _ 3
+3:1 _ _ 2 3 _ _
+2:1 _ _ 2 _ _ _
+1:_ _ _ 1 _ _ _
+
+=> 表达式=> 老 =(新-1+s) % i + 1 => s被杀节点的编号
+=> s = (m-1) % i + 1
+=> 老 = (新+(m-1)%i)%i+1 = (新+m-1)%i+1 =>  这是固定的顺序序号
+
+
+约瑟夫环递推公式：
+    f(1) = 0;     //表示最后一轮的胜出者当前编号是0
+    f(x) = (f(x - 1) + m) % x , 1 < x <= n //每一轮都找到胜出者在上一轮中的编号
+    不过本题里m是在变化的，所以要相应地变为：
+==> f(x) = (f(x - 1) + a[(n - x) % m]) % x, 1 < x <= n
+```
+
+* 代码
+
+```java
+public void solution(int[] arr, int n, int m) {
+
+    int ans = 0;
+    for (int i = 2; i <= n; i++) {
+        ans =  (ans + (arr[(n-i) % m])) % i;
+    }
+
+    System.out.println(ans);
+
+}
+```
 
 #### 第四课
 

@@ -465,7 +465,7 @@ class Data2 { //资源
 
 #### Condition 精准的通知和唤醒线程
 
-通过Condition进行顺序执行任务。实际上是通过Condition精确的监视每一个方法，需要手动设置唤醒的指定线程，以及使当前线程等待。
+**通过Condition进行顺序执行任务。实际上是通过Condition精确的监视每一个方法，需要手动设置唤醒的指定线程，以及使当前线程等待。**
 
 可以这样理解：班主任通知班长让同学们打卡，班长然后一个一个提醒同学，学生打完卡，汇报给班长，然后班长汇报给班主任。这是顺序的执行，但是中间班长通知所有同学，可以多线程进行。
 
@@ -562,9 +562,9 @@ class Data3{
 
 - **两个同步方法，一个对象调用**，标准情况下，两个线程先打印短信还是电话？发短信
 
-- sendSms延迟4秒，两个线程先打印 发短信还是 打电话？发短信
+- sendSms延迟4秒，两个线程先打印发短信还是 打电话？发短信
 
-**synchronized 锁的是方法的调用者，也就是对象锁。两个方法持有的是同一把锁，因此谁先拿到锁谁先执行**
+**synchronized 锁的是方法的调用者，也就是对象锁。两个方法持有的是同一把锁，因此谁先拿到锁谁先执行**  。
 
 ```java
 /**
@@ -666,7 +666,7 @@ class Phone2{
 }
 ```
 
-* **两个静态同步方法，一个对象调用**，增加两个静态的同步方法，只有一个对象，先打印 发短信？打电话？
+* **两个静态同步方法，一个对象调用**，增加两个静态的同步方法，只有一个对象，先打电话还是发短信？打电话？
 
 **static方法类一加载就会执行，synchronized 锁的是Class对象，所以两个方法持有一把锁，谁先得到谁先执行**
 
@@ -970,8 +970,7 @@ public class CountDownLatchDemo {
 
         countDownLatch.await(); // 等待计数器归零，然后向下执行
 
-        System.out.println("close
-                           door");
+        System.out.println("close door");
 
     }
 }
@@ -1014,7 +1013,7 @@ public class CyclicBarrierDemo {
 }
 ```
 
-### Semaphre
+### Semaphore
 
 ![image-20220301103757160](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509278.png)
 
@@ -1327,7 +1326,7 @@ public class SynchronousQueueDemo {
 
 **核心作用：线程复用、可以控制最大并发数、管理线程。**
 
-> 线程池面试：三大方法、7大多参数、4种拒绝策略
+> 线程池面试：三大方法、7大参数、4种拒绝策略
 
 ### 三大方法
 
@@ -1502,6 +1501,8 @@ ExecutorService threadPool = new ThreadPoolExecutor(
 > 必须掌握：lambda表达式、链式编程、函数式接口、Stream流式计算
 
 ### 函数式接口：只有一个方法的接口
+
+Java 8为函数式接口引入了一个新注解@FunctionalInterface，主要用于**编译级错误检查**，加上该注解，当你写的接口不符合函数式接口定义的时候，编译器会报错。
 
 ```java
 @FunctionalInterface
@@ -1680,7 +1681,7 @@ public class Test {
         User u3 = new User(3,"c",23);
         User u4 = new User(4,"d",24);
         User u5 = new User(5,"e",25);
-        User u6 = new User(6,"e",26);
+        User u6 = new User(6,"f",26);
 
         // 集合是用来存储的
         List<User> userList = Arrays.asList(u1,u2,u3,u4,u5,u6);
@@ -1738,7 +1739,6 @@ public class ForkJoinDemo extends RecursiveTask<Long> {
 
         }
     }
-
 
     @Override
     protected Long compute() {
@@ -1817,8 +1817,6 @@ public class Demo1 {
 
         System.out.println(1111);
 
-        completableFuture.get();//获取阻塞执行结果
-
         //有返回值的异步回调
         CompletableFuture<Integer> completableFuture2 = CompletableFuture.supplyAsync(()->{
             System.out.println(Thread.currentThread().getName() + "supplyAsync => void");
@@ -1853,7 +1851,7 @@ JMM是java内存模型，不存在的东西，就是一个概念/约定。
 
 **关于JMM的一些同步约定：**
 
-* 线程解锁钱，必须把共享变量**立刻**刷回主存。
+* 线程解锁前，必须把共享变量**立刻**刷回主存。
 * 线程加锁前，必须读取主存中的最新值到工作内存中。
 * 加锁和解锁是同一把锁
 
@@ -1891,8 +1889,6 @@ JMM是java内存模型，不存在的东西，就是一个概念/约定。
 （7）如果一个变量实现没有被lock操作锁定，则不允许对它执行unlock操作，也不允许去unlock一个被其他线程锁定的变量。
 
 （8）对一个变量执行unlock操作之前，必须先把此变量同步回主内存（执行store和write操作）。
-
-
 
 问题： 程序不知道主内存的值已经被修改过了
 
@@ -1978,11 +1974,10 @@ public class demo02 {
     private volatile static AtomicInteger num = new AtomicInteger();
 
     public static void add(){
-        num.getAndIncrement(); // AtomicInteger +1,CAS
+        num.getAndIncrement(); // AtomicInteger+1,CAS
     }
 
     public static void main(String[] args) {
-
 
         for(int i=0;i<20;i++){
             new Thread(()->{
@@ -2016,13 +2011,13 @@ x = x + 5; // 3
 y = x * x; // 4
 ```
 
-所期望的是1234步骤进行顺序执行，但是计算机会进行指令重排（比如2134，1324也可以执行）
+所期望的是1234步骤进行顺序执行，但是计算机会进行指令重排（比如2134，1324也可以执行）。
 
 ![image-20220303104718976](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509297.png)
 
 ![image-20220303104734627](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509298.png)
 
-volatile可以避免指令重排：
+volatile可以避免指令重排。
 
 内存屏障，CPU指令。作用：
 
@@ -2032,7 +2027,7 @@ volatile可以避免指令重排：
 
 ![image-20220303105352687](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509299.png)
 
-volatile是可以保持可见性，不能保证原子性，由于内存屏障，可以保证避免指令重排的现象发生。
+**volatile是可以保持可见性，不能保证原子性，由于内存屏障，可以保证避免指令重排的现象发生。**
 
 ## 彻底玩转单例模式
 
@@ -2050,7 +2045,6 @@ public class Hungry {
     private byte[] data4 = new byte[1024*1024];
 
     private Hungry(){
-
     }
 
     private final static Hungry HUNGRY = new Hungry();
@@ -2196,8 +2190,6 @@ class Test{
 
 ![image-20220303150903189](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509300.png)
 
-
-
 ## 深入理解CAS 
 
 ### 什么是CAS
@@ -2256,6 +2248,8 @@ public class CASDemo {
 }
 ```
 
+![image-20220502124037974](../../../../../../../Pictures/assets/05-JUC并发编程/image-20220502124037974.png)
+
 ### 原子引用
 
 解决ABA 问题，引入原子引用！ 对应的思想：乐观锁！
@@ -2265,10 +2259,6 @@ public class CASDemo {
 **Integer 使用了对象缓存机制，默认范围是 -128 ~ 127 ，推荐使用静态工厂方法 valueOf 获取对象实例，而不是 new，因为 valueOf 使用缓存，而 new 一定会创建新的对象分配新的内存空间；**
 
 AtomicStampedReference 注意，如果泛型是一个包装类，注意对象的引用问题。 正常在业务操作，这里面比较的都是一个个对象。
-
-````java
-
-````
 
 ## 各种锁的理解
 
@@ -2286,7 +2276,7 @@ public ReentrantLock() {
 //可以通过传入fair值，变成公平锁
 public ReentrantLock(boolean fair) {
         sync = fair ? new FairSync() : new NonfairSync();
-    }
+}
 ```
 
 ### 可重入锁
@@ -2388,7 +2378,6 @@ public class SpinLockDemo {
         Thread thread = Thread.currentThread();
         System.out.println(Thread.currentThread().getName() + "==> mylock" );
         while (!reference.compareAndSet(null,thread)){
-
         }
     }
 
@@ -2397,7 +2386,6 @@ public class SpinLockDemo {
         Thread thread = Thread.currentThread();
         System.out.println(Thread.currentThread().getName() + "==> myUnlock" );
         while (!reference.compareAndSet(thread,null)){
-
         }
     }
 
@@ -2408,8 +2396,6 @@ public class SpinLockDemo {
 
         // 底层使用自旋锁
         SpinLockDemo lock2 = new SpinLockDemo();
-
-
         new Thread(()->{
             lock2.myLock();
             try {
@@ -2419,7 +2405,6 @@ public class SpinLockDemo {
             }finally {
                 lock2.myUnlock();
             }
-
         },"T1").start();
         new Thread(()->{
             lock2.myLock();
@@ -2504,3 +2489,67 @@ jstack 19360
 
 1. 查看日志
 2. 看下堆栈信息
+
+## Synchronized锁升级
+
+* 无锁
+
+* 偏向锁：没有线程竞争的情况，锁会偏向于线程A，不需要再次获取，而是直接进入。如果存在多个线程来抢占锁，线程B来抢占所，锁会升级为轻量级锁。（默认4秒后开启，`-XX:BiasedLockingStartupDelay=0`）
+
+* 轻量级锁：为了避免线程阻塞，通过自旋锁来实现（也就是重试）。 如果重试后，还是抢不到锁，升级为重量级锁。
+
+* 重量级锁：
+  * 用户态到内核态的切换
+  * 没有获得锁的线程会阻塞，再被唤醒
+  
+
+## JUC面试
+
+### 互联网三高
+
+* 高性能：响应（低延时）（缓存、JVM优化）、吞吐（高吞吐量、高并发）（集群、负载均衡）
+* 高扩展
+* 高可用
+
+### 线程的数量是不是越多越好
+
+不是
+
+- 单核CPU设定多线程是否有意义
+
+- 工作线程数是不是设置的越大越好
+
+- 工作线程数设多少合适
+
+$N_{threads}= N_{CPU}*U_{CPU}*(1+W/C)$
+
+* $N_{CPU}$是处理器的核的数目，可以通过`Runtime.getRuntime.availableProcessors()`得到
+* $U_{CPU}$是期望的CPU的利用率（该值应该介于0~1之间）
+* $W/C$是等待时间与计算时间的比率。
+
+### synchronized悲观锁与JUC乐观锁
+
+悲观锁：总感觉有人要自己竞争，因此一直加锁。
+
+乐观锁：总感觉没人和自己竞争，一直不设防。
+
+synchronized本质上是一个悲观锁。
+
+JUC的乐观锁是自旋锁，自旋锁的实现方式是通过CAS实现的。
+
+### CAS面试题：ABA问题
+
+就是A被修改为B，然后又被修改为A。
+
+（版本号/boolean）
+
+### CAS的原子性问题
+
+CAS操作cpu本身有指令支持-不保障原子性
+
+### 什么时候使用CAS，什么使用悲观锁
+
+能使用synchronized的时候，就优先先使用syn。
+
+JDK1.5之后，synchronized内部有锁升级过程，偏向锁-> 自旋锁（轻量级）->重量级锁（悲观排队锁）
+
