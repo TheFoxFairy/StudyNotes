@@ -8,7 +8,7 @@
 - 顺序执行程序
 - 计算机硬件由运算器、控制器、存储器、输入设备和输出设备五大部分组成
 
-<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122349.png" alt="image-20220215065945520"  />
+<img src="https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122349.png" alt="image-20220215065945520"  />
 
 
 
@@ -40,7 +40,7 @@
 - 运算器
   - 运算器主要运行算数运算和逻辑运算，并将中间结果暂存到运算器中
 
-<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122350.png" alt="image-20220215070135910"  />
+<img src="https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122350.png" alt="image-20220215070135910"  />
 
 ### 硬盘的分类
 
@@ -53,12 +53,12 @@
   - 硬盘可以以二进制来存储表示文字、图片等信息。
   - 硬盘可以根据转速来判断硬盘的好坏（转速7200转/分，读取速度100-200M/s）
 
-![image-20220215070220344](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122351.png)
+![image-20220215070220344](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122351.png)
 
 * **固态硬盘（Solid State Disk, SSD）**
   * 固态硬盘通过闪存颗粒（固态电子存储芯片阵列）来存储数据
 
-![image-20220215070327724](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122352.png)
+![image-20220215070327724](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122352.png)
 
 **读写速度的区别**：
 
@@ -72,11 +72,11 @@
   - 寻道时间
   - 数据传输时间
 
-<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122353.png" alt="image-20220215070541605" style="zoom:67%;" />
+<img src="https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122353.png" alt="image-20220215070541605" style="zoom:67%;" />
 
 ### 顺序读写与随机读写
 
-![image-20220215070631735](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122354.png)
+![image-20220215070631735](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122354.png)
 
 顺序读写比随机读写快很多，但是很不幸，随机读写比顺序读写在实际应用中更好。
 
@@ -113,7 +113,7 @@ netmask子网掩码(255.255.255.0)--分割（通过与运算）
 
 **域名服务器DNS**：
 
-![image-20220215070738701](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122355.png)
+![image-20220215070738701](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122355.png)
 
 - DNS是域名服务器，用来解析域名的（域名和IP之间的解析）。（一般借助阿里云等公司帮助注册域名）
 - 如果没有这东西，登陆某个网站时就必须输入该网站的IP地址，有了DNS就可以直接输入网址。
@@ -123,7 +123,7 @@ netmask子网掩码(255.255.255.0)--分割（通过与运算）
 127.0.0.1 baidu
 ```
 
-![image-20220215083458023](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122356.png)
+![image-20220215083458023](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122356.png)
 
 > 域名劫持就利用了该原理。
 
@@ -143,7 +143,7 @@ netmask子网掩码(255.255.255.0)--分割（通过与运算）
   - NAT模式下的虚拟系统的TCP/IP配置信息是由VMnet8(NAT)虚拟网络的DHCP服务器提供的
   - 虚拟系统也就无法和本局域网中的其他真实主机进行通讯
 
-![image-20220215070821683](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122357.png)
+![image-20220215070821683](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122357.png)
 
 ### 软件分类
 
@@ -179,14 +179,14 @@ netmask子网掩码(255.255.255.0)--分割（通过与运算）
     - 不要使用最新版的CentOS
   - 主要用于服务器版本
 
-<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122358.png" alt="img" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122358.png" alt="img" style="zoom:50%;" />
 
 - Debain（免费）
   - Ubuntu
     - 视窗界面良好的Linux系统
     - 一些主流的软件都支持Ubuntu系统
 
-<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122359.png" alt="image-20220215071146535" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122359.png" alt="image-20220215071146535" style="zoom:50%;" />
 
 ### Linux下载
 
@@ -225,57 +225,57 @@ ZF71R-DMX85-08DQY-8YMNC-PPHV8
 
 ### 创建虚拟主机
 
-![image-20220215091644544](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122360.png)
+![image-20220215091644544](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122360.png)
 
-![image-20220215091700183](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122361.png)
+![image-20220215091700183](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122361.png)
 
-![image-20220215091715061](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122362.png)
+![image-20220215091715061](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122362.png)
 
-![image-20220215091726255](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122363.png)
+![image-20220215091726255](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122363.png)
 
-![image-20220215091733768](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122364.png)
+![image-20220215091733768](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122364.png)
 
-![image-20220215091740361](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122365.png)
+![image-20220215091740361](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122365.png)
 
-![image-20220215091809839](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122366.png)
+![image-20220215091809839](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122366.png)
 
-![image-20220215091834053](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122367.png)
+![image-20220215091834053](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122367.png)
 
-![image-20220215091849528](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122368.png)
+![image-20220215091849528](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122368.png)
 
-![image-20220215091901065](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122369.png)
+![image-20220215091901065](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122369.png)
 
-![image-20220215091917072](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122370.png)
+![image-20220215091917072](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122370.png)
 
 通过自定义硬件修改硬件参数
 
-![image-20220215092014780](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122371.png)
+![image-20220215092014780](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122371.png)
 
 ### 安装操作系统
 
-![image-20220215092142316](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122372.png)
+![image-20220215092142316](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122372.png)
 
 默认即可，选英文版本，不然容易出现bug
 
-![image-20220215092326988](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122373.png)
+![image-20220215092326988](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122373.png)
 
 
 
-![image-20220215092439465](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122374.png)
+![image-20220215092439465](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122374.png)
 
-![image-20220215092557328](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122375.png)
+![image-20220215092557328](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122375.png)
 
 修改主机名称，便于找到
 
-![image-20220215094127650](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122376.png)
+![image-20220215094127650](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122376.png)
 
 然后点击开始安装，密码改为123456
 
-![image-20220215094223636](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122377.png)
+![image-20220215094223636](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122377.png)
 
 等待安装即可，然后重启。
 
-![image-20220215094824153](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122378.png)
+![image-20220215094824153](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122378.png)
 
 ### 配置常见参数
 
@@ -283,17 +283,17 @@ ZF71R-DMX85-08DQY-8YMNC-PPHV8
 
 - 在编辑-虚拟网络编辑器里设置vmnet8的参数，同时取消勾选DHCP服务
 
-![image-20220215152623502](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122379.png)
+![image-20220215152623502](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122379.png)
 
 * 在NAT设置里面，记录下子网IP、子网掩码、网关这三个参数
 
-![image-20220215152727916](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122380.png)
+![image-20220215152727916](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122380.png)
 
 * 打开宿主机控制面板-网络和Internet-网络连接，配置VMnet8的IPV4协议，要保证该网络的IP地址和刚才NAT设置里面的子网IP地址在同一网段
 
 **这里要和虚拟机的IP在同一网段，不然主机没法ping通虚拟机**
 
-![image-20220215153509652](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122381.png)
+![image-20220215153509652](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122381.png)
 
 * 进入虚拟机内CentOS系统，编辑配置文件
 
@@ -319,7 +319,7 @@ GATEWAY=192.168.183.2
 DNS1=114.114.114.114
 ```
 
-![image-20220215154138310](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122382.png)
+![image-20220215154138310](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122382.png)
 
 * 增加DNS服务器配置
 
@@ -327,7 +327,7 @@ DNS1=114.114.114.114
 vi /etc/resolv.conf
 ```
 
-![image-20220215154033858](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122383.png)
+![image-20220215154033858](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122383.png)
 
 * 重启网卡重新加载配置文件
 
@@ -341,7 +341,7 @@ service network restart
 ip addr
 ```
 
-![image-20220215154345430](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122384.png)
+![image-20220215154345430](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122384.png)
 
 * 使用ping命令，查看是否可以访问网络,`ctrl+c`停止该命令
 
@@ -381,7 +381,7 @@ systemctl status firewalld
 vi /etc/selinux/config
 ```
 
-![image-20220215155722186](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122385.png)
+![image-20220215155722186](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122385.png)
 
 #### 关机命令
 
@@ -418,7 +418,7 @@ reboot
 - 转到
   - 回到某一个历史快照的节点
 
-<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122386.png" alt="image-20220215160157684" style="zoom: 80%;" />
+<img src="https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122386.png" alt="image-20220215160157684" style="zoom: 80%;" />
 
 - 克隆
   - 复制某一个历史快照节点
@@ -458,13 +458,13 @@ hostname hutao
 
 负责向虚拟机输入命令
 
-![image-20220215100029136](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122387.png)
+![image-20220215100029136](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122387.png)
 
 #### 使用XFtp
 
 复制则向服务器传输文件
 
-![image-20220215164445370](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122388.png)
+![image-20220215164445370](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122388.png)
 
 ## Linux命令
 
@@ -633,7 +633,7 @@ disk3 1P
 
 ### Linux文件目录
 
-![image-20220216111002612](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122389.png)
+![image-20220216111002612](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122389.png)
 
 `/bin`：bin是Binary的缩写, 这个目录存放着最经常使用的命令。
 
@@ -673,7 +673,7 @@ disk3 1P
 
 ``/var``：这个目录中存放着在不断扩充着的东西，我们习惯将那些经常被修改的目录放在这个目录下。包括各种日志文件。
 
-![image-20220216111159414](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161122390.png)
+![image-20220216111159414](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122390.png)
 
 ``/usr``：这是一个非常重要的目录，用户的很多应用程序和文件都放在这个目录下，类似于windows下的program files目录。
 

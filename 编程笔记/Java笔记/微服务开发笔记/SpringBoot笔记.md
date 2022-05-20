@@ -1,5451 +1,8109 @@
-# SpringBoot笔记
-
-## 文档
-
-* [spring boot](https://docs.spring.io/spring-boot/docs/current/reference/html/using.html#using.build-systems)
+# SpringCloud笔记
 
 ## 前言
 
-### 回顾Spring
+### 内容
 
-Spring是一个开源框架，2003 年兴起的一个轻量级的Java 开发框架，作者：Rod Johnson  。**Spring是为了解决企业级应用开发的复杂性而创建的，简化开发。**
+SpringCloud + SpringCloud alibaba
 
-为了降低Java开发的复杂性，Spring采用了以下4种关键策略：
+### 前提技术要求
 
-1、基于POJO的轻量级和最小侵入性编程，所有东西都是bean；
+java8+maven+git+github+nginx+RabbitMQ+SpringBoot2.0
 
-2、通过IOC，依赖注入（DI）和面向接口实现松耦合；
+## 微服务架构零基础理论入门
 
-3、基于切面（AOP）和惯例进行声明式编程；
+### 微服务架构概述
 
-4、通过切面和模版减少样式代码，RedisTemplate，xxxTemplate；
+#### 什么是微服务
 
-### 什么是SpringBoot
+微服务是将完整系统的各个模块拆分成一个个独立的服务模块，服务之间可以相互调用。
 
-SpringBoot就是一个javaweb的开发框架，和SpringMVC类似，对比其他javaweb框架的好处，官方说是简化开发，**约定大于配置**，  you can "just run"，能迅速的开发web应用，几行代码开发一个http接口。
+#### 微服务的优缺点
 
-Spring Boot 基于 Spring 开发，Spirng Boot 本身并不提供 Spring 框架的核心特性以及扩展功能，只是用于快速、敏捷地开发新一代基于 Spring 框架的应用程序。也就是说，它并不是用来替代 Spring 的解决方案，而是和 Spring 框架紧密结合用于提升 Spring 开发者体验的工具。Spring Boot 以**约定大于配置的核心思想**，默认帮我们进行了很多设置，多数 Spring Boot 应用只需要很少的 Spring 配置。同时它集成了大量常用的第三方库配置（例如 Redis、MongoDB、Jpa、RabbitMQ、Quartz 等等），Spring Boot 应用中这些第三方库几乎可以零配置的开箱即用。
+优点：
 
-简单来说就是SpringBoot其实不是什么新的框架，它默认配置了很多框架的使用方式，就像maven整合了所有的jar包，spring boot整合了所有的框架 。
+- 单个服务代码量少，易于维护；
+- 单个微服务可独立部署和运行；
+- 进程独立，可以动态升级；
+- 多个相同的微服务可以做负载均衡，提高性能和可靠性；
 
-### SpringBoot的主要优点
+缺点：
 
-- 为所有Spring开发者更快的入门
-- **开箱即用**，提供各种默认配置来简化项目配置
-- 内嵌式容器简化Web项目
-- 没有冗余代码生成和XML配置的要求
+- 虽然代码量少，但系统复杂度的总量是不变的；
+- 每一个微服务需要一个团队维护，小公司玩不起…
 
-## 什么是微服务架构
+#### 什么是分布式微服务架构
 
-### 什么是微服务
+分布式微服务架构：**服务注册与发现**、**服务调用**、**服务熔断**、**负载均衡**、**服务降级**、**服务消息队列**、**配置中心管理**、**服务网关**、**服务监控**、**全链路追踪**、自动化构建部署、服务定时任务调度操作。
 
-微服务是一种架构风格，它要求我们在开发一个应用的时候，这个应用必须构建成―系列小服务的组合；可以通过http的方式进行互通。
+![image-20220408112828193](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204081551152.png)
 
-### 单体应用架构
+#### SpringCloud与微服务的关系
 
-所谓单体应用架构（all in one)是指，我们将一个应用的中的所有应用服务都封装在一个应用中。
+SpringCloud是分布式微服务架构的**一站式解决方案**，是多种微服务架构落地技术的**集合体**，俗称微服务全家桶。
 
-无论是ERP、CRM或是其他什么系统，你都把数据库访问，web访问，等等各个功能放到一个war包内。
+SpringCloud官网：https://spring.io/
 
-- 这样做的好处是，易于开发和测试;也十分方便部署;当需要扩展时，只需要将war复制多份，然后放到多个服务器上，再做个负载均衡就可以了。
-- 单体应用架构的缺点是，哪怕我要修改一个非常小的地方，我都需要停掉整个服务，重新打包、部署这个应用war包。特别是对于一个大型应用，我们不可能吧所有内容都放在一个应用里面，我们如何维护、如何分工合作都是问题。
+#### SpringCloud集成相关优质项目推荐
 
-### 微服务架构
+![](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204081551154.png)
 
-all in one的架构方式，我们把所有的功能单元放在一个应用里面。然后我们把整个应用部署到服务器上。如果负载能力不行，我们将整个应用进行水平复制，进行扩展，然后在负载均衡。
+#### 大厂案例
 
-所谓微服务架构，就是打破之前all in one的架构方式，把每个功能元素独立出来。把独立出来的功能元素的动态组合，需要的功能元素才去拿来组合，需要多一些时可以整合多个功能元素。所以微服务架构是对功能元素进行复制，而没有对整个应用进行复制。
+##### 京东
 
-这样做的好处是:
+![京东.png](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204081551155.png)
 
-1. 节省了调用资源。
-2. 每个功能元素的服务都是一个可替换的、可独立升级的软件代码。
+##### 阿里
 
-<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201172250012.png" alt="image-20220117225033466" style="zoom:50%;" />
+![阿里.png](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204081551156.png)
 
-### 如何构建微服务
+##### 京东物流
 
-​	一个大型系统的微服务架构，就像一个复杂交织的神经网络，每一个神经元就是一个功能元素，它们各自完成自己的功能，然后通过http相互请求调用。比如一个电商系统，查缓存、连数据库、浏览页面、结账、支付等服务都是一个个独立的功能服务，都被微化了，它们作为一个个微服务共同构建了一个庞大的系统。如果修改其中的一个功能，只需要更新升级其中一个功能服务单元即可。
+![s76Kw8.png](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204081551157.png)
 
-​	但是这种庞大的系统架构给部署和运维带来很大的难度。于是,spring为我们带来了构建大型分布式微服务的全套、全程产品:
+#### 基础服务
 
-- 构建一个个功能独立的微服务应用单元，可以使用springboot，可以帮我们快速构建一个应用;
+![image-20220408135827288](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204081551158.png)
 
-- 大型分布式网络服务的调用，这部分由spring cloud来完成，实现分布式;
-- 在分布式中间，进行流式数据计算、批处理，我们有spring cloud data flow。
--  spring为我们想清楚了整个从开始构建应用到大型分布式应用全流程方案。
+#### SpringCloud技术栈
 
-## 第一个SpringBoot程序
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204081551159.png)
 
-### 创建项目
+## 从2.2.x和H版开始说起
 
-Spring官方提供了非常方便的工具让我们快速构建应用
+### 环境配置
 
-Spring Initializr：https://start.spring.io/
+| 工具         | 版本          |
+| ------------ | ------------- |
+| Cloud        | Hoxton.SR1    |
+| Boot         | 2.2.2.RELEASE |
+| CloudAlibaba | 2.1.0.RELEASE |
+| Java         | Java8         |
+| Maven        | 3.5及以上     |
+| Mysql        | 5.7及以上     |
 
-#### 第一种创建方式：使用Spring Initializr 的 Web页面创建项目
+这里是对照这视频的版本对应，可以自己去在[官网里面进行查找对应版本](https://docs.spring.io/spring-cloud/docs/Hoxton.SR12/reference/html/)。
 
-* 打开https://start.spring.io/
-* 填写项目信息，并添加依赖
+### SpringCloud版本（升级至2.0及以上）
 
-![image-20220117234333458](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201181821519.png)
+SpringBoot 官网：https://spring.io/projects/spring-boot
 
-![image-20220117234427770](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201181821520.png)
+源码：https://github.com/spring-projects/spring-boot/releases/
 
-* 点击”Generate Project“按钮生成项目；下载此项目
+- GA：当前最稳定版本
+- Pre-release：预发布版本
 
-* 解压项目包，并用IDEA以Maven项目导入，一路下一步即可，直到项目导入完毕
+### SpringCloud 版本选择
 
-![image-20220117234907092](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201181821521.png)
+官网：[https://spring.io/projects/spring-cloud](https://spring.io/projects/spring-cloud#learn)
 
-* 如果是第一次使用，可能速度会比较慢，包比较多、需要耐心等待一切就绪。
+源码：https://github.com/spring-projects/spring-cloud
 
-#### 第一种创建方式：使用 IDEA 直接创建项目
+### Cloud与Boot的对应的依赖关系
 
-- 创建一个新项目
-- 选择spring initalizr ， 可以看到默认就是去官网的快速构建工具那里实现
-- 填写项目信息
-- 选择初始化的组件（初学勾选 Web 即可）
-- 填写项目路径
-- 等待项目构建成功
+推荐：Cloud官网LEARN选项中查看版本后的Reference Doc。
 
-### 项目分析
+或者：overview选项下翻查看表格选择，如下。
 
-* 打开`pom.xml`，看看Spring Boot项目的依赖：
+| Release Train       | Boot Version                     |
+| ------------------- | -------------------------------- |
+| 2020.0.x aka Ilford | 2.4.x                            |
+| Hoxton              | 2.2.x, 2.3.x (Starting with SR5) |
+| Greenwich           | 2.1.x                            |
+| Finchley            | 2.0.x                            |
 
-````xml
-<!-- 父依赖 -->
-<parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.6.2</version>
-    <relativePath/> <!-- lookup parent from repository -->
-</parent>
+更详细版本对应关系：使用JSON工具查看[JSON串结果](https://start.spring.io/actuator/info)。
 
-<!--java版本-->
+## 关于Cloud各种组件的停更/升级/替换
+
+| 服务注册中心                                | 服务调用                                                 | 服务调用2 | 服务降级                            | 服务网关            | 服务配置 | 服务总线 |
+| ------------------------------------------- | -------------------------------------------------------- | --------- | ----------------------------------- | ------------------- | -------- | -------- |
+| ✖ Eureka（停更，要学）                      | ✔ Ribbon（正在使用，但已停更，未来将被LoadBalancer替换） | ✖ Feign   | ✖ Hystrix（停更，国内大规模使用中） | ✖ Zuul              | ✖ Config | ✖ Bus    |
+| ✔ Zookeeper                                 | ✔ LoadBalancer（还没成熟）                               | OpenFeign | ✔ resilience4j（国外使用）          | ？ Zuul2 （还没出） | ✔ Nacos  | ✔ Nacos  |
+| ✔ Consul                                    | -                                                        | -         | ✔ rentienl（阿里的，国内使用）      | ✔ gateway           | apollo   | -        |
+| ✔ Nacos（阿里的，重点推荐，完美替换Eureka） | -                                                        | -         | -                                   | -                   | -        |          |
+
+* ✖为老技术，基本上已停更，但很多公司还在用。
+
+- ✔为老技术停更后的替代方法。
+- 新老技术都会讲解，因此课程量很大。
+
+参考资料：
+ [SpringCloud官网文档](https://cloud.spring.io/spring-cloud-static/Hoxton.SR1/reference/htmlsingle/)、[SpringCloud中文文档](https://www.bookstack.cn/read/spring-cloud-docs/docs-index.md)、 [SpringBoot官方文档](https://docs.spring.io/spring-boot/docs/2.2.2.RELEASE/reference/htmlsingle/)
+
+## 微服务架构编码构建
+
+### 微服务的规矩
+
+**约定>配置>编码**
+
+### IDEA新建project工作空间
+
+#### 微服务cloud整体聚合父工程Project
+
+* 新建Project
+
+![image-20220408144323185](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204081551160.png)
+
+![image-20220408144852932](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345187.png)
+
+**之后删除src文件夹。**
+
+* 字符编码
+
+![image-20220408145220072](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204081551162.png)
+
+* 注解生效激活
+
+<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204081551163.png" alt="image-20220408145319343" style="zoom:67%;" />
+
+* Java编译版本选8
+
+![image-20220408145405444](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204081551164.png)
+
+* File Type过滤
+
+![image-20220408150455105](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204081551165.png)
+
+#### 父工程pom文件
+
+* 在pom.xml中添加`<packaging>pom</packaging>`标签，表示这个pom是个总的父工程，如下：
+
+```xml
+<version>1.0-SNAPSHOT</version>
+<packaging>pom</packaging>
+```
+
+* 统一管理Jar包版本
+
+```xml
+<!-- 统一管理Jar包版本 -->
 <properties>
-    <java.version>17</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <junit.version>4.12</junit.version>
+    <log4j.version>1.2.17</log4j.version>
+    <lombok.version>1.16.18</lombok.version>
+    <mysql.version>8.0.15</mysql.version>
+    <druid.version>1.1.16</druid.version>
+    <mybatis.spring.boot.version>1.3.0</mybatis.spring.boot.version>
 </properties>
+```
 
-<dependencies>
-    <!-- web场景启动器 -->
-    <!--web依赖：tomcat，dispatcherServlet，xml-->
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <!--单元测试-->
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-test</artifactId>
-        <scope>test</scope>
+* 子模块继承之后，提供作用：``锁定版本+子module`不用写groupId和version
 
-        <!-- 剔除依赖 -->
-        <exclusions>
-            <exclusion>
-                <groupId>org.junit.vintage</groupId>
-                <artifactId>junit-vintage-engine</artifactId>
-            </exclusion>
-        </exclusions>
-    </dependency>
-</dependencies>
+```xml
+<dependencyManagement>
+    <dependencies>
+        <!--spring boot 2.2.2-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-dependencies</artifactId>
+            <version>2.2.2.RELEASE</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <!--spring cloud Hoxton.SR1-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-dependencies</artifactId>
+            <version>Hoxton.SR1</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <!--spring cloud 阿里巴巴-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+            <version>2.1.0.RELEASE</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <!--mysql-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+            <!--      <scope>runtime</scope>-->
+        </dependency>
+        <!-- druid-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>${druid.version}</version>
+        </dependency>
+        <!--mybatis-->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>${mybatis.spring.boot.version}</version>
+        </dependency>
+        <!--junit-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
+        <!--log4j-->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <!--解决maven项目中 无法打包生成空文件夹的问题-->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-project-info-reports-plugin</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
 
-<!--打包插件-->
 <build>
     <plugins>
         <plugin>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
+            <version>2.3.7.RELEASE</version>
+            <configuration>
+                <fork>true</fork>
+                <addResources>true</addResources>
+            </configuration>
         </plugin>
     </plugins>
 </build>
-````
-
-
-
-* 主程序入口
-
-![image-20220117235552330](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201181821522.png)
-
-* 在主程序的同级目录下，新建一个controller包，一定要在同级目录下，否则识别不到
-* 在包中新建一个HelloController类
-
-```java
-@RestController
-public class HelloController {
-
-    @RequestMapping("/hello")
-    public String hello(){
-        return "Hello SpringBoot";
-    }
-}
 ```
 
-* 编写完毕后，从主程序启动项目，浏览器发起请求，看页面返回；控制台输出了 Tomcat 访问的端口号
+#### Maven工程落地细节
 
-http://localhost:8080/hello
+##### DependencyManagement与Dependencies
 
-![image-20220118000231394](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201181821523.png)
+Maven使用dependencyManagement元素来提供了一种管理依赖版本号的方式。
 
-### 更改项目启动名称
+**通常会在一个组织或者项目的最顶层的父POM中看到dependencyManagement元素。**
 
-如何更改启动时显示的字符拼成的字母，SpringBoot呢？也就是 banner 图案；
+使用pom.xml中的dependencyManagement元素能让所有在子项目中引用一个依赖而不用显式的列出版本号。
 
-只需一步：到项目下的 resources 目录下新建一个banner.txt 即可。
+Maven会沿着父子层次向上走，直到找到一个拥有dependencyManagement元素的项目，然后它就会使用这个dependencyManagement元素中指定的版本号。
 
-图案可以到：https://www.bootschool.net/ascii 这个网站生成，然后拷贝到文件中即可！
-
-![image-20220118000745390](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201181821524.png)
-
-## 初探：自动配置原理
-
-之前写的HelloSpringBoot，到底是怎么运行的呢，Maven项目，我们一般从pom.xml文件探究起；
-
-### `pom.xml`
-
-#### 父依赖
-
-其中它主要是依赖一个父项目，主要是管理项目的资源过滤及插件！
-
- ```xml
-<!-- 父依赖 -->
-<parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.6.2</version>
-    <relativePath/> <!-- lookup parent from repository -->
-</parent>
- ```
-
-点进去，发现还有一个父依赖
+比如：
 
 ```xml
-<parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-dependencies</artifactId>
-    <version>2.6.2</version>
-</parent>
-```
-
-这里才是真正管理SpringBoot应用里面所有依赖版本的地方，SpringBoot的版本控制中心；
-
-#### 启动器 spring-boot-starter
-
-```xml
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-web</artifactId>
-</dependency>
-```
-
-**springboot-boot-starter-xxx**：就是spring-boot的场景启动器
-
-**spring-boot-starter-web**：帮我们导入了web模块正常运行所依赖的组件；
-
-SpringBoot将所有的功能场景都抽取出来，做成一个个的starter （启动器），只需要在项目中引入这些starter即可，所有相关的依赖都会导入进来 ， 我们要用什么功能就导入什么样的场景启动器即可 ；我们未来也可以自己自定义 starter；
-
-* [更多启动器](https://docs.spring.io/spring-boot/docs/current/reference/html/using.html#using.build-systems.ant)
-
-### 主启动类
-
-分析完了 pom.xml 来看看这个启动类
-
-#### 默认的主启动类
-
-```java
-// 程序主入口
-@SpringBootApplication // 标注这个类是一个springboot应用
-public class HelloworldApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(HelloworldApplication.class, args);
-	}
-}
-```
-
-但是**一个简单的启动类并不简单！**来分析一下这些注解都干了什么
-
-#### @SpringBootApplication
-
-作用：标注在某个类上说明这个类是SpringBoot的主配置类 ， SpringBoot就应该运行这个类的main方法来启动SpringBoot应用；
-
-进入这个注解：可以看到上面还有很多其他注解！
-
-```java
-@SpringBootConfiguration // springboot的配置
-@EnableAutoConfiguration // 自动配置
-@ComponentScan( // 自动扫描并加载符合条件的组件或者bean
-    excludeFilters = {@Filter(
-    type = FilterType.CUSTOM,
-    classes = {TypeExcludeFilter.class}
-), @Filter(
-    type = FilterType.CUSTOM,
-    classes = {AutoConfigurationExcludeFilter.class}
-)}
-)
-public @interface SpringBootApplication {
-    // ......
-}
-```
-
-##### @ComponentScan
-
-这个注解在Spring中很重要 ,它对应XML配置中的元素。
-
-**作用：自动扫描并加载符合条件的组件或者bean ， 将这个bean定义加载到IOC容器中**
-
-##### @SpringBootConfiguration
-
-**作用：SpringBoot的配置类 ，标注在某个类上 ， 表示这是一个SpringBoot的配置类；**
-
-继续进去这个注解查看
-
-```java
-// 点进去得到下面的 @Component
-@Configuration
-public @interface SpringBootConfiguration {}
-
-@Component
-public @interface Configuration {}
-```
-
-这里的 @Configuration，说明这是一个配置类 ，配置类就是对应Spring的xml 配置文件；
-
-里面的 @Component 这就说明，启动类本身也是Spring中的一个组件而已，负责启动应用！
-
-回到 SpringBootApplication 注解中继续看。
-
-##### @EnableAutoConfiguration
-
-**@EnableAutoConfiguration ：开启自动配置功能**
-
-以前我们需要自己配置的东西，而现在SpringBoot可以自动帮我们配置 ；@EnableAutoConfiguration告诉SpringBoot开启自动配置功能，这样自动配置才能生效；
-
-点进注解接续查看：
-
-**@AutoConfigurationPackage ：自动配置包**
-
-```java
-@Import({Registrar.class})
-public @interface AutoConfigurationPackage {
-}
-```
-
-**@import** **：Spring底层注解@import ， 给容器中导入一个组件**
-
-**Registrar.class 作用：将主启动类的所在包及包下面所有子包里面的所有组件扫描到Spring容器 ；**
-
-这个分析完了，退到上一步，继续看
-
-**@Import({AutoConfigurationImportSelector.class}) ：给容器导入组件 ；**
-
-AutoConfigurationImportSelector ：自动配置导入选择器，那么它会导入哪些组件的选择器呢？我们点击去这个类看源码：
-
-* 这个类中有一个这样的方法
-
-```java
-
-// 获得候选的配置
-protected List<String> getCandidateConfigurations(AnnotationMetadata metadata, AnnotationAttributes attributes) {
-    //这里的getSpringFactoriesLoaderFactoryClass（）方法
-    //返回的就是我们最开始看的启动自动导入配置文件的注解类；EnableAutoConfiguration
-    List<String> configurations = SpringFactoriesLoader.loadFactoryNames(this.getSpringFactoriesLoaderFactoryClass(), this.getBeanClassLoader());
-    Assert.notEmpty(configurations, "No auto configuration classes found in META-INF/spring.factories. If you are using a custom packaging, make sure that file is correct.");
-    return configurations;
-}
-```
-
-* 这个方法又调用了  SpringFactoriesLoader 类的静态方法！我们进入SpringFactoriesLoader类loadFactoryNames() 方法
-
-```java
-
-public static List<String> loadFactoryNames(Class<?> factoryClass, @Nullable ClassLoader classLoader) {
-    String factoryClassName = factoryClass.getName();
-    //这里它又调用了 loadSpringFactories 方法
-    return (List)loadSpringFactories(classLoader).getOrDefault(factoryClassName, Collections.emptyList());
-}
-```
-
-* 继续点击查看 loadSpringFactories 方法
-
-```java
-private static Map<String, List<String>> loadSpringFactories(@Nullable ClassLoader classLoader) {
-    //获得classLoader ， 我们返回可以看到这里得到的就是EnableAutoConfiguration标注的类本身
-    MultiValueMap<String, String> result = (MultiValueMap)cache.get(classLoader);
-    if (result != null) {
-        return result;
-    } else {
-        try {
-            //去获取一个资源 "META-INF/spring.factories"
-            Enumeration<URL> urls = classLoader != null ? classLoader.getResources("META-INF/spring.factories") : ClassLoader.getSystemResources("META-INF/spring.factories");
-            LinkedMultiValueMap result = new LinkedMultiValueMap();
-
-            //将读取到的资源遍历，封装成为一个Properties
-            while(urls.hasMoreElements()) {
-                URL url = (URL)urls.nextElement();
-                UrlResource resource = new UrlResource(url);
-                Properties properties = PropertiesLoaderUtils.loadProperties(resource);
-                Iterator var6 = properties.entrySet().iterator();
-
-                while(var6.hasNext()) {
-                    Entry<?, ?> entry = (Entry)var6.next();
-                    String factoryClassName = ((String)entry.getKey()).trim();
-                    String[] var9 = StringUtils.commaDelimitedListToStringArray((String)entry.getValue());
-                    int var10 = var9.length;
-
-                    for(int var11 = 0; var11 < var10; ++var11) {
-                        String factoryName = var9[var11];
-                        result.add(factoryClassName, factoryName.trim());
-                    }
-                }
-            }
-            cache.put(classLoader, result);
-            return result;
-        } catch (IOException var13) {
-            throw new IllegalArgumentException("Unable to load factories from location [META-INF/spring.factories]", var13);
-        }
-    }
-}
-```
-
-* 发现一个多次出现的文件：spring.factories，全局搜索它
-
-##### spring.factories
-
-们根据源头打开spring.factories ， 看到了很多自动配置的文件；这就是自动配置根源所在！
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201181731737)
-
-**WebMvcAutoConfiguration**
-
-我们在上面的自动配置类随便找一个打开看看，比如 ：WebMvcAutoConfiguration
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201181732800)
-
-可以看到这些一个个的都是JavaConfig配置类，而且都注入了一些Bean，可以找一些自己认识的类，看着熟悉一下！
-
-所以，自动配置真正实现是从classpath中搜寻所有的META-INF/spring.factories配置文件 ，并将其中对应的 org.springframework.boot.autoconfigure. 包下的配置项，通过反射实例化为对应标注了 @Configuration的JavaConfig形式的IOC容器配置类 ， 然后将这些都汇总成为一个实例并加载到IOC容器中。
-
-**结论：**
-
-1. SpringBoot在启动的时候从类路径下的META-INF/spring.factories中获取EnableAutoConfiguration指定的值
-2. 将这些值作为自动配置类导入容器 ， 自动配置类就生效 ， 帮我们进行自动配置工作；
-3. 整个J2EE的整体解决方案和自动配置都在springboot-autoconfigure的jar包中；
-4. 它会给容器中导入非常多的自动配置类 （xxxAutoConfiguration）, 就是给容器中导入这个场景需要的所有组件 ， 并配置好这些组件 ；
-5. 有了自动配置类 ， 免去了我们手动编写配置注入功能组件等的工作；
-
-#### **SpringApplication**
-
-```java
-
-@SpringBootApplication
-public class SpringbootApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(SpringbootApplication.class, args);
-    }
-}
-```
-
-**SpringApplication.run分析**
-
-分析该方法主要分两部分，一部分是SpringApplication的实例化，二是run方法的执行；
-
-
-
-**这个类主要做了以下四件事情：**
-
-1、推断应用的类型是普通的项目还是Web项目
-
-2、查找并加载所有可用初始化器 ， 设置到initializers属性中
-
-3、找出所有的应用程序监听器，设置到listeners属性中
-
-4、推断并设置main方法的定义类，找到运行的主类
-
-查看构造器：
-
-```java
-public SpringApplication(ResourceLoader resourceLoader, Class... primarySources) {
-    // ......
-    this.webApplicationType = WebApplicationType.deduceFromClasspath();
-    this.setInitializers(this.getSpringFactoriesInstances();
-    this.setListeners(this.getSpringFactoriesInstances(ApplicationListener.class));
-    this.mainApplicationClass = this.deduceMainApplicationClass();
-}
-```
-
-#### run方法流程分析
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201181732502)
-
-### 谈谈对SpringBoot的理解
-
-* 自动装配
-* run方法
-
-## yaml配置注入
-
-### yaml语法学习
-
-#### 配置文件
-
-SpringBoot使用一个全局的配置文件 ， 配置文件名称是固定的
-
-- application.properties
-
-- - 语法结构 ：key=value
-
-- application.yml
-
-- - 语法结构 ：key：空格 value
-
-**配置文件的作用 ：**修改SpringBoot自动配置的默认值，因为SpringBoot在底层都给我们自动配置好了；
-
-比如可以在配置文件中修改Tomcat 默认启动的端口号！测试一下！
-
- ```properties
-server.port=8081
- ```
-
-#### yaml概述
-
-YAML是 "YAML Ain't a Markup Language" （YAML不是一种标记语言）的递归缩写。在开发的这种语言时，YAML 的意思其实是："Yet Another Markup Language"（仍是一种标记语言）
-
-> **这种语言以数据作为中心，而不是以标记语言为重点！**
-
-以前的配置文件，大多数都是使用xml来配置；比如一个简单的端口配置，我们来对比下yaml和xml
-
-传统xml配置：
-
-```xml
-<server>
-    <port>8081<port>
-</server>
-```
-
-yaml配置：
-
-```yaml
-server：
-  prot: 8080
-```
-
-> application.properties与application.yaml一样，都能生效。
-
-#### yaml基础语法
-
-说明：语法要求严格！
-
-1、空格不能省略
-
-2、以缩进来控制层级关系，只要是左边对齐的一列数据都是同一个层级的。
-
-3、属性和值的大小写都是十分敏感的。
-
-**字面量：普通的值  [ 数字，布尔值，字符串  ]**
-
-字面量直接写在后面就可以 ， 字符串默认不用加上双引号或者单引号；
-
-```yaml
-k: v
-```
-
-注意：
-
-- “ ” 双引号，不会转义字符串里面的特殊字符 ， 特殊字符会作为本身想表示的意思；
-
-  比如 ：name: "kuang \n shen"  输出 ：kuang  换行  shen
-
-- '' 单引号，会转义特殊字符 ， 特殊字符最终会变成和普通字符一样输出
-
-  比如 ：name: ‘kuang \n shen’  输出 ：kuang  \n  shen
-
-**对象、Map（键值对）**
-
-```yaml
-#对象、Map格式
-k: 
-    v1:
-    v2:
-```
-
-在下一行来写对象的属性和值得关系，注意缩进；比如：
-
- ```yaml
-student:
-    name: aaaa
-    age: 3
- ```
-
-行内写法
-
-```yaml
-dog:
-   {name: 小明,age: 18}
-```
-
-**数组（ List、set ）**
-
-用 - 值表示数组中的一个元素,比如：
-
-```yaml
-pets:
- - cat
- - dog
- - pig
-```
-
-行内写法
-
-```yaml
-pets: [cat,dog,pig]
-```
-
-**修改SpringBoot的默认端口号**
-
-配置文件中添加，端口号的参数，就可以切换端口；
-
-```yaml
-server:
-  port: 8082
-```
-
-### 注入配置文件
-
-yaml文件更强大的地方在于，他可以给我们的实体类直接注入匹配值！
-
-#### yaml注入配置文件
-
-1、在springboot项目中的resources目录下新建一个文件 application.yml
-
-2、编写一个实体类 Dog；
-
-```yaml
-@Component  //注册bean到容器中
-public class Dog {
-    @Value("小明")
-    private String name;
-    @Value("18")
-    private Integer age;
-
-    //有参无参构造、get、set方法、toString()方法
-
-    @Override
-    public String toString() {
-        return "Dog{" +
-                "name='" + name + '\'' +
-                ", age=" + age +
-                '}';
-    }
-}
-```
-
-* 思考，原来是如何给bean注入属性值的！@Value，给狗狗类测试一下：
-
-```java
-@Component //注册bean
-public class Dog {
-    @Value("小明")
-    private String name;
-    @Value("18")
-    private Integer age;
-}
-```
-
-* 在SpringBoot的测试类下注入Dog输出一下；
-
-```java
-@SpringBootTest
-class DemoApplicationTests {
-
-    @Autowired //将狗狗自动注入进来
-    Dog dog;
-
-    @Test
-    public void contextLoads() {
-        System.out.println(dog); //打印看下狗狗对象
-    }
-}
-```
-
-结果成功输出，@Value注入成功。
-
-![image-20220118180706658](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201181821525.png)
-
-* 来使用yaml配置的方式进行注入，写的时候注意区别和优势，编写一个yaml配置！
-
-```yaml
-dog:
-   {name: 小明,age: 18}
-```
-
-或者
-
-```yaml
-dog:
-  name: 旺财
-  age: 1
-```
-
-* 注入到类中！
-
-```java
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Component  //注册bean到容器中
-@ConfigurationProperties(prefix = "dog")
-public class Dog {
-    private String name;
-    private Integer age;
-    
-     //有参无参构造、get、set方法、toString()方法  
-
-    @Override
-    public String toString() {
-        return "Dog{" +
-                "name='" + name + '\'' +
-                ", age=" + age +
-                '}';
-    }
-}
-```
-
-* IDEA 提示，springboot配置注解处理器没有找到，让我们看文档，我们可以查看文档，找到一个依赖！
-
-![image-20220118181129726](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201181821526.png)
-
-```xml
-<!-- 导入配置文件处理器，配置文件进行绑定就会有提示，需要重启 -->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-configuration-processor</artifactId>
-    <optional>true</optional>
-</dependency>
-```
-
-* 确认以上配置都OK之后，去测试类中测试一下
-
-![image-20220118182129167](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201181821527.png)
-
-#### 加载指定的配置文件
-
-**@PropertySource ：**加载指定的配置文件；
-
-**@configurationProperties**：默认从全局配置文件中获取值；
-
-* 在resources目录下新建一个**application.properties**文件
-
-```properties
-name=小明
-```
-
-* 然后在代码中指定加载application.properties文件
-
-```java
-@PropertySource(value = "classpath:application.properties")
-@Component
-public class Person {
-    @Value("${name}") // 引用配置文件中name属性，进行赋值
-    private String name;
-}
-```
-
-* 再次输出测试一下：指定配置文件绑定成功！
-
-![image-20220118183316879](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201181836587.png)
-
-#### properties配置
-
-properties配置文件在写中文的时候，会有乱码 ， 我们需要去IDEA中设置编码格式为UTF-8；
-
-settings-->FileEncodings 中配置；
-
-![image-20220118183247785](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201181836589.png)
-
-#### 对比小结
-
-@Value这个使用起来并不友好！我们需要为每个属性单独注解赋值，比较麻烦；我们来看个功能对比图
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201181835277)
-
-1. @ConfigurationProperties只需要写一次即可 ， @Value则需要每个字段都添加
-2. 松散绑定：这个什么意思呢? 比如我的yml中写的last-name，这个和lastName是一样的， - 后面跟着的字母默认是大写的。这就是松散绑定。可以测试一下
-
-```yaml
-person:
-  last-name: 小明
-```
-
-```java
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Component
-@ConfigurationProperties(prefix = "person")
-public class Person {
-    @Value("${name}")
-    private String lastName;
-
-    @Override
-    public String toString() {
-        return "Person{" +
-                "lastName='" + lastName + '\'' +
-                '}';
-    }
-}
-```
-
-3. JSR303数据校验 ， 这个就是我们可以在字段是增加一层过滤器验证 ， 可以保证数据的合法性
-
-4. 复杂类型封装，yml中可以封装对象 ， 使用value就不支持
-
-**结论：**
-
-配置yml和配置properties都可以获取到值 ， 强烈推荐 yml；
-
-如果我们在某个业务中，只需要获取配置文件中的某个值，可以使用一下 @value；
-
-如果说，专门编写了一个JavaBean来和配置文件进行一一映射，就直接@configurationProperties，不要犹豫！
-
-## JSR303
-
-* https://doc.stack.seezoon.com/guide/feature/jsr-303.html
-
-### 数据校验
-
-`person.java`
-
-```java
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Component
-@ConfigurationProperties(prefix = "person")
-@Validated // 数据校验
-public class Person {
-    private String email;
-
-    @Override
-    public String toString() {
-        return "Person{" +
-                "email='" + email + '\'' +
-                '}';
-    }
-}
-```
-
-`application.yaml`
-
-```yaml
-person:
-  email: 1111@qq.com
-```
-
-添加相关依赖：
-
-```xml
-<dependency>
-    <groupId>commons-validator</groupId>
-    <artifactId>commons-validator</artifactId>
-    <version>1.3.1</version>
-</dependency>
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-validation</artifactId>
-</dependency>
-```
-
-Springboot中可以用@validated来校验数据，如果数据异常则会统一抛出异常，方便异常中心统一处理。这里来写个注解让我们的email只能支持Email格式；
-
-```java
-@Validated // 数据校验
-public class Person {
-
-    @Email(message = "邮箱格式错误")
-    private String email;
-    
-}
-```
-
-
-
-如果emial格式错误，输出会怎么样：
-
-```yaml
-email: 1111
-```
-
-![image-20220119163900009](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201191654137.png)
-
-如果数据不符合规定，则会打印错误。
-
-常见jsr303验证注解：
-
-| 常用验证注解 | 描述                                                        |
-| ------------ | ----------------------------------------------------------- |
-| @NotNull     | 不能为null。                                                |
-| @NotEmpty    | 不能为null 不能为空，适用字符、集合、Map、数组的验证。      |
-| @NotBlank    | 不能为null或者空白符。                                      |
-| @Null        | 必须为null，用的较少。                                      |
-| @Size        | 为null的时候不生效，适用字符长度，集合、Map、数组容量校验。 |
-| @Pattern     | 为null的时候不生效，适用字符正则验证。                      |
-| @Min和@Max   | 为null的时候不生效，适合数值类验证。                        |
-| @Email       | 为null的时候不生效，验证字符是否符合邮箱格式。              |
-| @Digits      | 为null的时候不生效，小数验证。                              |
-| @AssertTrue  | 验证 Boolean 对象是否为 true                                |
-| @AssertFalse | 验证 Boolean 对象是否为 false                               |
-| @Past@Past   | 验证 Date 和 Calendar 对象是否在当前时间之前                |
-| @Future      | 验证 Date 和 Calendar 对象是否在当前时间之后                |
-| @Pattern     | 验证 String 对象是否符合正则表达式的规则                    |
-
-### 多环境切换
-
-profile是Spring对不同环境提供不同配置功能的支持，可以通过激活不同的环境版本，实现快速切换环境；
-
-#### 多配置文件
-
-在主配置文件编写的时候，文件名可以是 application-{profile}.properties/yml , 用来指定多个环境版本；
-
-**例如：**
-
-application-test.properties 代表测试环境配置
-
-application-dev.properties 代表开发环境配置
-
-但是Springboot并不会直接启动这些配置文件，它**默认使用application.properties主配置文件**；
-
-需要通过一个配置来选择需要激活的环境：
-
-```properties
-#比如在配置文件中指定使用dev环境，我们可以通过设置不同的端口号进行测试；
-#我们启动SpringBoot，就可以看到已经切换到dev下的配置了；
-spring.profiles.active=dev
-```
-
-#### yaml的多文档块
-
-和properties配置文件中一样，但是使用yml去实现不需要创建多个配置文件，更加方便了 !
-
- ```yaml
-
-server:
-  port: 8081
-#选择要激活那个环境块
-spring:
-  profiles:
-    active: prod
-
----
-server:
-  port: 8083
-spring:
-  profiles: dev #配置环境的名称
-
-
----
-
-server:
-  port: 8084
-spring:
-  profiles: prod  #配置环境的名称
- ```
-
-**注意：如果yml和properties同时都配置了端口，并且没有激活其他环境 ， 默认会使用properties配置文件的**
-
-#### 配置文件加载位置
-
-**外部加载配置文件的方式十分多，选择最常用的即可，在开发的资源文件中进行配置！**
-
-官方外部配置文件说明参考文档
-
-![image-20220119170635531](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070921225.png)
-
-
-
-springboot 启动会扫描以下位置的application.properties或者application.yml文件作为Spring boot的默认配置文件：
-
-```properties
-优先级1：项目路径下的config文件夹配置文件
-优先级2：项目路径下配置文件
-优先级3：资源路径下的config文件夹配置文件
-优先级4：资源路径下配置文
-```
-
-优先级由高到底，高优先级的配置会覆盖低优先级的配置；
-
-**SpringBoot会从这四个位置全部加载主配置文件；互补配置；**
-
-我们在最低级的配置文件中设置一个项目访问路径的配置来测试互补问题；
-
-```properties
-#配置项目的访问路径
-server.servlet.context-path=/easy
-```
-
-#### 拓展，运维小技巧
-
-指定位置加载配置文件
-
-我们还可以通过spring.config.location来改变默认的配置文件位置
-
-项目打包好以后，我们可以使用命令行参数的形式，启动项目的时候来指定配置文件的新位置；这种情况，一般是后期运维做的多，相同配置，外部指定的配置文件优先级最高
-
-```sh
-java -jar spring-boot-config.jar --spring.config.location=C:/application.properties
-```
-
-## 进阶：自动配置原理
-
-配置文件到底能写什么？怎么写？
-
-SpringBoot官方文档中有大量的配置，我们无法全部记住
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201191800592)
-
-
-
-### 分析自动配置原理
-
-以**HttpEncodingAutoConfiguration（Http编码自动配置）**为例解释自动配置原理；
-
-```java
-//表示这是一个配置类，和以前编写的配置文件一样，也可以给容器中添加组件；
-@Configuration(proxyBeanMethods = false)
-
-//启动指定类的ConfigurationProperties功能；
-  //进入这个ServerProperties查看，将配置文件中对应的值和ServerProperties绑定起来；
-  //并把ServerProperties加入到ioc容器中
-@EnableConfigurationProperties(ServerProperties.class)
-
-//Spring底层@Conditional注解
-  //根据不同的条件判断，如果满足指定的条件，整个配置类里面的配置就会生效；
-  //这里的意思就是判断当前应用是否是web应用，如果是，当前配置类生效
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-
-//判断当前项目有没有这个类CharacterEncodingFilter；SpringMVC中进行乱码解决的过滤器；
-@ConditionalOnClass(CharacterEncodingFilter.class)
-
-//判断配置文件中是否存在某个配置：server.servlet.encoding.enabled；
-  //如果不存在，判断也是成立的
-  //即使我们配置文件中不配置server.servlet.encoding.enabled=true，也是默认生效的；
-@ConditionalOnProperty(
-    prefix = "server.servlet.encoding", 
-    value = "enabled", 
-    matchIfMissing = true)
-
-
-public class HttpEncodingAutoConfiguration {
-
-	private final Encoding properties;
-
-	public HttpEncodingAutoConfiguration(ServerProperties properties) {
-		this.properties = properties.getServlet().getEncoding();
-	}
-
-	@Bean
-	@ConditionalOnMissingBean
-	public CharacterEncodingFilter characterEncodingFilter() {
-		CharacterEncodingFilter filter = new OrderedCharacterEncodingFilter();
-		filter.setEncoding(this.properties.getCharset().name());
-		filter.setForceRequestEncoding(this.properties.shouldForce(Encoding.Type.REQUEST));
-		filter.setForceResponseEncoding(this.properties.shouldForce(Encoding.Type.RESPONSE));
-		return filter;
-	}
-
-	@Bean
-	public LocaleCharsetMappingsCustomizer localeCharsetMappingsCustomizer() {
-		return new LocaleCharsetMappingsCustomizer(this.properties);
-	}
-
-	static class LocaleCharsetMappingsCustomizer
-			implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory>, Ordered {
-        
-		private final Encoding properties;
-        
-		LocaleCharsetMappingsCustomizer(Encoding properties) {
-			this.properties = properties;
-		}
-
-		@Override
-		public void customize(ConfigurableServletWebServerFactory factory) {
-			if (this.properties.getMapping() != null) {
-				factory.setLocaleCharsetMappings(this.properties.getMapping());
-			}
-		}
-        
-		@Override
-		public int getOrder() {
-			return 0;
-		}
-	}
-}
-```
-
-**一句话总结 ：根据当前不同的条件判断，决定这个配置类是否生效！**
-
-- 一但这个配置类生效；这个配置类就会给容器中添加各种组件；
-- 这些组件的属性是从对应的properties类中获取的，这些类里面的每一个属性又是和配置文件绑定的；
-- 所有在配置文件中能配置的属性都是在xxxxProperties类中封装着；
-- 配置文件能配置什么就可以参照某个功能对应的这个属性类
-
-```java
-//从配置文件中获取指定的值和bean的属性进行绑定
-@ConfigurationProperties(prefix = "server", ignoreUnknownFields = true)
-public class ServerProperties {
-    // .....
-}
-```
-
-去配置文件里面试试前缀，看提示！
-
-![image-20220119204157228](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201192042930.png)
-
-> **这就是自动装配的原理！**
-
-### 精髓
-
-1、SpringBoot启动会加载大量的自动配置类
-
-2、我们看我们需要的功能有没有在SpringBoot默认写好的自动配置类当中；
-
-3、我们再来看这个自动配置类中到底配置了哪些组件；（只要我们要用的组件存在在其中，我们就不需要再手动配置了）
-
-4、给容器中自动配置类添加组件的时候，会从properties类中获取某些属性。我们只需要在配置文件中指定这些属性的值即可；
-
-**xxxxAutoConfigurartion：自动配置类；**给容器中添加组件
-
-**xxxxProperties:封装配置文件中相关属性；**
-
-### 了解：@Conditional
-
-了解完自动装配的原理后，我们来关注一个细节问题，**自动配置类必须在一定的条件下才能生效；**
-
-**@Conditional派生注解（Spring注解版原生的@Conditional作用）**
-
-作用：必须是@Conditional指定的条件成立，才给容器中添加组件，配置配里面的所有内容才生效；
-
-<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201192048749" alt="Image" style="zoom:67%;" />
-
-**那么多的自动配置类，必须在一定的条件下才能生效；也就是说，我们加载了这么多的配置类，但不是所有的都生效了。**
-
-我们怎么知道哪些自动配置类生效？
-
-**我们可以通过启用 debug=true属性；来让控制台打印自动配置报告，这样我们就可以很方便的知道哪些自动配置类生效；**
-
-```properties
-#开启springboot的调试类
-debug=true
-```
-
-**Positive matches:（自动配置类启用的：正匹配）**
-
-**Negative matches:（没有启动，没有匹配成功的自动配置类：负匹配）**
-
-**Unconditional classes: （没有条件的类）**
-
-## SpringBoot Web开发
-
-### 回顾知识点
-
-SpringBoot最大的特点就是自动装配。说白了就是别人写好的了，自动进行配置。
-
-**使用SpringBoot的步骤：**
-
-1、创建一个SpringBoot应用，选择我们需要的模块，SpringBoot就会默认将我们的需要的模块自动配置好
-
-2、手动在配置文件中配置部分配置项目就可以运行起来了
-
-3、专注编写业务代码，不需要考虑以前那样一大堆的配置了。
-
-要熟悉掌握开发，之前学习的自动配置的原理一定要搞明白！
-
-比如SpringBoot到底帮我们配置了什么？我们能不能修改？我们能修改哪些配置？我们能不能扩展？
-
-- 向容器中自动配置组件 ：*** Autoconfiguration
-- 自动配置类，封装配置文件的内容：***Properties
-
-没事就找找类，看看自动装配原理！
-
-### Web开发静态资源处理
-
-#### 准备工作
-
-* **搭建一个普通的SpringBoot项目**，回顾一下HelloWorld程序！
-
-项目中有许多的静态资源，比如css，js等文件，这个SpringBoot怎么处理呢？
-
-#### 静态资源处理
-
-##### 第一种静态资源映射规则：通过webjars导入
-
-SpringBoot中，SpringMVC的web配置都在 WebMvcAutoConfiguration 这个配置类里面；
-
-我们可以去看看 WebMvcAutoConfigurationAdapter 中有很多配置方法；
-
-有一个方法：addResourceHandlers 添加资源处理
-
-```java
-@Override
-public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    if (!this.resourceProperties.isAddMappings()) {
-        logger.debug("Default resource handling disabled");
-        return;
-    }
-    addResourceHandler(registry, "/webjars/**", "classpath:/META-INF/resources/webjars/");
-    addResourceHandler(registry, this.mvcProperties.getStaticPathPattern(), (registration) -> {
-        registration.addResourceLocations(this.resourceProperties.getStaticLocations());
-        if (this.servletContext != null) {
-            ServletContextResource resource = new ServletContextResource(this.servletContext, SERVLET_LOCATION);
-            registration.addResourceLocations(resource);
-        }
-    });
-}
-```
-
-读一下源代码：比如所有的 `/webjars/**` ， 都需要去 `classpath:/META-INF/resources/webjars/` 找对应的资源；
-
-##### 什么是webjars？
-
-Webjars本质就是以jar包的方式引入的静态资源 ， 以前要导入一个静态资源文件，直接导入即可。
-
-* 网站：https://www.webjars.org 
-
-要使用jQuery，我们只要要引入jQuery对应版本的pom依赖即可！
-
- ```xml
-<dependency>
-    <groupId>org.webjars</groupId>
-    <artifactId>jquery</artifactId>
-    <version>3.6.0</version>
-</dependency>
- ```
-
-导入完毕，查看webjars目录结构，并访问Jquery.js文件！
-
-![image-20220119225325802](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070921227.png)
-
-访问：只要是静态资源，SpringBoot就会去对应的路径寻找资源，这里访问：
-
-* http://localhost:8080/webjars/jquery/3.6.0/jquery.js
-
-![image-20220119225826398](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070921228.png)
-
-##### 第二种静态资源映射规则：通过static导入
-
-在项目中要是使用自己的静态资源该怎么导入呢？
-
-去找staticPathPattern发现第二种映射规则 ：`/**` , 访问当前的项目任意资源，它会去找 resourceProperties 这个类，可以点进去看一下分析：
-
-![image-20220119230453899](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070921229.png)
-
-ResourceProperties 可以设置静态资源有关的参数；这里面指向了它会去寻找资源的文件夹，即上面数组的内容。
-
-所以得出结论，以下四个目录存放的静态资源可以被我们识别：
-
-```properties
-"classpath:/META-INF/resources/"
-"classpath:/resources/"
-"classpath:/static/"
-"classpath:/public/"
-```
-
-![image-20220119230904152](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070921230.png)
-
-可以在resources根目录下新建对应的文件夹，都可以存放静态文件；
-
-*  http://localhost:8080/test.js , 就会去这些文件夹中寻找对应的静态资源文件；
-
-![image-20220119231006789](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070921231.png)
-
-##### 第三种静态资源映射规则：自定义
-
-也可以自己通过配置文件来指定一下，哪些文件夹是需要我们放静态资源文件的，在application.properties中配置；
-
-```properties
-spring.web.resources.static-locations=classpath:/coding/,classpath:/documents/
-```
-
-#### 优先级
-
-自定义规则 > `resouces` > `static`(默认) > `public`
-
-### 自定义首页和图标
-
-#### 首页
-
-继续向下看`WebMvcAutoConfiguration.java`源码！可以看到一个欢迎页的映射，就是首页！
-
-![image-20220119232011491](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070921232.png)
-
-点击`WelcomePageHandlerMapping.java`
-
-![image-20220119232207751](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070921233.png)
-
-通过大致阅读，可知，这就是首页显示的源码，默认首页为`index.html`
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>首页</title>
-    </head>
-    <body>
-        Hello SpringBoot
-    </body>
-</html>
-```
-
-> 静态资源可以放到上面所描述的任何地方。
-
-#### 图标
-
-与其他静态资源一样，Spring Boot在配置的静态内容位置中查找 favicon.ico。如果存在这样的文件，它将自动用作应用程序的favicon。
-
-* 关闭SpringBoot默认图标
-
-```properties
-#关闭默认图标
-spring.mvc.favicon.enabled=false
-```
-
-* 放一个图标在静态资源目录下，放在 public 目录或者static下，都可以4
-* 清除浏览器缓存！刷新网页，发现图标已经变成自己的了！
-
-![image-20220119234019441](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070921234.png)
-
-但是由于favicon在最新的springboot已经被禁止使用了，禁止原因详情请百度。
-
-通过css进行导入，如下：
-
-```css
-<link rel="shortcut icon" href="favicon.ico" >
-```
-
-### Thymeleaf模板引擎
-
-> 现在已经前后端分离啦，但是该学的还是要学
-
-#### 模板引擎
-
-前端交给我们的页面，是html页面。如果是我们以前开发，我们需要把他们转成jsp页面，jsp好处就是当我们查出一些数据转发到JSP页面以后，我们可以用jsp轻松实现数据的显示，及交互等。
-
-现在springboot**现在默认是不支持jsp的**。**SpringBoot可以来使用模板引擎**来代替jsp。
-
-![image-20220205005646557](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050104857.png)
-
-
-
-> SpringBoot给推荐的Thymeleaf，模板引擎有非常多
-
-模板引擎的作用就是来写一个页面模板，可以进行动态传参以及写表达式。
-
-#### 引入Thymeleaf
-
-* Thymeleaf 官网：https://www.thymeleaf.org/
-
-* Spring官方文档：找到对应的版本
-
-  https://docs.spring.io/spring-boot/docs/2.6.2/reference/htmlsingle/#using.build-systems.starters
-
-* 导入依赖
-
-```xml
-<!--thymeleaf-->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-thymeleaf</artifactId>
-</dependency>
-```
-
-* 编写测试页面`test.html`，在`resources/templates/test.html`
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    test
-</body>
-</html>
-```
-
-#### Thymeleaf分析
-
-按照SpringBoot的自动配置原理看一下Thymeleaf的自动配置规则，在按照那个规则，进行使用。
-
-找一下Thymeleaf的自动配置类：ThymeleafProperties
-
-```java
-@ConfigurationProperties(prefix = "spring.thymeleaf")
-public class ThymeleafProperties {
-
-	private static final Charset DEFAULT_ENCODING = StandardCharsets.UTF_8;
-
-	public static final String DEFAULT_PREFIX = "classpath:/templates/";
-
-	public static final String DEFAULT_SUFFIX = ".html";
-
-	/**
-	 * Whether to check that the template exists before rendering it.
-	 */
-	private boolean checkTemplate = true;
-
-	/**
-	 * Whether to check that the templates location exists.
-	 */
-	private boolean checkTemplateLocation = true;
-
-	/**
-	 * Prefix that gets prepended to view names when building a URL.
-	 */
-	private String prefix = DEFAULT_PREFIX;
-
-	/**
-	 * Suffix that gets appended to view names when building a URL.
-	 */
-	private String suffix = DEFAULT_SUFFIX;
-
-	/**
-	 * Template mode to be applied to templates. See also Thymeleaf's TemplateMode enum.
-	 */
-	private String mode = "HTML";
-
-	/**
-	 * Template files encoding.
-	 */
-	private Charset encoding = DEFAULT_ENCODING;
-  	...
-}
-```
-
-可以在其中看到默认的前缀和后缀！**只需要把html页面放在类路径下的templates下，thymeleaf就可以自动渲染了。**
-
->  使用thymeleaf什么都不需要配置，只需要将他放在指定的文件夹下即可！
-
-首先编写一个TestController
-
-```java
-@Controller
-public class TestController {
-    @GetMapping("/test")
-    public String test(){
-        return "test";
-    }
-}
-```
-
-然后启动项目请求测试
-
-* http://localhost:8080/test
-
-![image-20220205012447063](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050124537.png)
-
-#### Thymeleaf语法
-
-* Thymeleaf 官网：https://www.thymeleaf.org/ 
-
-##### 简单测试
-
-* 在`resources/templates/test.html`
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    !--th:text就是将div中的内容设置为它指定的值，和之前学习的Vue一样-->
-	<div th:text="${msg}"></div>
-</body>
-</html>
-```
-
-* 编写TestController
-
-```java
-@Controller
-public class TestController {
-    @GetMapping("/test")
-    public String test(Model model){
-        model.addAttribute("msg", "Hello SpringBoot");
-        return "test";
-    }
-}
-```
-
-##### 使用语法
-
-* **可以使用任意的 th:attr 来替换Html中原生属性的值！**
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050130357)
-
-* **表达式**
-
-```properties
-
-Simple expressions:（表达式语法）
-Variable Expressions: ${...}：获取变量值；OGNL；
-    1）、获取对象的属性、调用方法
-    2）、使用内置的基本对象：#18
-         #ctx : the context object.
-         #vars: the context variables.
-         #locale : the context locale.
-         #request : (only in Web Contexts) the HttpServletRequest object.
-         #response : (only in Web Contexts) the HttpServletResponse object.
-         #session : (only in Web Contexts) the HttpSession object.
-         #servletContext : (only in Web Contexts) the ServletContext object.
-
-    3）、内置的一些工具对象：
-　　　　　　#execInfo : information about the template being processed.
-　　　　　　#uris : methods for escaping parts of URLs/URIs
-　　　　　　#conversions : methods for executing the configured conversion service (if any).
-　　　　　　#dates : methods for java.util.Date objects: formatting, component extraction, etc.
-　　　　　　#calendars : analogous to #dates , but for java.util.Calendar objects.
-　　　　　　#numbers : methods for formatting numeric objects.
-　　　　　　#strings : methods for String objects: contains, startsWith, prepending/appending, etc.
-　　　　　　#objects : methods for objects in general.
-　　　　　　#bools : methods for boolean evaluation.
-　　　　　　#arrays : methods for arrays.
-　　　　　　#lists : methods for lists.
-　　　　　　#sets : methods for sets.
-　　　　　　#maps : methods for maps.
-　　　　　　#aggregates : methods for creating aggregates on arrays or collections.
-==================================================================================
-
-  Selection Variable Expressions: *{...}：选择表达式：和${}在功能上是一样；
-  Message Expressions: #{...}：获取国际化内容
-  Link URL Expressions: @{...}：定义URL；
-  Fragment Expressions: ~{...}：片段引用表达式
-
-Literals（字面量）
-      Text literals: 'one text' , 'Another one!' ,…
-      Number literals: 0 , 34 , 3.0 , 12.3 ,…
-      Boolean literals: true , false
-      Null literal: null
-      Literal tokens: one , sometext , main ,…
-      
-Text operations:（文本操作）
-    String concatenation: +
-    Literal substitutions: |The name is ${name}|
-    
-Arithmetic operations:（数学运算）
-    Binary operators: + , - , * , / , %
-    Minus sign (unary operator): -
-    
-Boolean operations:（布尔运算）
-    Binary operators: and , or
-    Boolean negation (unary operator): ! , not
-    
-Comparisons and equality:（比较运算）
-    Comparators: > , < , >= , <= ( gt , lt , ge , le )
-    Equality operators: == , != ( eq , ne )
-    
-Conditional operators:条件运算（三元运算符）
-    If-then: (if) ? (then)
-    If-then-else: (if) ? (then) : (else)
-    Default: (value) ?: (defaultvalue)
-    
-Special tokens:
-    No-Operation: _
-```
-
-* 抽取公共模板
-
-`common.html`
-
-```html
-<html xmlns:th="http://www.thymeleaf.org">
-    <div th:fragment="xxx">
-        xxx
-    </div>
-</html>
-```
-
-`index.html`
-
-插入公共部分
-
-```html
-<div th:replace="~{commons/commno::xxx}">
-</div>
-```
-
-其中`xxx`类似于id，便于进行插入，`~{commons/common::xxx}`是该公共部分被放在`commons/common.html`中的`xxx`部分处。
-
-* 日期格式化
-
-```html
-th:text="${#dates.format(date,'yyyy-MM-dd HH:mm:ss')}"
-```
-
-**练习测试：**
-
-* 编写一个Controller，放一些数据
-
-````java
-
-@RequestMapping("/t2")
-public String test2(Map<String,Object> map){
-    //存入数据
-    map.put("msg","<h1>Hello</h1>");
-    map.put("users", Arrays.asList("aaa","asda"));
-    //classpath:/templates/test.html
-    return "test";
-}
-````
-
-* 测试页面取出数据
-
-````html
-
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <title>狂神说</title>
-    </head>
-    <body>
-        <h1>测试页面</h1>
-
-        <div th:text="${msg}"></div>
-        <!--不转义-->
-        <div th:utext="${msg}"></div>
-
-        <!--遍历数据-->
-        <!--th:each每次遍历都会生成当前这个标签：官网#9-->
-        <h4 th:each="user :${users}" th:text="${user}"></h4>
-
-        <h4>
-            <!--行内写法：官网#12-->
-            <span th:each="user:${users}">[[${user}]]</span>
-        </h4>
-
-    </body>
-</html>
-````
-
-> web中的session可以通过`${session.key}`进行取出来使用
-
-### MVC自动配置原理
-
-* 官方文档：https://docs.spring.io/spring-boot/docs/2.6.2/reference/htmlsingle/#web.servlet.spring-mvc.auto-configuration
-
-如何扩展SpringMVC：编写一个@Configuration注解类，并且类型要为WebMvcConfigurer，还不能标注@EnableWebMvc注解；我们去自己写一个；我们新建一个包叫config，写一个类MyMvcConfig；
-
-```java
-/应为类型要求为WebMvcConfigurer，所以我们实现其接口
-//可以使用自定义类扩展MVC的功能
-@Configuration
-public class MyMvcConfig implements WebMvcConfigurer {
-
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        // 浏览器发送/test ， 就会跳转到test页面；
-        registry.addViewController("/test").setViewName("test");
-    }
-}
-```
-
-**要扩展SpringMVC，官方就推荐这么去使用，既保SpringBoot留所有的自动配置，也能用我们扩展的配置**
-
-> **开发中，不推荐使用全面接管SpringMVC**
-
-全面接管即：SpringBoot对SpringMVC的自动配置不需要了，所有都是我们自己去配置！
-
-只需在我们的配置类中要加一个`@EnableWebMvc`。
-
-### 错误页面
-
-只需要在templates文件夹下创建error文件夹，放进错误页面，比如`404.html`，SpringBoot会自动寻找。
-
-### 拦截器
-
-> 对于登录进行拦截，进行权限判断
-
-* 编写`config/LoginHandlerInterceptor.java`
-
-```java
-public class LoginHandlerInterceptor implements HandlerInterceptor {
-
-    // 处理前
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
-        // 登录成功之后，应该有用户会话session
-        Object loginUser = request.getSession().getAttribute("loginUser");
-
-        if(loginUser == null){ //没有登录
-            request.setAttribute("msg","不能登录");
-            request.getRequestDispatcher("/index.html").forward(request,response);
-            return false;
-        }else {
-            return true;
-        }
-    }
-
-    //处理后
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
-    }
-
-    // 清理后
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
-    }
-}
-```
-
-* 在`config/WebMvcConfig.java`配置拦截器，进行生效
-
-```java
-@Configuration
-public class MyMvcConfig implements WebMvcConfigurer {
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/**").excludePathPatterns("/login","/index","/css/*","/img/*","/js/*");
-    }
-}
-```
-
-* addPathPatterns：进行设置地址进行拦截，`/**`表示所有地址。
-  * excludePathPatterns：对不需要的地址进行放行，不需要拦截，比如首页，`"/css/*","/img/*","/js/*"`必须放行。
-
-### 国际化
-
-#### 编码问题
-
-* 先在IDEA中统一设置properties的编码问题！
-
-![image-20220205043849604](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050438360.png)
-
-![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050229373.png)
-
-编写国际化配置文件，抽取页面需要显示的国际化页面消息。我们可以去登录页面查看一下，哪些内容我们需要编写国际化的配置！
-
-#### 配置文件编写
-
-* 在resources资源文件下新建一个i18n目录，存放国际化配置文件
-
-* 建立一个login.properties文件，还有一个login_zh_CN.properties；发现IDEA自动识别了我们要做国际化操作；文件夹变了！
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050230111)
-
-* 可以在这上面去新建一个文件；
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050231564)
-
-弹出如下页面：再添加一个英文的；
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050231298)
-
-这样就快捷多了！
-
-* **接下来，我们就来编写配置，我们可以看到idea下面有另外一个视图；**
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050231737)
-
-这个视图我们点击 + 号就可以直接添加属性了；我们新建一个login.tip，可以看到边上有三个文件框可以输入
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050233897)
-
-添加一下首页的内容
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050233444)
-
-
-
-然后依次添加其他页面内容即可！
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050233035)
-
-然后去查看我们的配置文件；
-
-login.properties ：默认
-
-```properties
-login.btn=登录
-login.password=密码
-login.remember=记住我
-login.tip=请登录
-login.username=用户名
-```
-
-英文：
-
-```properties
-login.btn=Sign in
-login.password=Password
-login.remember=Remember me
-login.tip=Please sign in
-login.username=Username
-```
-
-中文：
-
-```properties
-login.btn=登录
-login.password=密码
-login.remember=记住我
-login.tip=请登录
-login.username=用户名
-```
-
-OK，配置文件步骤搞定！
-
-#### 配置文件生效
-
-```properties
-spring.messages.basename=i18n.login
-```
-
-真实的情况是放在了i18n目录下，所以我们要去配置这个messages的路径；
-
-#### 配置页面国际化值
-
-去页面获取国际化的值，查看Thymeleaf的文档，找到message取值操作为：`#{...}`。我们去页面测试下：
-
-IDEA还有提示，非常智能的！
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050238943)
-
-可以去启动项目，访问一下，发现已经自动识别为中文的了！
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050238957)
-
-
-
-**但是我们想要更好！可以根据按钮自动切换中文英文！**
-
-#### 配置国际化解析
-
-在Spring中有一个国际化的Locale （区域信息对象）；里面有一个叫做LocaleResolver （获取区域信息对象）的解析器！
-
-如果我们现在想点击链接让我们的国际化资源生效，就需要让我们自己的Locale生效！
-
-需要写一个自己的LocaleResolver，可以在链接上携带区域信息！
-
-修改一下前端页面的跳转连接：
-
-```html
-<!-- 这里传入参数不需要使用 ？使用 （key=value）-->
-<a class="btn btn-sm" th:href="@{/index.html(l='zh_CN')}">中文</a>
-<a class="btn btn-sm" th:href="@{/index.html(l='en_US')}">English</a>
-```
-
-去写一个处理的组件类！
-
-```java
-
-package com.easy.component;
-
-import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.LocaleResolver;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Locale;
-
-//可以在链接上携带区域信息
-public class MyLocaleResolver implements LocaleResolver {
-
-    //解析请求
-    @Override
-    public Locale resolveLocale(HttpServletRequest request) {
-
-        String language = request.getParameter("l");
-        Locale locale = Locale.getDefault(); // 如果没有获取到就使用系统默认的
-        //如果请求链接不为空
-        if (!StringUtils.isEmpty(language)){
-            //分割请求参数
-            String[] split = language.split("_");
-            //国家，地区
-            locale = new Locale(split[0],split[1]);
-        }
-        return locale;
-    }
-
-    @Override
-    public void setLocale(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Locale locale) {
-
-    }
-}
-```
-
-为了让我们的区域化信息能够生效，我们需要再配置一下这个组件！在我们自己的MvcConofig下添加bean；
-
-```java
-@Bean
-public LocaleResolver localeResolver(){
-    return new MyLocaleResolver();
-}
-```
-
-### Json乱码
-
-```properties
-#设置响应为utf-8
-spring.http.encoding.force-response=true
-```
-
-### 整合JDBC
-
-对于数据访问层，无论是 SQL(关系型数据库) 还是 NOSQL(非关系型数据库)，Spring Boot 底层都是采用 Spring Data 的方式进行统一处理。
-
-Spring Boot 底层都是采用 Spring Data 的方式进行统一处理各种数据库，Spring Data 也是 Spring 中与 Spring Boot、Spring Cloud 等齐名的知名项目。
-
-- Sping Data 官网：https://spring.io/projects/spring-data
-
-- 数据库相关的启动器 ：可以参考官方文档：https://docs.spring.io/spring-boot/docs/2.2.5.RELEASE/reference/htmlsingle/#using-boot-starter
-
-#### 创建测试项目测试数据源
-
-* 创建新项目：springboot-data-jdbc，引入相应的模块
-
-![image-20220205041058674](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050411542.png)
-
-* 项目建好之后，发现自动帮我们导入了如下的启动器：
-
-```xml
-<!-- JDBC -->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-jdbc</artifactId>
-</dependency>
-<!-- Mysql -->
-<dependency>
-    <groupId>mysql</groupId>
-    <artifactId>mysql-connector-java</artifactId>
-    <scope>runtime</scope>
-</dependency>
-```
-
-* 编写yaml配置文件连接数据库
-
-```yaml
-spring:
-  datasource:
-    username: root
-    password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/review01?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
-```
-
-* 配置完这一些东西后，我们就可以直接去使用了，因为SpringBoot已经默认帮我们进行了自动配置；去测试类测试一下
-
-```java
-@SpringBootTest
-class SpringbootDataJdbcApplicationTests {
-
-    // DI注入数据源
-    @Autowired
-    DataSource dataSource;
-
-    @Test
-    void contextLoads() throws SQLException {
-        //看一下数据源
-        System.out.println(dataSource.getClass());
-
-        // 获得连接
-        Connection connection = dataSource.getConnection();
-        System.out.println(connection);
-
-        // 关闭连接
-        connection.close();
-    }
-}
-```
-
-可以看到他默认给我们配置的数据源为 : class
-
-`com.zaxxer.hikari.HikariDataSource `
-
-> 默认使用HikariDataSource 数据源，**HikariDataSource 号称 Java WEB 当前速度最快的数据源，相比于传统的 C3P0 、DBCP、Tomcat jdbc 等连接池更加优秀；**
-
-**可以使用 spring.datasource.type 指定自定义的数据源类型，值为 要使用的连接池实现的完全限定名。**
-
-#### JDBCTemplate
-
-1、有了数据源(com.zaxxer.hikari.HikariDataSource)，然后可以拿到数据库连接(java.sql.Connection)，有了连接，就可以使用原生的 JDBC 语句来操作数据库；
-
-2、即使不使用第三方第数据库操作框架，如 MyBatis等，Spring 本身也对原生的JDBC 做了轻量级的封装，即JdbcTemplate。
-
-3、数据库操作的所有 CRUD 方法都在 JdbcTemplate 中。
-
-4、Spring Boot 不仅提供了默认的数据源，同时默认已经配置好了 JdbcTemplate 放在了容器中，程序员只需自己注入即可使用
-
-5、JdbcTemplate 的自动配置是依赖 org.springframework.boot.autoconfigure.jdbc 包下的 JdbcTemplateConfiguration 类
-
-**JdbcTemplate主要提供以下几类方法：**
-
-- execute方法：可以用于执行任何SQL语句，一般用于执行DDL语句；
-- update方法及batchUpdate方法：update方法用于执行新增、修改、删除等语句；batchUpdate方法用于执行批处理相关语句；
-- query方法及queryForXXX方法：用于执行查询相关语句；
-- call方法：用于执行存储过程、函数相关语句。
-
-**测试**
-
-* 编写一个Controller，注入 jdbcTemplate，编写测试方法进行访问测试；
-
-```java
-@RestController
-public class JdbcController {
-
-    /**
-     * Spring Boot 默认提供了数据源，默认提供了 org.springframework.jdbc.core.JdbcTemplate
-     * JdbcTemplate 中会自己注入数据源，用于简化 JDBC操作
-     * 还能避免一些常见的错误,使用起来也不用再自己来关闭数据库连接
-     */
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
-    @RequestMapping("/test")
-    public List<Map<String,Object>> test(){
-        String sql = "select * from student";
-        List<Map<String,Object>> students = jdbcTemplate.queryForList(sql);
-        return students;
-    }
-}
-```
-
-* 启动程序
-
-![image-20220205042928599](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070921235.png)
-
-### 整合Druid
-
-#### 简介
-
-Java程序很大一部分要操作数据库，为了提高性能操作数据库的时候，又不得不使用数据库连接池。
-
-Druid 是阿里巴巴开源平台上一个数据库连接池实现，结合了 C3P0、DBCP 等 DB 池的优点，同时加入了日志监控。
-
-Druid 可以很好的监控 DB 池连接和 SQL 的执行情况，天生就是针对监控而生的 DB 连接池。
-
-Druid已经在阿里巴巴部署了超过600个应用，经过一年多生产环境大规模部署的严苛考验。
-
-Spring Boot 2.0 以上默认使用 Hikari 数据源，可以说 Hikari 与 Driud 都是当前 Java Web 上最优秀的数据源，我们来重点介绍 Spring Boot 如何集成 Druid 数据源，如何实现数据库监控。
-
-Github地址：https://github.com/alibaba/druid/
-
-**com.alibaba.druid.pool.DruidDataSource 基本配置参数如下：**
-
-
-
-![image-20220205043712530](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070921236.png)
-
-![image-20220205043935815](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050439645.png)
-
-![image-20220205044001835](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050440169.png)
-
-#### 配置数据源
-
-* 添加上 Druid 数据源依赖。
-
-```xml
-<!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
-<dependency>
-    <groupId>com.alibaba</groupId>
-    <artifactId>druid</artifactId>
-    <version>1.2.8</version>
-</dependency>
-```
-
-* 切换数据源；之前已经说过 Spring Boot 2.0 以上默认使用 com.zaxxer.hikari.HikariDataSource 数据源，但可以 通过 spring.datasource.type 指定数据源。
-
-```yaml
-spring:
-  datasource:
-    username: root
-    password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/review01?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
-    type: com.alibaba.druid.pool.DruidDataSource # 自定义数据源
-```
-
-* 数据源切换之后，在测试类中注入 DataSource，然后获取到它，输出一看便知是否成功切换；
-
-![image-20220205044408232](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070921237.png)
-
-* 切换成功！既然切换成功，就可以设置数据源连接初始化大小、最大连接数、等待时间、最小连接数 等设置项；可以查看源码
-
-```yaml
-spring:
-  datasource:
-    username: root
-    password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/review01?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
-    type: com.alibaba.druid.pool.DruidDataSource # 自定义数据源
-
-    #Spring Boot 默认是不注入这些属性值的，需要自己绑定
-    #druid 数据源专有配置
-    initialSize: 5
-    minIdle: 5
-    maxActive: 20
-    maxWait: 60000
-    timeBetweenEvictionRunsMillis: 60000
-    minEvictableIdleTimeMillis: 300000
-    validationQuery: SELECT 1 FROM DUAL
-    testWhileIdle: true
-    testOnBorrow: false
-    testOnReturn: false
-    poolPreparedStatements: true
-
-    #配置监控统计拦截的filters，stat:监控统计、log4j：日志记录、wall：防御sql注入
-    #如果允许时报错  java.lang.ClassNotFoundException: org.apache.log4j.Priority
-    #则导入 log4j 依赖即可，Maven 地址：https://mvnrepository.com/artifact/log4j/log4j
-    filters: stat,wall,log4j
-    maxPoolPreparedStatementPerConnectionSize: 20
-    useGlobalDataSourceStat: true
-    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
-```
-
-* 导入Log4j 的依赖
-
-```xml
-<!-- https://mvnrepository.com/artifact/log4j/log4j -->
-<dependency>
-    <groupId>log4j</groupId>
-    <artifactId>log4j</artifactId>
-    <version>1.2.17</version>
-</dependency>
-```
-
-* 现在需要程序员自己为 DruidDataSource 绑定全局配置文件中的参数，再添加到容器中，而不再使用 Spring Boot 的自动生成了；我们需要 自己添加 DruidDataSource 组件到容器中，并绑定属性；
-
-```java
-@Configuration
-public class DruidConfig {
-    /*
-       将自定义的 Druid数据源添加到容器中，不再让 Spring Boot 自动创建
-       绑定全局配置文件中的 druid 数据源属性到 com.alibaba.druid.pool.DruidDataSource从而让它们生效
-       @ConfigurationProperties(prefix = "spring.datasource")：作用就是将 全局配置文件中
-       前缀为 spring.datasource的属性值注入到 com.alibaba.druid.pool.DruidDataSource 的同名参数中
-     */
-    @ConfigurationProperties(prefix = "spring.datasource")
-    @Bean
-    public DataSource druidDataSource(){
-        return new DruidDataSource();
-    }
-}
-```
-
-* 去测试类中测试一下；看是否成功！
-
-```java
-@SpringBootTest
-class SpringbootDataJdbcApplicationTests {
-
-    //DI注入数据源
-    @Autowired
-    DataSource dataSource;
-
-    @Test
-    public void contextLoads() throws SQLException {
-        //看一下默认数据源
-        System.out.println(dataSource.getClass());
-        //获得连接
-        Connection connection =   dataSource.getConnection();
-        System.out.println(connection);
-
-        DruidDataSource druidDataSource = (DruidDataSource) dataSource;
-        System.out.println("druidDataSource 数据源最大连接数：" + druidDataSource.getMaxActive());
-        System.out.println("druidDataSource 数据源初始化连接数：" + druidDataSource.getInitialSize());
-
-        //关闭连接
-        connection.close();
-    }
-}
-```
-
-![image-20220205045033087](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070921238.png)
-
-> springboot整合Druid数据(出现log4j:WARN No appenders could be found for logger (druid.sql.Connection))的解决方案：配置log4j.properties文件，详细见Mybatis日志。
-
-#### 配置Druid数据源监控
-
-Druid 数据源具有监控的功能，并提供了一个 web 界面方便用户查看，类似安装 路由器 时，人家也提供了一个默认的 web 页面。
-
-所以第一步需要设置 Druid 的后台管理页面，比如 登录账号、密码 等；配置后台管理；
-
-```java
-@Configuration
-public class DruidConfig {
-
-    ...
-
-    // 后台监控
-    @Bean
-    public ServletRegistrationBean statViewServlet(){
-        ServletRegistrationBean<StatViewServlet> bean = new ServletRegistrationBean<>(new StatViewServlet(),"/druid/*");
-        //后台，账号密码设置
-
-        HashMap<String,String> initParameters = new HashMap<>();
-        // 账号
-        initParameters.put("loginUsername","admin");
-        // 密码
-        initParameters.put("loginPassword","123456");
-        // 允许谁可以访问
-        /*
-            initParams.put("allow", "localhost")：表示只有本机可以访问
-            initParams.put("allow", "")：为空或者为null时，表示允许所有访问
-         */
-        initParameters.put("allow", "");
-
-        bean.setInitParameters(initParameters); // 初始化参数
-
-        return bean;
-    }
-}
-```
-
-![image-20220205051559978](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202050516689.png)
-
-### 整合Mybatis
-
-- 官方文档：http://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/
-- Maven仓库地址：https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter/2.2.2
-
-1. 导入 MyBatis 所需要的依赖
-
-```xml
-<dependency>
-    <groupId>org.mybatis.spring.boot</groupId>
-    <artifactId>mybatis-spring-boot-starter</artifactId>
-    <version>2.2.2</version>
-</dependency>
-```
-
-2. 配置数据库连接信息（不变），对mybatis进行配置
-
-```yaml
-spring:
-  datasource:
-    username: root
-    password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/review01?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
-    type: com.alibaba.druid.pool.DruidDataSource # 自定义数据源
-
-    #Spring Boot 默认是不注入这些属性值的，需要自己绑定
-    #druid 数据源专有配置
-    initialSize: 5
-    minIdle: 5
-    maxActive: 20
-    maxWait: 60000
-    timeBetweenEvictionRunsMillis: 60000
-    minEvictableIdleTimeMillis: 300000
-    validationQuery: SELECT 1 FROM DUAL
-    testWhileIdle: true
-    testOnBorrow: false
-    testOnReturn: false
-    poolPreparedStatements: true
-
-    #配置监控统计拦截的filters，stat:监控统计、log4j：日志记录、wall：防御sql注入
-    #如果允许时报错  java.lang.ClassNotFoundException: org.apache.log4j.Priority
-    #则导入 log4j 依赖即可，Maven 地址：https://mvnrepository.com/artifact/log4j/log4j
-    filters: stat,wall,log4j
-    maxPoolPreparedStatementPerConnectionSize: 20
-    useGlobalDataSourceStat: true
-    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
-    
-
-#配置mybatis
-mybatis:
-  #开启驼峰写法
-  configuration:
-    map-underscore-to-camel-case: true
-  #如果配置文件和类名对应包名可以省略，否则 需要声明位置
-  mapper-locations: classpath:mapper/*.xml
-  #配置别名
-  type-aliases-package: com.easy.pojo
-```
-
-3. **测试数据库是否连接成功！**
-
-4. **创建实体类`Student.java`，导入 Lombok！**
-
-```java
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class Student {
-    private int id;
-    private String name;
-}
-```
-
-* **创建mapper目录以及对应的 Mapper 接口**`StudentMapper.java`
-
-```java
-//@Mapper : 表示本类是一个 MyBatis 的 Mapper
-@Mapper
-@Repository
-public interface StudentMapper {
-    public List<Student> getAllStudent();
-}
-```
-
-* **对应的Mapper映射文件**`StudentMapper.xml`
-
-```xml
-<mapper namespace="com.easy.dao.StudentMapper">
-    <select id="getAllStudent" resultType="Student">
-        select * from student;
-    </select>
-</mapper>
-```
-
-> SpringBoot会自动默认生成bean名称，生成bean规则：
->
-> 1、如果首字母和第二个字母都是大写，这直接使用类名作为bean名称
->
-> 2、默认是首字母转换成小写，作为bean名称
->
-> 直接使用类名最方便。
-
-* maven配置资源过滤问题
-
-```xml
-<resources>
-    <resource>
-        <directory>src/main/java</directory>
-        <includes>
-            <include>**/*.xml</include>
-        </includes>
-        <filtering>true</filtering>
-    </resource>
-</resources>
-```
-
-* **编写StudentController测试**
-
-```java
-@RestController
-public class StudentController {
-    @Autowired
-    StudentMapper studentMapper;
-
-    @GetMapping("/query")
-    public List<Student> query(){
-        return studentMapper.getAllStudent();
-    }
-}
-```
-
-## SpringSecurity
-
-### 扩展阅读
-
-* https://www.cnblogs.com/zongmin/p/13783285.html
-
-### 安全简介
-
-在 Web 开发中，安全一直是非常重要的一个方面。安全虽然属于应用的非功能性需求，但是应该在应用开发的初期就考虑进来。如果在应用开发的后期才考虑安全的问题，就可能陷入一个两难的境地：**一方面，应用存在严重的安全漏洞，无法满足用户的要求，并可能造成用户的隐私数据被攻击者窃取；另一方面，应用的基本架构已经确定，要修复安全漏洞，可能需要对系统的架构做出比较重大的调整，因而需要更多的开发时间，影响应用的发布进程。**因此，从应用开发的第一天就应该把安全相关的因素考虑进来，并在整个应用的开发过程中。
-
-> 市面上存在比较有名的：Shiro，Spring Security ！
-
-### 什么是Spring Security？
-
-- Spring Security是一个功能强大且高度可定制的身份验证和访问控制框架。它实际上是保护基于spring的应用程序的标准。
-- Spring Security是一个框架，侧重于为Java应用程序提供身份验证和授权。与所有Spring项目一样，Spring安全性的真正强大之处在于它可以轻松地扩展以满足定制需求
-
-从上面的介绍中可以知道这是一个权限框架。想我们之前做项目是没有使用框架是怎么控制权限的？对于权限 一般会细分为功能权限，访问权限，和菜单权限。代码会写的非常的繁琐，冗余。
-
-怎么解决之前写权限代码繁琐，冗余的问题，一些主流框架就应运而生而Spring Scecurity就是其中的一种。
-
-Spring 是一个非常流行和成功的 Java 应用开发框架。**Spring Security 基于 Spring 框架，提供了一套 Web 应用安全性的完整解决方案。**一般来说，Web 应用的安全性包括用户认证（Authentication）和用户授权（Authorization）两个部分。用户认证指的是验证某个用户是否为系统中的合法主体，也就是说用户能否访问该系统。用户认证一般要求用户提供用户名和密码。系统通过校验用户名和密码来完成认证过程。用户授权指的是验证某个用户是否有权限执行某个操作。在一个系统中，不同用户所具有的权限是不同的。比如对一个文件来说，有的用户只能进行读取，而有的用户可以进行修改。一般来说，系统会为不同的用户分配不同的角色，而每个角色则对应一系列的权限。
-
-对于上面提到的两种应用情景，Spring Security 框架都有很好的支持。**在用户认证方面，Spring Security 框架支持主流的认证方式，包括 HTTP 基本认证、HTTP 表单验证、HTTP 摘要认证、OpenID 和 LDAP 等。在用户授权方面，Spring Security 提供了基于角色的访问控制和访问控制列表（Access Control List，ACL），可以对应用中的领域对象进行细粒度的控制。**
-
-> 工作：认证、授权
-
-### 认识SpringSecurity
-
-Spring Security 是针对Spring项目的安全框架，也是Spring Boot底层安全模块默认的技术选型，他可以实现强大的Web安全控制，对于安全控制，我们仅需要引入 spring-boot-starter-security 模块，进行少量的配置，即可实现强大的安全管理！
-
-记住几个类：
-
-- **WebSecurityConfigurerAdapter：自定义Security策略**
-- **AuthenticationManagerBuilder：自定义认证策略**
-- **@EnableWebSecurity：开启WebSecurity模式**
-
-> 开启某个功能，@Enablexxx
-
-Spring Security的两个主要目标是 “认证” 和 “授权”（访问控制）。
-
-**“认证”（Authentication）**
-
-身份验证是关于验证您的凭据，如用户名/用户ID和密码，以验证您的身份。
-
-身份验证通常通过用户名和密码完成，有时与身份验证因素结合使用。
-
- **“授权” （Authorization）**
-
-授权发生在系统成功验证您的身份后，最终会授予您访问资源（如信息，文件，数据库，资金，位置，几乎任何内容）的完全权限。
-
-这个概念是通用的，而不是只在Spring Security 中存在。
-
-### 前提工作
-
-* 创建新项目`springboot-06-security`，添加基础模块
-
-![image-20220205212058304](../../../../../../../Pictures/assets/SpringBoot笔记/202202052301617.png)
-
-* 创建在`templates`文件夹下创建
-
-```properties
-index.html
-|views
-    |level1
-        1.html
-        2.html
-        3.html
-    |level2
-        1.html
-        2.html
-        3.html
-    |level3
-        1.html
-        2.html
-        3.html
-    Login.html
-```
-
-> 链接：https://pan.baidu.com/s/1K2CzctswRKit5bce5_CpVw 
->
-> 提取码：ps61 
-
-* 在`application.properties`中关闭模板引擎缓存，方便调试
-
-```properties
-spring.thymeleaf.cache=false
-```
-
-* 创建Controller类`RouterController.java`
-
-```java
-@Controller
-public class RouterController {
-
-    @RequestMapping({"/","/index"})
-    public String index(){
-        return "index";
-    }
-
-    @RequestMapping("/toLogin")
-    public String toLogin(){
-        return "views/login";
-    }
-
-    @RequestMapping("level1/{id}")
-    public String level1(@PathVariable("id") int id){
-        return String.format("views/level1/%d", id);
-    }
-
-    @RequestMapping("level2/{id}")
-    public String level2(@PathVariable("id") int id){
-        return String.format("views/level2/%d", id);
-    }
-
-    @RequestMapping("level3/{id}")
-    public String level3(@PathVariable("id") int id){
-        return String.format("views/level3/%d", id);
-    }
-}
-```
-
-* 测试环境，是否成功
-
-![image-20220205214616269](../../../../../../../Pictures/assets/SpringBoot笔记/202202052301618.png)
-
-### 认证和授权
-
-目前，测试环境，是谁都可以访问的，使用 Spring Security 增加上认证和授权的功能
-
-* 引入 Spring Security 模块，已经在前面引入了
-
-```xml
-<dependency>
-   <groupId>org.springframework.boot</groupId>
-   <artifactId>spring-boot-starter-security</artifactId>
-</dependency>
-```
-
-#### 授权
-
-* 编写 Spring Security 配置类
-
-参考官网：https://spring.io/projects/spring-security 
-
-对应的帮助文档：https://www.baeldung.com/spring-security-jdbc-authentication
-
-![image-20220205220126296](../../../../../../../Pictures/assets/SpringBoot笔记/202202052301619.png)
-
-* 编写基础配置类
-
-```java
-@EnableWebSecurity
-@Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-    }
-}
-```
-
-* 定制请求的授权规则，对不同角色进行设置权限
-
-```java
-@EnableWebSecurity
-@Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        // 设置权限
-        http.authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/level1/**").hasRole("vip1")
-                .antMatchers("/level2/**").hasRole("vip2")
-                .antMatchers("/level3/**").hasRole("vip3");
-    }
-}
-```
-
-* 在configure()方法中加入以下配置，开启自动配置的登录功能！对没有权限的用户跳转到登录页面
-
-```
-// 开启自动配置的登录功能
-// /login 请求来到登录页
-// /login?error 重定向到这里表示登录失败
-http.formLogin();
-```
-
-* 测试一下：发现，没有权限的时候，会跳转到登录的页面！
-
-![image-20220205221611449](../../../../../../../Pictures/assets/SpringBoot笔记/202202052301444.png)
-
-#### 认证
-
-##### 内存认证
-
-定义认证规则，重写configure(AuthenticationManagerBuilder auth)方法
-
-```java
-@EnableWebSecurity
-@Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    
-	...
-        
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("customer").password("123456").roles("vip1","vip2")
-                .and()
-                .withUser("admin").password("123456").roles("vip1","vip2","vip3");
-    }
-}
-```
-
-`inMemoryAuthentication`是从内存中读取，正常情况下应该从数据库中读取。
-
-直接运行后，出现`java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the id "null"`错误，解决如下：
-
-在Spring Security5.0+中，新增了很多加密方式。
-
-```java
-@EnableWebSecurity
-@Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-	...
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // 加密
-        BCryptPasswordEncoder bpe = new BCryptPasswordEncoder();
-        auth.inMemoryAuthentication().passwordEncoder(bpe)
-                .withUser("customer").password(bpe.encode("123456")).roles("vip1","vip2")
-                .and()
-                .withUser("admin").password(bpe.encode("123456")).roles("vip1","vip2","vip3");
-    }
-}
-
-```
-
-> spring security 官方推荐的是使用bcrypt加密方式。
-
-* 测试，发现，登录成功，并且每个角色只能访问自己认证下的规则！搞定
-
-![image-20220205225920871](../../../../../../../Pictures/assets/SpringBoot笔记/202202052259831.png)
-
-##### JDBC身份验证
-
-* 创建数据库
-
-```mysql
-create table users(
-    username varchar(50) not null primary key,
-    password varchar(200) not null,
-    enabled boolean not null
-);
-create table authorities (
-    username varchar(50) not null,
-    authority varchar(200) not null,
-    constraint fk_authorities_users foreign key(username) references users(username)
-);
-create unique index ix_auth_username on authorities (username,authority);
-
--- User user/pass
-INSERT INTO users (username, password, enabled) values 
-('customer',
-    '$2a$10$SBrJ5ixGwqZaE5jPnDSCZOLagXpju4lLk9XrvAYvlyE8QASC7vova',
-    1),
-('admin',
-    '$2a$10$SBrJ5ixGwqZaE5jPnDSCZOLagXpju4lLk9XrvAYvlyE8QASC7vova',
-    1);
-
-INSERT INTO authorities (username, authority) values
-('customer', 'ROLE_vip1'),
-('customer', 'ROLE_vip2'),
-('admin', 'ROLE_vip1'),
-('admin', 'ROLE_vip2'),
-('admin', 'ROLE_vip3');
-```
-
-* 导入依赖
-
-```xml
-<!-- JDBC -->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-jdbc</artifactId>
-</dependency>
-<!-- Mysql -->
-<dependency>
-    <groupId>mysql</groupId>
-    <artifactId>mysql-connector-java</artifactId>
-    <scope>runtime</scope>
-</dependency>
-```
-
-* 在application.yml中配置数据库
-
-```yaml
-spring:
-  datasource:
-    username: root
-    password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/review01?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
-```
-
-* 必须禁用ddl-auto属性，不然JDBC无法使用
-
-```pro
-#spring.sql.init.mode=always
-spring.datasource.initialization-mode=always
-spring.jpa.hibernate.ddl-auto=none
-```
-
-> 另外，请注意spring.sql.init.mode属性是在 Spring Boot 2.5.0 中引入的；对于早期版本，我们需要使用spring.datasource.initialization-mode。
-
-* 配置JDBC身份验证
-
-```java
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().dataSource(dataSource)
-                .usersByUsernameQuery("select username, password, enabled from users where username=?")
-                .authoritiesByUsernameQuery(
-                        "select username, authority from authorities where username = ?");
-    }
-```
-
-
-
-### 权限控制和注销
-
-#### 注销
-
-* 开启自动配置的注销的功能
-
-```java
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-		
-        ...
-        // 没有权限的跳转到登录页面
-        http.formLogin();
-
-        //开启自动配置的注销的功能
-        // /logout 注销请求
-        http.logout();
-    }
-```
-
-* 在前端，增加一个注销的按钮，index.html 导航栏中
-
-```html
-<a class="item" th:href="@{/logout}">
-   <i class="address card icon"></i> 注销
-</a>
-```
-
-![image-20220206001315880](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206001315880.png)
-
-* 运行测试
-
-![image-20220206001346592](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206001346592.png)
-
-* 注销后，可以重定向页面
-
-```java
-// 开启注销登录功能
-http.logout()
-    // 用户注销登录时访问的 url，默认为 /logout
-    .logoutUrl("/logout")
-    // 用户成功注销登录后重定向的地址，默认为 loginPage() + ?logout
-    .logoutSuccessUrl("/login/page?logout");    
-```
-
-#### 权限控制
-
-根据角色的权限显示出当前角色拥有的页面功能，无权限页面则不显示，并且如果登录了则隐藏登录按钮，只显示注销按钮，而未登录同理。
-
-* ==我们需要结合thymeleaf中的一些功能==
-
-`sec：authorize="isAuthenticated()"`:是否认证登录！来显示不同的页面
-
-* 导入依赖
-
-```xml
-<!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity4 -->
-<dependency>
-   <groupId>org.thymeleaf.extras</groupId>
-   <artifactId>thymeleaf-extras-springsecurity5</artifactId>
-   <version>3.0.4.RELEASE</version>
-</dependency>
-```
-
-* 修改`index.html`前端页面，导入命名空间
-
-```html
-xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
-```
-
-* 修改导航栏，增加认证判断
-
-```html
-<!--登录注销-->
-<div class="right menu">
-    <!--未登录-->
-    <div sec:authorize="!isAuthenticated()">
-        <a class="item" th:href="@{/toLogin}">
-            <i class="address card icon"></i> 登录
-        </a>
-    </div>
-
-    <!--如果已登录-->
-    <div sec:authorize="isAuthenticated()">
-        <a class="item" th:href="@{/logout}">
-            <i class="address card icon"></i> 注销
-        </a>
-    </div>
-</div>
-```
-
-修改完后，进行测试
-
-![image-20220206002200942](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206002200942.png)
-
-* 如果注销404了，就是因为它默认防止csrf跨站请求伪造，因为会产生安全问题，我们可以将请求改为post表单提交，或者在spring security中关闭csrf功能；我们试试：在 配置中增加 `http.csrf().disable();`
-
-```properties
-http.csrf().disable();//关闭csrf功能:跨站请求伪造,默认只能通过post方式提交logout请求
-http.logout().logoutSuccessUrl("/");
-```
-
-* 修改角色功能块认证完成
-
-```html
-<div class="ui three column stackable grid">
-    <div class="column"  sec:authorize="hasRole('vip1')">
-        <div class="ui raised segment">
-            <div class="ui">
-                <div class="content">
-                    <h5 class="content">Level 1</h5>
-                    <hr>
-                    <div><a th:href="@{/level1/1}"><i class="bullhorn icon"></i> Level-1-1</a></div>
-                    <div><a th:href="@{/level1/2}"><i class="bullhorn icon"></i> Level-1-2</a></div>
-                    <div><a th:href="@{/level1/3}"><i class="bullhorn icon"></i> Level-1-3</a></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="column" sec:authorize="hasRole('vip2')">
-        <div class="ui raised segment">
-            <div class="ui">
-                <div class="content">
-                    <h5 class="content">Level 2</h5>
-                    <hr>
-                    <div><a th:href="@{/level2/1}"><i class="bullhorn icon"></i> Level-2-1</a><a
-                                                                                                 th:href="@{/level2/2}"><i class="bullhorn icon"></i> Level-2-2</a></div>
-                    <div><a th:href="@{/level2/3}"><i class="bullhorn icon"></i> Level-2-3</a></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="column" sec:authorize="hasRole('vip3')">
-        <div class="ui raised segment">
-            <div class="ui">
-                <div class="content">
-                    <h5 class="content">Level 3</h5>
-                    <hr>
-                    <div><a th:href="@{/level3/1}"><i class="bullhorn icon"></i> Level-3-1</a></div>
-                    <div><a th:href="@{/level3/2}"><i class="bullhorn icon"></i> Level-3-2</a></div>
-                    <div><a th:href="@{/level3/3}"><i class="bullhorn icon"></i> Level-3-3</a></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-```
-
-其中，进行判断的语句是` <div class="column" sec:authorize="hasRole('vip3')">`。判断角色拥有的权限。
-
-![image-20220206002623737](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206002623737.png)
-
-### 记住我
-
-现在的情况，只要登录之后，关闭浏览器，再登录，就会让重新登录，但是很多网站的情况，就是有一个记住密码的功能，这个该如何实现呢？很简单
-
-* 开启记住我功能
-
-```java
-//定制请求的授权规则
-@Override
-protected void configure(HttpSecurity http) throws Exception {
-    ....
-    //记住我
-    http.rememberMe();
-}
-```
-
-* 再次启动项目测试一下，发现登录页多了一个记住我功能，登录之后关闭 浏览器，然后重新打开浏览器访问，发现用户依旧存在！
-
-![image-20220206005845955](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206005845955.png)
-
-思考：如何实现的呢？其实非常简单，可以查看浏览器的cookie
-
-![image-20220206010046741](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206010046741.png)
-
-> 默认保存14天
-
-* 更改默认保存时间
-
-```java
-// 开启 Remember-Me 功能
-http.rememberMe()
-    // 指定在登录时“记住我”的 HTTP 参数，默认为 remember-me
-    .rememberMeParameter("remember-me")
-    // 设置 Token 有效期为 200s，默认时长为 2 星期
-    .tokenValiditySeconds(200)
-    // 指定 UserDetailsService 对象
-    .userDetailsService(userDetailsService);
-```
-
-### 全局性的安全配置
-
-```java
-/**
-     * 定制一些全局性的安全配置，例如：不拦截静态资源的访问
-     */
-@Override
-public void configure(WebSecurity web) throws Exception {
-    // 静态资源的访问不需要拦截，直接放行
-    web.ignoring().antMatchers("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
-}
-```
-
-### 定制登录页
-
-现在这个登录页面都是spring security 默认的，怎么样可以使用我们自己写的Login界面呢？
-
-* 在刚才的登录页配置后面指定 loginpage
-
-```java
-http.formLogin().loginPage("/toLogin");
-```
-
-* 然后前端也需要指向我们自己定义的 login请求
-
-```html
-<a class="item" th:href="@{/toLogin}">
-   <i class="address card icon"></i> 登录
-</a>
-```
-
-* 我们登录，需要将这些信息发送到哪里，我们也需要配置，login.html 配置提交请求及方式，方式必须为post:
-
-```html
-<form th:action="@{/login}" method="post">
-   <div class="field">
-       <label>Username</label>
-       <div class="ui left icon input">
-           <input type="text" placeholder="Username" name="username">
-           <i class="user icon"></i>
-       </div>
-   </div>
-   <div class="field">
-       <label>Password</label>
-       <div class="ui left icon input">
-           <input type="password" name="password">
-           <i class="lock icon"></i>
-       </div>
-   </div>
-   <input type="submit" class="ui blue submit button"/>
-</form>
-```
-
-* 这个请求提交上来，我们还需要验证处理，怎么做呢？我们可以查看formLogin()方法的源码！我们配置接收登录的用户名和密码的参数！
-
-```java
-http.formLogin()
-    .usernameParameter("username")
-    .passwordParameter("password")
-    .loginPage("/toLogin")
-    .loginProcessingUrl("/login"); // 登陆表单提交请求
-```
-
-* 在登录页增加记住我的多选框
-
-```html
-<input type="checkbox" name="remember"> 记住我
-```
-
-* 后端验证处理！
-
-```java
-http.rememberMe().rememberMeParameter("remember");
-```
-
-![image-20220206011415325](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206011415325.png)
-
-![image-20220206011425796](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206011425796.png)
-
-### 完整配置代码
-
-```java
-@EnableWebSecurity
-@Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    private DataSource dataSource; //注入数据源
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        // 设置权限
-        http.authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/level1/**").hasRole("vip1")
-                .antMatchers("/level2/**").hasRole("vip2")
-                .antMatchers("/level3/**").hasRole("vip3");
-
-        // 没有权限的跳转到登录页面
-        http.formLogin()
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .loginPage("/toLogin")
-                .loginProcessingUrl("/login"); // 登陆表单提交请求
-
-        //开启自动配置的注销的功能
-        // /logout 注销请求
-        http.logout();
-
-        http.csrf().disable();//关闭csrf功能:跨站请求伪造,默认只能通过post方式提交logout请求
-        http.logout().logoutSuccessUrl("/");
-
-        http.rememberMe().rememberMeParameter("remember");
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        BCryptPasswordEncoder bpe = new BCryptPasswordEncoder();
-//        auth.inMemoryAuthentication().passwordEncoder(bpe)
-//                .withUser("customer").password(bpe.encode("123456")).roles("vip1", "vip2")
-//                .and()
-//                .withUser("admin").password(bpe.encode("123456")).roles("vip1", "vip2", "vip3");
-
-        auth.jdbcAuthentication().dataSource(dataSource)
-                .usersByUsernameQuery("select username, password, enabled from users where username=?")
-                .authoritiesByUsernameQuery(
-                        "select username, authority from authorities where username = ?");
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-    
-}
-```
-
-## Shiro
-
-### 概述
-
-#### 简介
-
-[Apache](https://so.csdn.net/so/search?q=Apache&spm=1001.2101.3001.7020) Shiro是一个强大且易用的Java安全框架
-
-[Shiro](https://so.csdn.net/so/search?q=Shiro&spm=1001.2101.3001.7020) 不仅可以用在 JavaSE 环境中，也可以用在 JavaEE 环境中，它可以完成身份验证、授权、密码和会话管理
-
-官网： http://shiro.apache.org/
-
-#### 功能
-
-![](../../../../../../../Pictures/assets/SpringBoot笔记/202202060119401.png)
-
-- Authentication：身份认证/登录，验证用户是不是拥有相应的身份；
-
-- Authorization：授权，即权限验证，验证某个已认证的用户是否拥有某个权限；即判断用户是否能做事情，常见的如：验证某个用户是否拥有某个角色。或者细粒度的验证某个用户对某个资源是否具有某个权限；
-
-- Session Manager：会话管理，即用户登录后就是一次会话，在没有退出之前，它的所有信息都在会话中；会话可以是普通JavaSE环境的，也可以是如Web环境的；
-
-- Cryptography：加密，保护数据的安全性，如密码加密存储到数据库，而不是明文存储；
-
-- Web Support：Web支持，可以非常容易的集成到Web环境；
-
-- Caching：缓存，比如用户登录后，其用户信息、拥有的角色/权限不必每次去查，这样可以提高效率；
-
-- Concurrency：shiro支持多线程应用的并发验证，即如在一个线程中开启另一个线程，能把权限自动传播过去；
-
-- Testing：提供测试支持；
-
-- Run As：允许一个用户假装为另一个用户（如果他们允许）的身份进行访问；
-
-- Remember Me：记住我，这个是非常常见的功能，即一次登录后，下次再来的话不用登录了。
-
-#### 从外部看
-
-![](../../../../../../../Pictures/assets/SpringBoot笔记/202202060130682.png)
-
-应用代码直接交互的对象是Subject，也就是说Shiro的对外API核心就是Subject；其每个API的含义：
-
-​	**Subject**：主体，代表了当前“用户”，这个用户不一定是一个具体的人，与当前应用交互的任何东西都是Subject，如网络爬虫，机器人等；即一个抽象概念；所有Subject都绑定到SecurityManager，与Subject的所有交互都会委托给SecurityManager；可以把Subject认为是一个门面；SecurityManager才是实际的执行者；
-
-​	**SecurityManager**：安全管理器；即所有与安全有关的操作都会与SecurityManager交互；且它管理着所有Subject；可以看出它是Shiro的核心，它负责与后边介绍的其他组件进行交互，如果学习过SpringMVC，你可以把它看成DispatcherServlet前端控制器；
-
-​	**Realm**：域，Shiro从从Realm获取安全数据（如用户、角色、权限），就是说SecurityManager要验证用户身份，那么它需要从Realm获取相应的用户进行比较以确定用户身份是否合法；也需要从Realm得到用户相应的角色/权限进行验证用户是否能进行操作；可以把Realm看成DataSource，即安全数据源。
-
-也就是说对于我们而言，最简单的一个Shiro应用：
-
-1. 应用代码通过Subject来进行认证和授权，而Subject又委托给SecurityManager；
-
-2. 我们需要给Shiro的SecurityManager注入Realm，从而让SecurityManager能得到合法的用户及其权限进行判断。
-
-
-从以上也可以看出，Shiro不提供维护用户/权限，而是通过Realm让开发人员自己注入
-
-外部架构
-
-![](../../../../../../../Pictures/assets/SpringBoot笔记/202202060131369.png)
-
-- **Subject**：主体，可以看到主体可以是任何可以与应用交互的“用户”；
-- **SecurityManager**：相当于SpringMVC中的DispatcherServlet或者Struts2中的FilterDispatcher；是Shiro的心脏；所有具体的交互都通过SecurityManager进行控制；它管理着所有Subject、且负责进行认证和授权、及会话、缓存的管理。
-- **Authenticator**：认证器，负责主体认证的，这是一个扩展点，如果用户觉得Shiro默认的不好，可以自定义实现；其需要认证策略（Authentication Strategy），即什么情况下算用户认证通过了；
-- **Authrizer**：授权器，或者访问控制器，用来决定主体是否有权限进行相应的操作；即控制着用户能访问应用中的哪些功能；
-- **Realm**：可以有1个或多个Realm，可以认为是安全实体数据源，即用于获取安全实体的；可以是JDBC实现，也可以是LDAP实现，或者内存实现等等；由用户提供；注意：Shiro不知道你的用户/权限存储在哪及以何种格式存储；所以我们一般在应用中都需要实现自己的Realm；
-- **SessionManager**：如果写过Servlet就应该知道Session的概念，Session呢需要有人去管理它的生命周期，这个组件就是SessionManager；而Shiro并不仅仅可以用在Web环境，也可以用在如普通的JavaSE环境、EJB等环境；所有呢，Shiro就抽象了一个自己的Session来管理主体与应用之间交互的数据；这样的话，比如我们在Web环境用，刚开始是一台Web服务器；接着又上了台EJB服务器；这时想把两台服务器的会话数据放到一个地方，这个时候就可以实现自己的分布式会话（如把数据放到Memcached服务器）；
-- **SessionDAO**：DAO大家都用过，数据访问对象，用于会话的CRUD，比如我们想把Session保存到数据库，那么可以实现自己的SessionDAO，通过如JDBC写到数据库；比如想把Session放到Memcached中，可以实现自己的Memcached SessionDAO；另外SessionDAO中可以使用Cache进行缓存，以提高性能；
-- **CacheManager**：缓存控制器，来管理如用户、角色、权限等的缓存的；因为这些数据基本上很少去改变，放到缓存中后可以提高访问的性能
-- **Cryptography**：密码模块，Shiro提高了一些常见的加密组件用于如密码加密/解密的
-
-####  认证流程
-
-![](../../../../../../../Pictures/assets/SpringBoot笔记/202202060132088.png)
-
-**用户** 提交 **身份信息、凭证信息** 封装成 **令牌** 交由 **安全管理器** 认证
-
-### 快速入门
-
-* 新建一个Maven工程`springboot-08-shiro`，删除其 src 目录，将其作为父工程
-
-* 在父工程中新建一个 Maven 模块`hello-shiro`
-
-![image-20220206013909463](../../../../../../../Pictures/assets/SpringBoot笔记/202202060139932.png)
-
-* 复制快速入门案例 POM.xml 文件中的依赖 （版本号自选）
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.15</version>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+然后在子项目里就可以添加mysql-connector时可以不指定版本号 **（如果指定了就优先用子项目的版本号）**，例如：
 
 ```xml
 <dependencies>
     <dependency>
-        <groupId>org.apache.shiro</groupId>
-        <artifactId>shiro-core</artifactId>
-        <version>1.4.1</version>
-    </dependency>
-
-    <!-- configure logging -->
-    <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>jcl-over-slf4j</artifactId>
-        <version>1.7.29</version>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-slf4j-impl</artifactId>
-        <version>2.17.1</version>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-core</artifactId>
-        <version>2.17.1</version>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
     </dependency>
 </dependencies>
 ```
 
-* 把快速入门案例中的 resource 下的`log4j.xml`复制下来
-* 复制一下 `shiro.ini` 文件
-* 复制一下 `Quickstart.java` 文件
-  **如果有导包的错误，把那两个错误的包删掉，就会自动导对的包了，快速入门案例中用的方法过时了**
+这样做的好处就是：如果有多个子项目都引用同一样依赖，则可以避免在每个使用的子项目里都声明一个版本号，这样当想升级或切换到另一个版本时，只需要在顶层父容器里更新，而不需要一个一个子项目的修改；另外如果某个子项目需要另外的一个版本，只需要声明version就可。
 
-其中IniSecurityManager已经弃用
+- dependencyManagement里只是声明依赖，并不实现引入，因此子项目需要显示的声明需要用的依赖。
+- 如果不在子项目中声明依赖，是不会从父项目中继承下来的；只有在子项目中写了该依赖项，并且没有指定具体版本，才会从父项目中继承该项，并且version和scope都读取自父pom
+- 如果子项目中指定了版本号，那么会使用子项目中指定的jar版本。
 
-```java
-Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");
-SecurityManager securityManager = factory.getInstance();
+##### Maven中如何跳过单元测试
+
+为什么要跳过单元测试：节约时间
+
+这上面有一个闪电的标记，点击后，test测试会变成不可用。
+
+![image-20220408152505302](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204081551166.png)
+
+#### 将父工程发布到仓库
+
+父工程创建完成执行`mvn:install`将父工程发布到仓库方便子工程继承。
+
+测试一下发布：
+
+![image-20220408153649641](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204081551167.png)
+
+然后清除：
+
+![image-20220408153724328](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204081551168.png)
+
+### Rest微服务工程构建
+
+#### 构建步骤
+
+##### 支付模块构建
+
+###### 新建module
+
+![image-20220408161059292](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345189.png)
+
+###### 修改父pom
+
+将pom文件的modules放在packing下面。
+
+![image-20220408161338584](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345190.png)
+
+导入依赖，子模块中有需要的在父工程中有的话，直接引入，不需要写版本号。
+
+```xml
+<dependencies>
+    <!--spring boot 2.2.2-->
+    <!--图形化监控展现-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <!--mybatis-->
+    <dependency>
+        <groupId>org.mybatis.spring.boot</groupId>
+        <artifactId>mybatis-spring-boot-starter</artifactId>
+    </dependency>
+    <!-- druid-->
+    <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>druid-spring-boot-starter</artifactId>
+        <version>1.1.10</version>
+    </dependency>
+    <!--mysql-connector-java-->
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+    <!--jdbc-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    </dependency>
+</dependencies>
 ```
 
-新写法如下：
+* 写yml文件
 
-```java
-DefaultSecurityManager securityManager = new DefaultSecurityManager();
-IniRealm iniRealm = new IniRealm("classpath:shiro.ini");
-securityManager.setRealm(iniRealm);
+在`src/main/resources`下创建`application.yml`文件。
+
+```yaml
+server:
+  port: 8001 # 端口号
+
+spring:
+  application:
+    name: cloud-payment-service # 应用名称
+  datasource: # 数据库
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db2020?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.atguigu.springcloud.entities # 所有Entity别名类所在包
 ```
 
-* 运行 `Quickstart.java`，得到结果
+* 主启动
 
-![image-20220206020420241](../../../../../../../Pictures/assets/SpringBoot笔记/202202060204903.png)
+创建`com.atguigu.springcloud.PaymentMain8001`
 
-### 分析案例
+![image-20220408163103024](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345191.png)
 
-* 通过 SecurityUtils 获取当前执行的用户 Subject
-
-```java
-Subject currentUser = SecurityUtils.getSubject();
-```
-
-* 通过 当前用户拿到 Session
+手动设置主启动
 
 ```java
-Session session = currentUser.getSession();
-```
-
-* 用 Session 存值取值
-
-```java
-session.setAttribute("someKey", "aValue");
-        String value = (String) session.getAttribute("someKey");
-```
-
-* 判断用户是否被认证
-
-```java
-currentUser.isAuthenticated()
-```
-
-* 权限判断
-
-```java
-currentUser.hasRole("vip1")
-```
-
-* 执行登录操作
-
-```java
- currentUser.login(token);
-```
-
-* 打印其标识主体
-
-```java
-currentUser.getPrincipal()
-```
-
-* 注销
-
-```java
-currentUser.logout();
-```
-
-* 完整样例
-
-```java
-public class Quickstart {
-
-    private static final transient Logger log = LoggerFactory.getLogger(Quickstart.class);
-
-
+@SpringBootApplication
+public class PaymentMain8001 {
     public static void main(String[] args) {
-
-        // 工厂模式，通过shiro.ini 配置文件中的信息，生成一个工厂实例
-        DefaultSecurityManager securityManager = new DefaultSecurityManager();
-        IniRealm iniRealm = new IniRealm("classpath:shiro.ini");
-        securityManager.setRealm(iniRealm);
-        SecurityUtils.setSecurityManager(securityManager);
-
-        // 现在已经建立了一个简单的shiro环境，看看能做什么
-        // 通过SecurityUtils获取当前执行的用户Subject
-        Subject currentUser = SecurityUtils.getSubject();
-
-        // 通过当前用户拿到session
-        // 使用shiro的session（不需要web或者EJB容器）
-        Session session = currentUser.getSession();
-
-        // 通过session进行存值取值
-        session.setAttribute("someKey", "aValue");
-        String value = (String) session.getAttribute("someKey");
-        if (value.equals("aValue")) {
-            log.info("Retrieved the correct value! [" + value + "]");
-        }
-
-        // 登录当前用户，以便可以检查角色和权限
-        // 这里和SpringSecurity使用了类似的代码，判断用户是否被认证
-        if (!currentUser.isAuthenticated()) {
-
-            // 如果被认证，就可以获得一个令牌（token）
-            // 通过用户的账号密码生成一个令牌
-            UsernamePasswordToken token = new UsernamePasswordToken("lonestarr", "vespa");
-            token.setRememberMe(true);
-            try {
-                // 执行登录操作
-                currentUser.login(token);
-            } catch (UnknownAccountException uae) {
-                // 如果用户不存在
-                log.info("没有用户名为 " + token.getPrincipal());
-            } catch (IncorrectCredentialsException ice) {
-                //如果密码不正确
-                log.info("账户密码 " + token.getPrincipal() + " 不正确");
-            } catch (LockedAccountException lae) {
-                // 用户被锁定，如密码输出过多，则被锁住
-                log.info("用户名账户 " + token.getPrincipal() + " 被锁住了  " +
-                        "请与管理员联系将其解锁");
-            }
-            // 在此处捕获更多异常
-            catch (AuthenticationException ae) {
-                //异常
-            }
-        }
-
-        // currentUser一些用法
-        // 打印其标识主题（在这种情况下，为用户名）
-        log.info("User [" + currentUser.getPrincipal() + "] logged in successfully.");
-
-        // 测试角色是否存在
-        if (currentUser.hasRole("schwartz")) {
-            log.info("schwartz 用户存在");
-        } else {
-            log.info("schwartz 用户不存在");
-        }
-
-        // 细粒度，权限范围小
-        // 测试类型化的权限（不是实例级别）
-        if (currentUser.isPermitted("lightsaber:wield")) {
-            log.info("You may use a lightsaber ring.  Use it wisely.");
-        } else {
-            log.info("Sorry, lightsaber rings are for schwartz masters only.");
-        }
-
-        // x粒度，权限范围广
-        // 实例级别权限
-        if (currentUser.isPermitted("winnebago:drive:eagle5")) {
-            log.info("You are permitted to 'drive' the winnebago with license plate (id) 'eagle5'.  " +
-                    "Here are the keys - have fun!");
-        } else {
-            log.info("Sorry, you aren't allowed to drive the 'eagle5' winnebago!");
-        }
-
-        // 注销
-        currentUser.logout();
-
-        System.exit(0);
+        SpringApplication.run(PaymentMain8001.class,args);
     }
 }
 ```
 
-### SpringBoot 集成 Shiro
+###### 业务类
 
-#### 编写配置文件
+1. **[创建数据库](./工具类/db2020.md)**
 
-* 在刚刚的父项目中新建一个 springboot 模块`shiro-springboot`
+2. 实体类
 
-* 导入 SpringBoot 和 Shiro 整合包的依赖
+主实体**Payment.java**
+
+```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Payment implements Serializable {
+
+    private Long id;
+    private String serial;
+
+}
+```
+
+由于给前端不显示业务类，只需要传给前端是否成功的信息。
+
+Json封装体**CommonResult.java**
+
+```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class CommonResult <T>{
+
+    private Integer code;
+    private String message;
+    private T data;
+
+    public CommonResult(Integer code,String message){
+        this(code,message,null);
+    }
+
+}
+```
+
+###### 创建dao层
+
+**PaymentDao.java**接口
+
+```java
+@Mapper // 注册Dao层
+public interface PaymentDao {
+    public int create(Payment payment);
+    public Payment getPaymentById(@Param("id") Long id);
+}
+```
+
+**mybatis的映射文件PaymentMapper.xml**
+
+路径一般设置在`resources/mapper`下，以便于后续方便修改。
 
 ```xml
-<!--SpringBoot 和 Shiro 整合包-->
-<!-- https://mvnrepository.com/artifact/org.apache.shiro/shiro-spring-boot-web-starter -->
-<dependency>
-    <groupId>org.apache.shiro</groupId>
-    <artifactId>shiro-spring-boot-web-starter</artifactId>
-    <version>1.6.0</version>
-</dependency>
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<!-- 命名空间一般设置dao接口，声明该xml文件属于那个接口的 -->
+<mapper namespace="com.atguigu.springcloud.dao.PaymentDao">
+
+    <insert id="create" parameterType="Payment" useGeneratedKeys="true" keyProperty="id">
+        insert into payment(serial) values (#{serial});
+    </insert>
+
+
+    <resultMap id="BaseResultMap" type="Payment">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <id column="serial" property="serial" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="getPaymentById" parameterType="Long" resultMap="BaseResultMap">
+        select * from payment where id = #{id};
+    </select>
+
+</mapper>
+```
+
+最好使用resultMap进行封装数据后返回使用，因为可能类里面的属性名与数据库的列名名字不同。
+
+###### 创建service层
+
+**PaymentService.java**接口
+
+```java
+public interface PaymentService {
+    public int create(Payment payment);
+    public Payment getPaymentById(@Param("id") Long id);
+}
+```
+
+**创建业务实体类PaymentServiceImpl.java**
+
+```java
+@Service
+public class PaymentServiceImpl implements PaymentService{
+
+    @Resource
+    private PaymentDao paymentDao;
+
+    @Override
+    public int create(Payment payment) {
+        return paymentDao.create(payment);
+    }
+
+    @Override
+    public Payment getPaymentById(Long id) {
+        return paymentDao.getPaymentById(id);
+    }
+
+}
+```
+
+**创建控制类PaymentController.java**
+
+````java
+@RestController
+@Slf4j // 打印日志
+public class PaymentController {
+
+    @Resource
+    private PaymentService paymentService;
+
+    @PostMapping("/payment/create")
+    public CommonResult create(Payment payment){
+
+        int result = paymentService.create(payment);
+        log.info("插入结果:"+result);
+
+        int code = 404;
+        String message = null;
+
+        if(result > 0){
+            code = 200;
+            message = "插入成功";
+        }else {
+            code = 444;
+            message = "插入数据库失败";
+        }
+
+        return new CommonResult(code,message,result);
+    }
+
+    @GetMapping("/payment/get/{id}")
+    public CommonResult getPaymentById(@PathVariable("id") Long id){
+
+        Payment payment = paymentService.getPaymentById(id);
+        log.info("查询结果:"+payment);
+
+        int code = 404;
+        String message = null;
+
+        if(payment != null ){
+            code = 200;
+            message = "查询成功";
+        }else {
+            code = 444;
+            message = "查询数据库失败";
+        }
+
+        return new CommonResult(code,message,payment);
+    }
+}
+````
+
+###### 小结
+
+1. 构造方法注解化的实现使用了插件lombok，要上线的项目还是全部敲出来较好
+2. 前后端分离，返回给前端一个json形式的封装类
+3. dao接口推荐使用@Mapper注解而不是@Repository，因为@Repository插入时可能会有问题
+4. 返回结果集建议使用映射resultMap，可以避免大小写、下划线等错误。（如果开启Mybatis的驼峰匹配，其实也无所谓）
+
+###### 测试
+
+将没用过的模块（eureka）先注释了，然后重新加载依赖即可。然后点击主启动开启服务。
+
+查询数据：http://localhost:8001/payment/get/31。
+
+![image-20220408224346418](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345192.png)
+
+插入数据：http://localhost:8001/payment/create
+
+![image-20220408224740851](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345193.png)
+
+如果报错，就如下输入
+
+![image-20220411111140777](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117509.png)
+
+##### 热部署Devtools
+
+热部署：开启后，项目在已部署状态下，每次代码改动后无需手动重新部署，可以实时更新。付费插件`JRebel`也可实现热部署。
+
+> 比较耗内存
+
+* 添加DevTools到项目中
+
+```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    <artifactId>spring-boot-devtools</artifactId>
+    <scope>runtime</scope>
+    <optional>true</optional>
 </dependency>
 ```
 
-* 在`resources`或者`src/main/resources/META-INF`文件夹下创建一个名为`shiro.ini`的文件.并且添加我们的用户验证信息.如下图所示
+* 添加maven插件到父工程的`pom.xml`中（如果报错就加上版本号）
 
-  ![image-20220206030730667](../../../../../../../Pictures/assets/SpringBoot笔记/202202060524518.png)
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <version>2.3.7.RELEASE</version>
+            <configuration>
+                <fork>true</fork>
+                <addResources>true</addResources>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
 
-不然会出现`Description: No bean of type ‘org.apache.shiro.realm.Realm‘ found.`错误。
+* 开启IDEA的自动编译
 
-* 下面是编写配置文件
+![image-20220408230234350](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345194.png)
 
-Shiro 三大要素
+* 重启IDEA
 
-1. subject -> ShiroFilterFactoryBean（用户）
-2. securityManager -> DefaultWebSecurityManager（管理所有用户）
-3. realm（数据）
+**注：开发阶段可用热部署，生产环境中必须关闭**
 
-实际操作中对象创建的顺序 ： realm -> securityManager -> subject
+##### 消费者订单模块
 
-* 编写自定义的ShiroConfig，需要继承 `AuthorizingRealm`
+###### 新建module
+
+![image-20220409110744924](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345195.png)
+
+###### 修改pom
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+```
+
+###### 修改yaml
+
+浏览器**默认为80端口**，所以客户端使用80端口可以方便用户。
+如百度`baidu.com:80`，我们直接输入`baidu.com`就可以了
+
+###### 业务类
+
+* entites
+
+与支付模块一样：`Payment`与`CommonResult`
+
+* RestTemplate
+
+RestTemplate提供了多种便捷访问远程Http服务的方法，是一种简单便捷的访问restful服务模板类，是Spring提供的用于访问Rest服务的**客户端模板工具集**
+
+官网文档地址：https://docs.spring.io/spring-framework/docs/5.2.2.RELEASE/javadoc-api/org/springframework/web/client/RestTemplate.html
+
+使用：`(url,requestMap,ResponseBean.class)`这三个参数分别代表`REST请求地址`、`请求参数`、`HTTP响应转换被转换成的对象类型`。
+
+* config配置类：RestTemplate的依赖注入配置
 
 ```java
 @Configuration
-public class ShiroConfig {
+public class ApplicationContextConfig {
 
-    // ShiroFilterFactoryBean
-    @Bean(name = "shiroFilterFactoryBean") //这里必须这样写
-    public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("defaultWebSecurityManager") DefaultWebSecurityManager defaultWebSecurityManager){
-        ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
-
-        // 关联securityManager
-        // 设置安全管理器
-        bean.setSecurityManager(defaultWebSecurityManager);
-
-        /*
-          添加shiro的内置过滤器：
-            anon:无需认证就可以访问
-            authc:必须认证才可以访问
-            user:必须拥有 记住我  功能才能用
-            perms:拥有某个资源的权限才能访问
-            role:拥有某个角色的权限才能访问
-         */
-
-        Map<String ,String> filterMap = new LinkedHashMap<>();
-        filterMap.put("/index", "anon");
-        filterMap.put("/", "anon");
-        filterMap.put("/login", "anon");
-        filterMap.put("/**", "authc");
-
-        bean.setFilterChainDefinitionMap(filterMap);
-        
-        bean.setLoginUrl("/toLogin");
-
-        return bean;
-    }
-
-    // DefaultWebSecurityManager
-    // 通过@Qualifier("userRealm")创建realm对象数据
-    @Bean(name = "defaultWebSecurityManager")
-    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("userRealm") UserRealm userRealm){
-        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-
-        // 关联UserRealm
-        securityManager.setRealm(userRealm);
-
-        return securityManager;
-    }
-
-    // 创建realm对象，需要自定义类
     @Bean
-    public UserRealm userRealm(){
-        return new UserRealm();
+    public RestTemplate getRestTemplate(){
+        return new RestTemplate();
     }
+
 }
 ```
 
-* 编写UserRealm类
+* controller
 
 ```java
-// 自定义的UserRealm
-public class UserRealm extends AuthorizingRealm {
-    // 授权
-    @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-       System.out.println("执行了授权");
-        return null;
+@RestController
+@Slf4j
+public class OrderController {
+
+    public static final String PAYMENT_URL = "http://localhost:8001";
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @GetMapping("/consumer/payment/create")
+    public CommonResult<Payment> create(Payment payment){
+
+        return restTemplate.postForObject(PAYMENT_URL+"/payment/create",payment,CommonResult.class);
+
     }
 
-    // 认证
-    @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        System.out.println("执行了认证");
-        return null;
-    }
-}
-```
-
-* 编写前端页面
-
-`index.html`
-
-```html
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    首页
-    <div th:text="${msg}"></div>
-</body>
-</html>
-```
-
-`add.html`
-
-```html
-<body>
-    添加
-</body>
-```
-
-`update.html`
-
-```
-<body>
-   	修改
-</body>
-```
-
-编写登录页面`login.html`
-
-```html
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h1>登录</h1>
-    <hr/>
-    <form th:action="@{/login}">
-        <p>用户名：<input type="text" name="username"></p>
-        <p>密码：<input type="password" name="password"></p>
-        <p><input type="submit"></p>
-        <div th:text="${msg}"></div>
-    </form>
-</body>
-</html>
-```
-
-* 编写控制类`MyController.java`
-
-```java
-@Controller
-public class MyController {
-
-    @GetMapping({"/","/index"})
-    public String index(Model model){
-        model.addAttribute("msg", "hello shiro");
-        return "index";
-    }
-
-    @GetMapping("/add")
-    public String add(){
-        return "add";
-    }
-
-    @GetMapping("/update")
-    public String update(){
-        return "update";
+    @GetMapping("/consumer/payment/get/{id}")
+    public CommonResult<Payment> getPayment(@PathVariable("id") Long id){
+        return restTemplate.getForObject(PAYMENT_URL+"/payment/get/"+id,CommonResult.class);
     }
     
-    @GetMapping("/toLogin")
-    public String toLogin(){
-        return "login";
-    }
 }
 ```
 
-* 测试，发现shiro默认在没有认证的情况下会自动跳往login.jsp，这是因为权限问题。
-* 可以自行设置登录页面
+###### 测试
+
+同时启动`cloud-consumer-order80`与`cloud-provider-payment8001`两个子工程项目。
+
+查询地址：http://127.0.0.1/consumer/payment/get/31
+
+![image-20220409133208238](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345196.png)
+
+插入地址：http://127.0.0.1/consumer/payment/create?serial=111
+
+不要忘记@RequestBody，**`@RequestBody`主要用来接收前端传递给后端的json字符串中的数据的(请求体中的数据)；** GET方式无请求体，所以使用@RequestBody接收数据时，前端不能使用GET方式提交数据，而是用POST方式进行提交。
+
+`cloud-provider-payment8001`下的`create`方法进行修改：
 
 ```java
-//设置登录页面
-bean.setLoginUrl("/toLogin");
-```
+@PostMapping("/payment/create")
+public CommonResult create(@RequestBody Payment payment){
 
-#### 登录拦截器
+    int result = paymentService.create(payment);
+    log.info("插入结果:"+result);
 
-在上面的 `getShiroFilterFactoryBean` 方法中加上需要拦截的登录请求
+    int code = 404;
+    String message = null;
 
-```java
-    // ShiroFilterFactoryBean
-    @Bean(name = "shiroFilterFactoryBean") //这里必须这样写
-    public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("securityManager") DefaultWebSecurityManager defaultWebSecurityManager){
-        ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
 
-        // 关联securityManager
-        // 设置安全管理器
-        bean.setSecurityManager(defaultWebSecurityManager);
-
-        
-        // 拦截
-        /*
-          添加shiro的内置过滤器：
-            anon:无需认证就可以访问
-            authc:必须认证才可以访问
-            user:必须拥有 记住我  功能才能用
-            perms:拥有某个资源的权限才能访问
-            role:拥有某个角色的权限才能访问
-         */
-
-        Map<String ,String> filterMap = new LinkedHashMap<>();
-        // 这样就可以进行访问了
-        filterMap.put("/index", "anon");
-        filterMap.put("/", "anon");
-        filterMap.put("/login", "anon");
-        filterMap.put("/**", "authc");
-        
-        // 放开静态资源
-        filterMap.put("/imgs/**","anon");
-        filterMap.put("/css/**","anon");
-        filterMap.put("/js/**","anon");
-
-        bean.setFilterChainDefinitionMap(filterMap);
-        
-        //设置登录页面
-        bean.setLoginUrl("/toLogin");
-
-        return bean;
+    if(result > 0){
+        code = 200;
+        message = "插入成功";
+    }else {
+        code = 444;
+        message = "插入数据库失败";
     }
-```
 
-* 测试，点击 add链接，不会跳到 add页面，而是跳到登录页，拦截成功
-
-![image-20220206052423160](../../../../../../../Pictures/assets/SpringBoot笔记/202202060524619.png)
-
-#### 用户认证
-
-* 在 Controller 中写一个登录的控制器
-
-```java
-@GetMapping("/login")
-public String login(String username,String password,Model model){
-
-    // 获取当前的用户
-    Subject subject = SecurityUtils.getSubject();
-    // 封装用户的登录数据=>token
-    UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-    try {
-        // 执行登录的方法
-        subject.login(token);
-        return "index";
-    }catch (UnknownAccountException e){
-        model.addAttribute("msg", "用户名错误");
-        return "login";
-    }catch (IncorrectCredentialsException e){
-        model.addAttribute("msg", "密码错误");
-        return "login";
-    }
-    return "login";
+    return new CommonResult(code,message,result);
 }
 ```
 
-![image-20220206053826694](../../../../../../../Pictures/assets/SpringBoot笔记/202202060538921.png)
+如下：
 
-* 下面去自定义的 `UserRealm` 中的 `AuthenticationInfo` 方法中去获取用户信息
+![image-20220409134753424](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345197.png)
 
-```java
-    // 认证
-    @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        System.out.println("执行了认证");
+##### 工程重构
 
-        // 用户名&密码，一般在用户库中取
-        String name = "admin";
-        String password = "123456";
+###### 观察问题
 
-        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+系统中有重复问题，重构
 
-        // 获取用户名并进行判断
-        if (token.getUsername() !=null &&!token.getUsername().equals(name)){
-            return null;// 抛出异常，UnknownAccountException
-        }
+###### 新建module
 
-        //密码认证， Shiro 自己做，为了避免和密码的接触
-        //最后返回一个 AuthenticationInfo 接口的实现类，这里选择 SimpleAuthenticationInfo
-        // 三个参数：获取当前用户的认证 ； 密码 ； 认证名
-        return new SimpleAuthenticationInfo("",password,"");
-    }
+![image-20220409135943101](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345198.png)
+
+###### 重写pom
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <!--工具包，如时间日期格式-->
+    <dependency>
+        <groupId>cn.hutool</groupId>
+        <artifactId>hutool-all</artifactId>
+        <version>5.1.0</version>
+    </dependency>
+</dependencies>
 ```
 
-#### 整合Mybatis
+###### entities
 
-* 导入依赖
+将两个子工程的entities复制到`cloud-api-commons`中。
+
+![image-20220409142056280](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345199.png)
+
+###### maven命令
+
+清除和重新安装依赖库。
+
+###### 改造两个子工程项目
+
+* 删除原来的entities
+* 然后引入相关依赖
 
 ```xml
 <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-jdbc</artifactId>
-</dependency>
-<dependency>
-    <groupId>mysql</groupId>
-    <artifactId>mysql-connector-java</artifactId>
-    <scope>runtime</scope>
-</dependency>
-
-<dependency>
-    <groupId>org.mybatis.spring.boot</groupId>
-    <artifactId>mybatis-spring-boot-starter</artifactId>
-    <version>2.2.2</version>
-</dependency>
-
-<dependency>
-    <groupId>org.projectlombok</groupId>
-    <artifactId>lombok</artifactId>
-    <version>1.18.22</version>
+    <groupId>com.atguigu.springcloud</groupId>
+    <artifactId>cloud-api-commons</artifactId>
+    <version>${project.version}</version>
 </dependency>
 ```
 
-* 在`application.yaml`中配置数据源
+* 重新启动测试
+
+## 服务注册与发现
+
+### 什么是服务治理？
+
+在传统的rpc远程调用框架中，管理每个服务与服务之间依赖关系比较复杂，管理比较复杂，所以需要使用服务治理，**管理服务于服务之间依赖关系，可以实现服务调用、负载均衡、容错等，实现服务发现与注册**。
+
+### 什么是服务注册与发现
+
+**服务注册**：服务进程在注册中心注册自己的元数据信息。 通常包括主机和端口号，有时还有身份验证信息，协议，版本号，以及运行环境的信息。
+
+**服务发现**：客户端服务进程向注册中心发起查询，来获取服务的信息。 服务发现的一个重要作用就是提供给客户端一个可用的服务列表。
+
+在服务注册与发现中，有一个注册中心。当服务器启动的时候，会把当前自己服务器的信息比如服务地址通讯地址等以别名方式注册到注册中心上。另一方(消费者|服务提供者)，以该别名的方式去注册中心上获取到实际的服务通讯地址，然后再实现本地NRPC调用RPC远程调用框架核心设计思想：在于注册中心，因为使用注册中心管理每个服务与服务之间的一个依赖关系(服务治理概念)。在任何rpc远程框架中，都会有一个注册中心(存放服务地址相关信息(接口地址))
+
+### Eureka
+
+#### Eureka简述
+
+##### 什么是Eureka？
+
+[Eureka](https://github.com/Netflix/Eureka) 是 [Netflix](https://github.com/Netflix) 开发的，一个基于 REST 服务的，服务注册与发现的组件，以实现中间层服务器的负载平衡和故障转移。
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345200)
+
+Eureka采用了CS的设计架构，Eureka Server作为服务注册功能的服务器，它是服务注册中心。而系统中的其他微服务，使用Eureka的值客户端连接到Eurek a sever并推持心跳连接。这样系统的维护人员就可以通过Eureka Server 来监控系统中各个微服务是否正常运行。 
+
+##### Eureka两大组件
+
+它主要包括两个组件：Eureka Server 和 Eureka Client
+
+- **Eureka Server**：提供服务注册与发现（通常就是微服务中的注册中心）
+
+各个微服务节点通过配置启动后，会在EurekaServer中进行注册，这样EurekaServer中的服务注册表中将会存储所有可用服务节点的信息，服务节点的信息可以在界面中直观看到。
+
+- **Eureka Client**：通过注册中心进行访问
+
+它是一个Java客户端，用于简化Eureka Server的交互，客户端同时也具备一个内置的、使用轮询(round-robin)负载算法的负载均衡器。在应用启动后，将会向Eureka Server发送心跳(默认周期为30秒)。如果Eureka Server在多个心跳周期内没有接收到某个节点的心跳，EurekaServer将会从服务注册表中把这个服务节点移除(默认90秒)。
+
+#### 单机Eureka构建步骤
+
+##### eurekaServer端服务注册中心（类似物业公司）
+
+###### 新建module
+
+![image-20220409150556845](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345201.png)
+
+###### 改写pom
+
+```xml
+<dependencies>
+    <!--eureka-server-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+    </dependency>
+    <!--自定义api通用包-->
+    <dependency>
+        <groupId>com.atguigu.springcloud</groupId>
+        <artifactId>cloud-api-commons</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <!--boot web acctuator-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+</dependencies>
+```
+
+###### 写yaml
 
 ```yaml
+server:
+  port: 7001
+
+eureka:
+  instance:
+    hostname: localhost # eureka服务端的实例名称
+  client:
+    register-with-eureka: false # false表示不能向注册中心注册自己
+    fetch-registry: false # false表示自己就是注册中心，其职责就是维护服务实例，并不需要去检索服务
+    service-url:
+      # 设置与Eureka Server交互的地址查询服务和注册服务都需要依赖这个地址
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+```
+
+###### 主启动
+
+```java
+@SpringBootApplication
+@EnableEurekaServer
+public class EurekaMain7001 {
+    public static void main(String[] args) {
+        SpringApplication.run(EurekaMain7001.class,args);
+    }
+}
+```
+
+###### 测试   
+
+Eureka地址：http://127.0.0.1:7001/
+
+![image-20220409152353793](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345202.png)
+
+##### 服务提供者
+
+找到`cloud-provider-payment8001`进行改写，注册成为服务提供者。
+
+###### 改pom
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+```
+
+###### 写yaml
+
+```yaml
+server:
+  port: 8001 # 端口号
+
 spring:
+  application:
+    name: cloud-payment-service # 应用名称
   datasource:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/review01?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://localhost:3306/db2020?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+    type: com.alibaba.druid.pool.DruidDataSource # 自定义数据源
 
-#配置mybatis
 mybatis:
-  #开启驼峰写法
-  configuration:
-    map-underscore-to-camel-case: true
-  #如果配置文件和类名对应包名可以省略，否则 需要声明位置
-  mapper-locations: classpath:mapper/*.xml,dao/*.xml
-  #配置别名
-  type-aliases-package: com.easy.pojo
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.atguigu.springcloud.entities # 所有Entity别名类所在包
+
+
+eureka:
+  client:
+    register-with-eureka: true # 表示是否将自己注册进EurekaServer，默认为true
+    fetch-registry: true # 是否从EurekaServer抓取已有的注册信息，默认为true。单节点无所谓，集群必须设置为true才能配合ribbon使用均衡负载
+    service-url:
+    # 这里地址一定是注册中心的地址
+      defaultZone: http://localhost:7001/eureka/
 ```
 
-* 必须禁用ddl-auto属性，不然JDBC无法使用
-
-```pro
-#spring.sql.init.mode=always
-spring.datasource.initialization-mode=always
-spring.jpa.hibernate.ddl-auto=none
-```
-
-> 另外，请注意spring.sql.init.mode属性是在 Spring Boot 2.5.0 中引入的；对于早期版本，我们需要使用spring.datasource.initialization-mode。
-
-* 编写实体类`User`
+###### 主启动
 
 ```java
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class User {
-    private String username;
-    private String password;
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+@SpringBootApplication
+@EnableEurekaClient
+public class PaymentMain8001 {
+    public static void main(String[] args) {
+        SpringApplication.run(PaymentMain8001.class,args);
     }
 }
 ```
 
-* 编写mapper层`UserMapper.java`
+###### 测试
 
-```java
-@Repository // bean
-@Mapper // 注册
-public interface UserMapper {
-    public User getUserByName(@Param("username") String name);
-}
+启动服务提供者和注册中心。访问地址：http://127.0.0.1:7001/
 
-```
+![image-20220409162409956](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345203.png)
 
-* 编写mapper层`UserMapper.xml`
+##### 服务消费者
 
-```xml
-<mapper namespace="com.easy.mapper.UserMapper">
-    <select id="getUserByName" resultType="User" parameterType="String">
-        select * from users where username = #{username};
-    </select>
-</mapper>
-```
+找到`cloud-consumer-order80`进行改写，注册成为服务提供者。
 
-* 如果出现错误，可能是资源过滤问题，在`pom.xml`中配置
+###### 改pom
 
 ```xml
-<resources>
-    <resource>
-        <directory>src/main/java</directory>
-        <includes>
-            <include>**/*.xml</include>
-        </includes>
-        <filtering>true</filtering>
-    </resource>
-</resources>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
 ```
 
-* 测试
+###### 写yaml
 
-```java
-@SpringBootTest
-class ShiroSpringbootApplicationTests {
+```yaml
+server:
+  port: 80
 
-    @Autowired
-    UserServiceImpl userService;
+spring:
+  application:
+    name: cloud-consumer-order # 应用名称
 
-    @Test
-    void contextLoads() {
-        System.out.println(userService.getUserByName("admin"));
-    }
-}
-
+eureka:
+  client:
+    register-with-eureka: true # 表示是否将自己注册进EurekaServer，默认为true
+    fetch-registry: true # 是否从EurekaServer抓取已有的注册信息，默认为true。单节点无所谓，集群必须设置为true才能配合ribbon使用均衡负载
+    service-url:
+      # 这里地址一定是注册中心的地址
+      defaultZone: http://localhost:7001/eureka/
 ```
 
-![image-20220206071322868](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206071322868.png)
-
-* 修改 `UserRealm` 中的 `AuthenticationInfo`，连接数据库
+###### 主启动
 
 ```java
-// 自定义的UserRealm
-public class UserRealm extends AuthorizingRealm {
-
-    @Autowired
-    UserService userService;
-
-    // 授权
-    @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        System.out.println("执行了授权");
-        return null;
-    }
-
-    // 认证
-    @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        System.out.println("执行了认证");
-
-        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-
-        // 连接真实数据库
-        User user = userService.getUserByName(token.getUsername());
-
-        if(user == null) {
-            return null;
-        }
-
-        //根据用户的情况，来构建AuthenticationInfo对象,通常使用的实现类为SimpleAuthenticationInfo
-        //以下信息是从数据库中获取的
-        //1)principal：认证的实体信息，可以是username，也可以是数据库表对应的用户的实体对象
-        //Object principal = token.getPrincipal();
-        User principal = user; //这里一定要写为User对象，不然在授权时，会因为获取对象出错
-        //2)credentials：数据库中的密码（经过加密的密码）
-        Object credentials = user.getPassword();
-        //3)credentials：盐值（使用用户名）
-        ByteSource credentialsSalt = ByteSource.Util.bytes(principal.getUsername());
-        //4)realmName：当前realm对象的name，调用父类的getName()方法即可
-        String realmName = getName();
+@SpringBootApplication
+@EnableEurekaClient
+public class OrderMain80 {
+    public static void main(String[] args) {
+        SpringApplication.run(OrderMain80.class,args);
     }
 }
 ```
 
-* 在注册用户时修改加密方式,在 BCrypt 中我们不需要为每个用户分配不同的盐，只要使用 `BCrypt.gensalt()` 就可以生成盐。
+###### 测试
 
-```java
-public String encodeByBCrypt(String password) {
-    return BCrypt.hashpw(password, BCrypt.gensalt());
-}
+启动服务消费者，然后刷新地址。访问地址：http://127.0.0.1:7001/
+
+![image-20220409163134328](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345204.png)
+
+#### 集群Eureka构建步骤
+
+##### Eureka集群原理
+
+**服务注册**：将服务信息注册到注册中心
+
+**服务发现**：从注册中心获取服务信息
+
+**实质**：存key服务名，取value调用地址
+
+**步骤**：
+
+1. 先启动eureka注册中心
+
+2. 启动服务提供者payment支付服务
+
+3. 支付服务启动后，会把自身信息注册到eureka
+
+4. 消费者order服务在需要调用接口时，使用服务别名去注册中心获取实际的远程调用地址
+
+5. 消费者获得调用地址后，底层实际是调用httpclient技术实现远程调用
+
+6. 消费者获得服务地址后会缓存在本地jvm中，默认每30秒更新异常服务调用地址
+
+**问题：**微服务RPC远程调用最核心的是说明？
+
+高可用，如果注册中心只有一个，出现故障就麻烦了o(*￣︶￣*)o。会导致整个服务环境不可用。
+
+**解决办法**：搭建eureka注册中心集群，实现**负载均衡+故障容错**
+
+> 互相注册，相互守望
+
+##### EurekaServer集群环境构建步骤
+
+###### 新建module
+
+参考``cloud-eureka-server7001``新建一个``clourd-eureka-server7002``。
+
+###### 修改映射配置
+
+找到当前系统的hosts文件，进行修改。windows中hosts在`C:\Windows\System32\drivers\etc`，添加如下：
+
+```tex
+127.0.0.1 eureka7001.com
+127.0.0.1 eureka7002.com
 ```
 
-* 如果需要加密，Shiro 框架没有内置 BCrypt 。需要引入新的库 `jBCrypt`:
+###### 修改yml
 
-```xml
-<dependency>
-    <groupId>de.svenkubiak</groupId>
-    <artifactId>jBCrypt</artifactId>
-    <version>0.4.1</version>
-</dependency>
+`cloud-eureka-server7001\...\application.yml`
+
+```yaml
+server:
+  port: 7001
+
+eureka:
+  instance:
+    hostname: eureka7001.com # eureka服务端的实例名称
+  client:
+    register-with-eureka: false # false表示不能向注册中心注册自己
+    fetch-registry: false # false表示自己就是注册中心，其职责就是维护服务实例，并不需要去检索服务
+    service-url:
+      # 设置与Eureka Server交互的地址查询服务和注册服务都需要依赖这个地址
+      defaultZone: http://eureka7002.com:7002/eureka/
+     
+spring:
+  freemarker:
+    prefer-file-system-access: false
 ```
 
-* 在 Shiro 配置文件 `ShiroConfig` 中为我们自定义的 `UserRealm` Bean 添加凭证匹配器。
+`cloud-eureka-server7002\...\application.yml`
 
-```java
-// 创建realm对象，需要自定义类
-@Bean
-public UserRealm userRealm(){
+```yaml
+server:
+  port: 7002
 
-    UserRealm realm = new UserRealm();
-    //配置单项hash
-    //UserRealm.setCredentialsMatcher(hashedCredentialsMatcher());
-
-    //配置 BCrypt
-    realm.setCredentialsMatcher(new CredentialsMatcher() {
-        @Override
-        public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
-            UsernamePasswordToken userToken = (UsernamePasswordToken) token;
-            //要验证的明文密码
-            String plaintext = new String(userToken.getPassword());
-            //数据库中的加密后的密文
-            String hashed = info.getCredentials().toString();
-            return BCrypt.checkpw(plaintext, hashed);
-        }
-    });
-    return realm;
-}
+eureka:
+  instance:
+    hostname: eureka7001.com
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/
+      
+spring:
+  freemarker:
+    prefer-file-system-access: false
 ```
 
-![image-20220206073628169](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206073628169.png)
+注意，hostname不能为同一个名字，因此配合上面的hosts，进行改写。然后两个注册中心之间进行相互注册，在`defaultZone`处相互写注册的地址。
 
-#### 请求授权
+如果想继续添加多个集群，在`defaultZone=http://node1:10001/eureka/,http://node2:10002/eureka/`处，类似的注册其他的地址即可。
 
-**修改实体类，增加一个字段**
+![image-20220409202702559](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345205.png)
 
-```java
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class User {
-    private String username;
-    private String password;
-    private String perms;
-}
+##### 将支付8001微服务发布到上面2台Eureka集群配置中
+
+注册中心集群搭建好后，只需要修改yml即可。对`cloud-provider-payment8001`下的application.yml进行修改。
+
+```yaml
+eureka:
+  client:
+    register-with-eureka: true # 表示是否将自己注册进EurekaServer，默认为true
+    fetch-registry: true # 是否从EurekaServer抓取已有的注册信息，默认为true。单节点无所谓，集群必须设置为true才能配合ribbon使用均衡负载
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/
 ```
 
-对数据库进行修改，添加一个字段
+##### 将订单服务80微服务发布到上面2台Eureka集群配置中
 
-![image-20220206085837366](../../../../../../../Pictures/assets/SpringBoot笔记/202202060858342.png)
+同理，对`cloud-consumer-order80`下的application.yml进行修改。
 
-在`public ShiroFilterFactoryBean getShiroFilterFactoryBean`中，添加授权样例
-
-```java
-// 授权
-filterMap.put("/add", "perms[add]");
+```yaml
+defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/
 ```
 
-必须通过当前参数，比如perms[user:method]，表示`/user/method`类似链接。在未授权进行访问的时候，会跳转到未授权页面。如果想修改跳转到其他未授权页面，如下：
+##### 测试
 
-```java
-bean.setUnauthorizedUrl("/unauthorized");
-```
+* 先启动EurekaServer，7001/7002服务
+* 再启动服务提供者provider，8001
+* 最后启动消费者consumer，80
 
-* 对被拦截的用户进行授权访问
+![ ](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345206.png)
 
-```java
-// 授权
-@Override
-protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-    System.out.println("执行了授权");
+![image-20220409203540774](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345207.png)
 
-    SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+访问地址：http://localhost/consumer/payment/get/31
 
-    Subject subject = SecurityUtils.getSubject(); //获得当前对象
-    User currentUser = (User) subject.getPrincipal(); //拿到User对象
-    info.addStringPermission(currentUser.getPerms()); //设置权限
+![image-20220409203406527](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345208.png)
 
-    return info;
-}
-```
+##### 支付服务提供者8001集群环境构建
 
-![image-20220206075736936](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206075736936.png)
+###### 新建module
 
-#### 整合Thymeleaf
+参考`cloud-provider-payment8001`，新建一个`cloud-provider-payment8002`。
 
-需求：**根据权限展示不同的前端页面**
+###### 写yml
 
-* 添加maven依赖
+注意修改端口号
 
-```xml
-<!-- https://mvnrepository.com/artifact/com.github.theborakompanioni/thymeleaf-extras-shiro -->
-<dependency>
-    <groupId>com.github.theborakompanioni</groupId>
-    <artifactId>thymeleaf-extras-shiro</artifactId>
-    <version>2.1.0</version>
-</dependency>
-```
+````yaml
+server:
+  port: 8002 # 端口号
 
-* **配置一个shiro的Dialect ，在shiro的配置中增加一个Bean**
+spring:
+  application:
+    name: cloud-payment-service # 应用名称
+  datasource: # 数据库
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db2020?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
 
-```java
-//配置ShiroDialect：用于 thymeleaf 和 shiro 标签配合使用
-@Bean
-public ShiroDialect getShiroDialect(){
-    return new ShiroDialect();
-}
-```
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.atguigu.springcloud.entities # 所有Entity别名类所在包
 
-* 修改`index.html`
+eureka:
+  client:
+    register-with-eureka: true # 表示是否将自己注册进EurekaServer，默认为true
+    fetch-registry: true # 是否从EurekaServer抓取已有的注册信息，默认为true。单节点无所谓，集群必须设置为true才能配合ribbon使用均衡负载
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7001.com:7002/eureka/
+````
 
-```html
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    首页
-    <div th:text="${msg}"></div>
-
-    <hr/>
-
-    <div shiro:hasPermission="add">
-        <a th:href="@{/add}">add</a>
-    </div>
-
-    <div shiro:hasPermission="update">
-        <a th:href="@{/update}">update</a>
-    </div>
-
-</body>
-</html>
-```
-
-![image-20220206091234671](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206091234671.png)
-
-* 在用户登录后应该把信息放到Session中，完善下！在执行认证逻辑时候，加入session
-
-**在controller的login方法中**
-
-```java
-// 执行登录的方法
-subject.login(token);
-
-//登陆成功存放用户信息
-Subject currentSubject = SecurityUtils.getSubject();
-Session session = currentSubject.getSession();
-session.setAttribute("loginUser",username);
-```
-
-* 修改`index.html`页面，添加登录和注销
-
-```html
-<p th:if="${session.get('loginUser')}==null">
-    <a th:href="@{/toLogin}">登录</a>
-</p>
-<p th:if="${session.get('loginUser')}!=null">
-    <a th:href="@{/logOut}">注销</a>
-</p>
-```
-
-![image-20220206092313534](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206092313534.png)
-
-* 实现注销功能
-
-```java
-//注销登录功能
-@RequestMapping("/logOut")
-public String logOut(){
-
-    Subject currentUser = SecurityUtils.getSubject();
-    currentUser.logout();
-
-    return "index";
-}
-```
-
-## Swagger
-
-![image-20220206131351334](../../../../../../../Pictures/assets/SpringBoot笔记/202202061313761.png)
-
-### 学习目标
-
-- 了解Swagger的概念及作用
-- 掌握在项目中集成Swagger自动生成API文档
-
-### Swagger简介
-
-**前后端分离**
-
-- 前端 -> 前端控制层、视图层
-- 后端 -> 后端控制层、服务层、数据访问层
-- 前后端通过API进行交互
-- 前后端相对独立且松耦合
-
-**产生的问题**
-
-- 前后端集成，前端或者后端无法做到“及时协商，尽早解决”，最终导致问题集中爆发
-
-**解决方案**
-
-- 首先定义schema [ 计划的提纲 ]，并实时跟踪最新的API，降低集成风险
-- 以前：指定word计划文档
-
-**Swagger**
-
-- 号称世界上最流行的API框架
-- Restful Api 文档在线自动生成器 => **API 文档 与API 定义同步更新**
-- 直接运行，在线测试API
-- 支持多种语言 （如：Java，PHP等）
-- 官网：https://swagger.io/
-
-### SpringBoot集成Swagger
-
-**SpringBoot集成Swagger** => **springfox**，两个jar包
-
-1. **Springfox-swagger2**
-2. swagger-springmvc
-
-**使用Swagger**，要求：jdk 1.8 + 否则swagger2无法运行
-
-* 新建一个SpringBoot-web项目
-* 导入相应依赖
-
-`swagger2.9.2`版本
-
-```xml
-<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
-<dependency>
-    <groupId>io.springfox</groupId>
-    <artifactId>springfox-swagger2</artifactId>
-    <version>2.9.2</version>
-</dependency>
-
-<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
-<dependency>
-    <groupId>io.springfox</groupId>
-    <artifactId>springfox-swagger-ui</artifactId>
-    <version>2.9.2</version>
-</dependency>
-</dependencies>
-```
-
-`swagger3.0.0`版本
-
-```xml
-<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
-<dependency>
-    <groupId>io.springfox</groupId>
-    <artifactId>springfox-swagger2</artifactId>
-    <version>3.0.0</version>
-</dependency>
-
-<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
-<dependency>
-    <groupId>io.springfox</groupId>
-    <artifactId>springfox-swagger-ui</artifactId>
-    <version>3.0.0</version>
-</dependency>
-
-<!-- https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter -->
-<dependency>
-    <groupId>io.springfox</groupId>
-    <artifactId>springfox-boot-starter</artifactId>
-    <version>3.0.0</version>
-</dependency>
-```
-
-
-
-* 编写一个HelloController
+###### 修改8001/8002的Controller
 
 ```java
 @RestController
-public class HelloController {
-    @RequestMapping("/")
-    public String hello(){
-        return "hello swagger";
+@Slf4j // 打印日志
+public class PaymentController {
+
+    @Resource
+    private PaymentService paymentService;
+
+    @Value("${server.port}")
+    private String serverPort;
+
+    @PostMapping("/payment/create")
+    public CommonResult create(Payment payment){
+
+        int result = paymentService.create(payment);
+        log.info("插入结果:"+result);
+
+        int code = 404;
+        String message = "当前端口号:"+serverPort;
+
+        if(result > 0){
+            code = 200;
+            message += "插入成功";
+        }else {
+            code = 444;
+            message += "插入数据库失败";
+        }
+
+        return new CommonResult(code,message,result);
+    }
+
+    @GetMapping("/payment/get/{id}")
+    public CommonResult getPaymentById(@PathVariable("id") Long id){
+
+        Payment payment = paymentService.getPaymentById(id);
+        log.info("查询结果:"+payment);
+
+        int code = 404;
+        String message = "当前端口号:"+serverPort;
+
+        if(payment != null ){
+            code = 200;
+            message += "查询成功";
+        }else {
+            code = 444;
+            message += "查询数据库失败";
+        }
+
+        return new CommonResult(code,message,payment);
     }
 }
 ```
 
-* 在WebMvcConfig中配置静态资源
+![image-20220409205407356](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345209.png)
+
+###### 修改Order80的Controller
+
+由于Order80的端口是写死的，会一直只访问一个提供者。
+
+单机版写成这样没问题：
+
+```java
+public static final String PAYMENT_URL = "http://localhost:8001";
+```
+
+但是在多集群上，不能这样。通过在eureka上注册过的微服务名称调用。
+
+```java
+public static final String PAYMENT_URL = "http://CLOUD-PAYMENT-SERVICE";
+```
+
+重新访问，http://localhost/consumer/payment/get/31，出现如下错误：
+
+![image-20220410112829556](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345210.png)
+
+因为不知道是那一台机器，导致无法找到。可以通过负载均衡解决。
+
+###### 负载均衡
+
+修改Order80的config类，使用``@LoadBalanced``注解赋予RestTemplate负载均衡的能力。
 
 ```java
 @Configuration
-public class WebMvcConfig implements WebMvcConfigurer {
+public class ApplicationContextConfig {
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("swagger-ui.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
-}
-```
-
-* 在SwaggerConfig中配置Swagger
-
-```java
-@Configuration
-@EnableSwagger2 //开启Swagger2
-// @EnableOpenApi //开启Swagger3
-public class SwaggerConfig{
-
-}
-```
-
-**注意：版本不同`注解`不同**
-
-- **Swagger3.0**——>注解：`@EnableOpenApi` //开启Swagger3.0
-
-```java
-// 配置Swagger的Docket的Bean实例
-@Bean
-public Docket docket() {
-    return new Docket(DocumentationType.OAS_30) // 这里和2.x有区别
-        .apiInfo(apiInfo())
-        .select()
-        // RequestHandlerSelect，配置要扫描的包的接口
-        .apis(RequestHandlerSelectors.basePackage("com.easy.controller"))
-        .build();
-}
-```
-
-- **Swagger2.0**——>注解：`@EnableSwagger2`
-
-* 测试运行：http://localhost:8080/swagger-ui.html
-
-**注意：版本不同`测试路径`不同**
-
-- **Swagger3.0**——>测试地址：`http://localhost:8080/swagger-ui/index.html`
-- **Swagger2.0**——>测试地址：`http://localhost:8080/swagger-ui.html`
-
-![image-20220206140046487](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206140046487.png)
-
-![image-20220207050959176](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220207050959176.png)
-
-### 配置Swagger
-
-Swagger实例Bean是Docket，所以通过配置Docket实例来配置Swaggger。其中可以通过apiInfo()属性配置文档信息
-
-```java
-@Configuration
-@EnableSwagger2 //开启Swagger2
-public class SwaggerConfig {
-
-    // 配置Swagger的Docket的Bean实例
     @Bean
-    public Docket docket() {
-        return new Docket(DocumentationType.OAS_30)
-                .apiInfo(apiInfo());
+    @LoadBalanced // 使用@LoadBalanced注解赋予RestTemplate负载均衡的能力
+    public RestTemplate getRestTemplate(){
+        return new RestTemplate();
     }
 
-    // 配置Swagger信息（apiInfo）
-    private ApiInfo apiInfo() {
+}
+```
 
-        Contact contact = new Contact("洛洛历险记", "https://xxx.com", "xxx@qq.com");
+重新访问：http://localhost/consumer/payment/get/31
 
-        ApiInfo info = new ApiInfo(
-                "Api接口文档",
-                "这是一个Api接口文档",
-                "v1.0",
-                "https://xxx.com",
-                contact,
-                "Apache 2.0",
-                "http://www.apache.org/licenses/LICENSE-2.0",
-                new ArrayList());
-        return info;
+![image-20220410113224897](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345211.png)
+
+![image-20220410113232253](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345212.png)
+
+#### actuator微服务信息完善
+
+##### 主机名称与服务名称的修改
+
+修改`cloud-provider-payment8001`以及`cloud-provider-payment8002`的yaml文件，在eureka下添加instance-id。
+
+```yaml
+eureka:
+  client:
+    register-with-eureka: true # 表示是否将自己注册进EurekaServer，默认为true
+    fetch-registry: true # 是否从EurekaServer抓取已有的注册信息，默认为true。单节点无所谓，集群必须设置为true才能配合ribbon使用均衡负载
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7001.com:7002/eureka/
+  instance:
+    instance-id: payment8001
+```
+
+![image-20220410114143788](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345213.png)
+
+##### 显示访问者的IP名称
+
+修改`cloud-provider-payment8001`以及`cloud-provider-payment8002`的yaml文件，在eureka下添加prefer-ip-adress用于显示访问者ip。
+
+```yaml
+eureka:
+  client:
+    register-with-eureka: true # 表示是否将自己注册进EurekaServer，默认为true
+    fetch-registry: true # 是否从EurekaServer抓取已有的注册信息，默认为true。单节点无所谓，集群必须设置为true才能配合ribbon使用均衡负载
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7001.com:7002/eureka/
+  instance:
+    instance-id: payment8001
+    prefer-ip-address: true
+```
+
+![image-20220410114559368](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345214.png)
+
+#### 服务发现Discovery
+
+对于注册进eureka里面的微服务，可以通过服务发现来获得该服务的信息。
+
+需要修改`cloud-provider-payment8001`以及``cloud-provider-payment8002``的controller。
+
+```java
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+
+@Resource
+private DiscoveryClient discoveryClient;
+
+@GetMapping("/payment/discovery")
+public Object discovery(){
+    // 获取服务列表名单
+    List<String> services = discoveryClient.getServices();
+    for(String service:services)
+        log.info("当前服务service："+service);
+
+    // 获取具体服务名称下的所有实例以及其所有信息
+    List<ServiceInstance> instances = discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE");
+    for(ServiceInstance serviceInstance:instances)
+        log.info("当前实例instance ID："+serviceInstance.getInstanceId() +";端口号："+serviceInstance.getPort());
+
+    return discoveryClient;
+}
+```
+
+并在主启动类添加`@EnableDiscoveryClient`
+
+```java
+@SpringBootApplication
+@EnableEurekaClient
+@EnableDiscoveryClient
+public class PaymentMain8002 {
+    public static void main(String[] args) {
+        SpringApplication.run(PaymentMain8002.class,args);
     }
 }
-
 ```
 
-![image-20220206142732928](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220206142732928.png)
+#### Eureka自我保护机制
 
-### 配置扫描端口
+##### 概述
 
-分析一下接口部分显示信息
+保护模式主要用于一组客户端和Eureka Server之间存在网络分区场景下的保护。一旦进入保护模式，Eureka Server将会尝试保护其服务注册表中的信息，不再删除服务注册表中的数据，也就是不会注销任何微服务。
 
-![](../../../../../../../Pictures/assets/SpringBoot笔记/202202070518859.png)
+如果在Eureka Server的首页看到以下这段提示，则说明eureka进入了保护模式：
 
-#### 设置扫描包及过滤
+![image-20220410121043943](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101345215.png)
 
-* 构建Docket时通过select()方法配置怎么扫描接口。
+也就是某时刻某一个微服务不可用了，Eureka不会立刻清理，依旧会对该微服务的信息进行保存。属于CAP里面的AP分支。
+
+##### 为什么会产生Eureka自我保护机制？
+
+为了防止EurekaClient可以正常运行，但是与EurekaServer网络不通情况下，EurekaServer不会立刻将EurekaClient服务剔除。
+
+##### 什么是自我保护模式？
+
+默认情况下，如果EurekaServer在一定时间内没有接收到某个微服务实例的心跳，EurekaServer将会注销该实例（默认90秒)。但是当网络分区故障发生(延时、卡顿、拥挤)时，微服务与EurekaServer之间无法正常通信，以上行为可能变得非常危险了——**因为微服务本身其实是健康的，此时本不应该注销这个微服务**。Eureka通过“自我保护模式”来解决这个问题—当EurekaServer节点在短时间内丢失过多客户端时（可能发生了网络分区故障)，那么这个节点就会进入自我保护模式。
+
+##### 如何进行eureka的自我保护？
+
+* Eureka 服务中心配置
+
+在注册中心`cloud-eureka-server7001`以及`cloud-eureka-server7002`中配置
+
+```yaml
+eureka:
+  server:
+    enable-self-preservation: false # 关闭自我保护机制，保证不可用服务被及时踢除
+    eviction-interval-timer-in-ms: 2000
+```
+
+* Eureka 客户端配置
+
+```yaml
+eureka:
+  instance:
+    # Eureka客户端向服务端发送心跳的时间间隔，单位为秒(默认是30秒)
+    lease-renewal-interval-in-seconds: 1
+    #  Eureka服务端在收到最后一次心跳后等待时间上限，单位为秒(默认是90秒)，超时将剔除服务
+    lease-expiration-duration-in-seconds: 2
+```
+
+![image-20220410142522753](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101554313.png)
+
+关了自我保护机制，一旦发生故障，就去除。
+
+* 停止8001或者8002其中一个，会立马删除
+* 启动后，又会加回来
+
+#### Eureka停止更新了怎么办？
+
+作为Eureka的替换，还可以使用Zookeeper、Consul、Nacos进行替换。
+
+### Zookeeper
+
+#### 什么是Zookeeper?
+
+Zookeeper是一个分布式协调工具，可以实现注册中心功能。[Zookeeper相关内容学习](./分布式开发笔记.md#Zookeeper)。
+
+#### Zookeeper简单使用
+
+配好集群过来使用….
+
+```sh
+systemctl stop firewalld # 关闭防火墙
+
+ifconfig # 查看当前虚拟机中的IP地址，然后使用ping查看是否连通
+```
+
+#### 服务提供者
+
+##### 新建module
+
+![image-20220410154407500](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204101554314.png)
+
+##### 改写pom
+
+与之前类似，只是将eureka换成了zookeeper
+
+```xml
+    <dependencies>
+
+        <dependency>
+            <groupId>com.atguigu.springcloud</groupId>
+            <artifactId>cloud-api-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!--spring boot 2.2.2-->
+        <!--图形化监控展现-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        
+        <!--SpringBoot整合Zookeeper客户端-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
+            <exclusions>
+                <!--先排除自带的zookeeper3.5.3-->
+                <exclusion>
+                    <groupId>org.apache.zookeeper</groupId>
+                    <artifactId>zookeeper</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--添加zookeeper3.4.6版本 -->
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>3.4.6</version>
+        </dependency>
+        <!--mybatis-->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+        </dependency>
+        <!-- druid-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.10</version>
+        </dependency>
+        <!--mysql-connector-java-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <!--jdbc-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+```
+
+##### 写yaml
+
+与之前类似
+
+```yaml
+server:
+  port: 8004
+
+# 服务名称--注册zookeeper到注册中心名称
+spring:
+  application:
+    name: cloud-provider-payment
+  cloud:
+    zookeeper:
+      connect-string: 192.168.183.102:2181
+```
+
+##### 主启动
 
 ```java
-// 配置Swagger的Docket的Bean实例
-@Bean
-public Docket docket() {
-    return new Docket(DocumentationType.OAS_30)
-        .apiInfo(apiInfo())
-        .select()
-        // RequestHandlerSelect，配置要扫描的包的接口
-        //basePackage指定要扫描的包
-        .apis(RequestHandlerSelectors.basePackage("com.easy.controller"))
-        .build();
+@SpringBootApplication
+@EnableDiscoveryClient
+public class PaymentMain8004 {
+    public static void main(String[] args) {
+        SpringApplication.run(PaymentMain8004.class,args);
+    }
 }
 ```
 
-![image-20220207052209185](../../../../../../../Pictures/assets/SpringBoot笔记/202202070552181.png)
+##### Controller
 
-RequestHandlerSelectors扫描接口的方式
-
-**RequestHandlerSelectors**，扫描接口的方式。其拥有的配置方法：
-
-- **basePackage**指定要扫描的包（常用）
-- **any()**扫描全部
-- **none**不扫描
-- **withClassAnnotation** 扫描类上得注解
-- **withMethodAnnotation** 扫描方法上得注解
-
-#### PathSelectors过滤方式
-
-方法：
-
-- ant()：过滤路径
-- any()：全部过滤
-- none()：不过滤
-- regex()：正则表达式
-
-使用第一种过滤路径测试
-
-![image-20220207055015769](../../../../../../../Pictures/assets/SpringBoot笔记/202202070553223.png)
-
-过滤后什么都没有了
-
-![image-20220207055028242](../../../../../../../Pictures/assets/SpringBoot笔记/202202070552183.png)
-
-#### 配置是否启动
-
-`enabled=true`属性是控制启动
-
-在`.apiInfo(apiInfo())`后面进行添加`.enable(false)`
+可以和之前一样，这里为了快速测试，就简单写一个函数，方便访问进行测试zookeeper是否可用。
 
 ```java
-// 配置Swagger的Docket的Bean实例
-@Bean
-public Docket docket() {
-    return new Docket(DocumentationType.OAS_30)
-        .apiInfo(apiInfo())
-        .enable(false)//关闭Swagger
-        .select()
-        .apis(RequestHandlerSelectors.basePackage("com.easy.controller"))
-        .build();
+@RestController
+@Slf4j
+public class PaymentController {
+    @Value("${server.port}")
+    private String serverPort;
+
+    @GetMapping("/payment/zk")
+    public String paymentZk(){
+        return "spring cloud with zookeeper:" + serverPort +":" + UUID.randomUUID().toString();
+    }
 }
 ```
 
-测试地址：http://localhost:8080/swagger-ui/index.html#/
+访问地址：http://localhost:8004/payment/zk
 
-![image-20220207055720687](../../../../../../../Pictures/assets/SpringBoot笔记/202202070557411.png)
+![image-20220410161317527](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117512.png)
 
-#### 设置Swagger在对应的项目环境启动
+之后，查看zookeeper里面的当前数据。
 
-在项目中只在**开发环境**开启Swagger，**生产环境**就要关闭Swagger。下面进行设置。
+```sh
+ls / # 查看当前节点数据
+ls /services # 这是当前服务的数据
+```
 
-##### 创建测试环境
+![image-20220410161543026](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117513.png)
 
-- application-dev：开发环境
-- application-pro：生产环境
+一直查下去，会出现一个流水号
 
-![image-20220207061528258](../../../../../../../Pictures/assets/SpringBoot笔记/202202070627108.png)
+![image-20220410162255923](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117514.png)
 
+之后，使用get获取节点的内部数据信息
 
+```sh
+get /services/cloud-provider-payment/d1374223-68fd-4555-8f58-fe66628c9555
+```
 
-`application.properties`内代码：``spring.profiles.active=dev`
-`application-dev.properties`内代码：`server.port=8081`
-`application-pro.properties`内代码：`server.port=8082`
+![image-20220410162345194](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117515.png)
 
-##### 编写配置类获取项目环境
+![ ](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117516.png)
 
-- `Profiles.of()`设置要显示的swagger的环境
-- 通过`environment.acceptsProfiles`判断是否处在自己设定的环境中 获取`boolean`值`flag`
-- 赋值给`enable（flag）`
+#### 思考：服务节点是临时还是永久？
+
+在zookeeper中服务节点是临时的，如果服务挂掉了，过一段时间后，服务节点就会在zookeeper中去掉。
+
+重新加入后，流水号就会变了，因为它会默认是加入了新的一个服务节点进来。
+
+#### 服务消费者
+
+##### 新建module
+
+![image-20220410163605035](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117517.png)
+
+##### 改写pom
+
+```xml
+<dependencies>
+
+    <dependency>
+        <groupId>com.atguigu.springcloud</groupId>
+        <artifactId>cloud-api-commons</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+
+    <!--SpringBoot整合Zookeeper客户端-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
+        <exclusions>
+            <!--先排除自带的zookeeper3.5.3-->
+            <exclusion>
+                <groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+    <!--添加zookeeper3.4.6版本 -->
+    <dependency>
+        <groupId>org.apache.zookeeper</groupId>
+        <artifactId>zookeeper</artifactId>
+        <version>3.4.6</version>
+    </dependency>
+</dependencies>
+
+```
+
+##### 写yaml
+
+```yaml
+server:
+  port: 80
+
+# 服务名称--注册zookeeper到注册中心名称
+spring:
+  application:
+    name: cloud-consumer-order
+  cloud:
+    zookeeper:
+      connect-string: 192.168.183.102:2181
+```
+
+##### 主启动
+
+````java
+@SpringBootApplication
+@EnableDiscoveryClient
+public class OrderZookeeperMain80 {
+    public static void main(String[] args) {
+        SpringApplication.run(OrderZookeeperMain80.class,args);
+    }
+}
+````
+
+##### 配置类
 
 ```java
-// 配置Swagger的Docket的Bean实例
-@Bean
-public Docket docket(Environment environment) {
+@Configuration
+public class ApplicationContextConfig {
+    @Bean
+    @LoadBalanced
+    public RestTemplate getRestRemplate(){
+        return new RestTemplate();
+    }
+}
+```
 
-    // 设置要显示的Swagger环境
-    Profiles profiles = Profiles.of("dev","test");
-    // 通过`Environment environment`获取项目环境
-    // 通过environment.acceptsProfiles判断是否处于自己设置的环境中
-    boolean flag = environment.acceptsProfiles(profiles);
+##### Controller
 
-    return new Docket(DocumentationType.OAS_30)
-        .apiInfo(apiInfo())
-        .enable(flag)
-        .select()
-        .apis(RequestHandlerSelectors.basePackage("com.easy.controller"))
-        .build();
+```java
+@RestController
+@Slf4j
+public class PaymentController {
+
+    public static final String INVOKE_URL = "http://cloud-provider-payment";
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @GetMapping("/consumer/payment/zk")
+    public String paymentInfo(){
+        String result = restTemplate.getForObject(INVOKE_URL+"/payment/zk",String.class);
+        return result;
+    }
 }
 ```
 
 ##### 测试
 
-application.properties中切换环境为dev环境： `spring.profiles.active=dev`
+启动后，发现该项目也加入进来了。
 
-dev环境的测试地址：http://localhost:8081/swagger-ui/index.html#/
+![image-20220410164548097](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117518.png)
 
-![image-20220207061958893](../../../../../../../Pictures/assets/SpringBoot笔记/202202070627141.png)
+之后访问地址：http://localhost/consumer/payment/zk
 
-application.properties中切换环境为pro环境： `spring.profiles.active=pro`
+![image-20220410164630311](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117519.png)
 
-![image-20220207062053031](../../../../../../../Pictures/assets/SpringBoot笔记/202202070627625.png)
+##### Eureka与Zookeeper的区别
 
-### API分组
+###### Eureka保证AP
 
-#### 设置分组
+Eureka服务器节点之间是对等的，只要有一个节点在，就可以正常提供服务。
 
-Docket的源码可以看到分组的默认值为default
+Eureka客户端的所有操作可能需要一段时间才能在Eureka服务器中反映出来，随后在其他Eureka客户端中反映出来。也就是说，客户端获取到的注册信息可能不是最新的，它并不保证强一致性
 
-![img](../../../../../../../Pictures/assets/SpringBoot笔记/202202070627594.png)
+###### Zookeeper保证CP
 
-进行修改,只需要一行代码
+Zookeeper集群中有一个Leader，多个Follower。Leader负责写，Follower负责读，ZK客户端连接到任何一个节点都是一样的，写操作完成以后要同步给所有Follower以后才会返回。如果Leader挂了，那么重新选出新的Leader，在此期间服务不可用。
 
-```java
-.groupName("花儿为什么这样红")
+###### 为什么用Eureka
+
+分布式系统大都可以归结为两个问题：数据一致性和防止单点故障。而作为注册中心的话，即使在一段时间内不一致，也不会有太大影响，所以在A和C之间选择A是比较适合该场景的。
+
+### Consul
+
+#### 什么是Consul？
+
+![image-20220410165515379](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117520.png)
+
+Consul是一个服务网格（微服务间的 TCP/IP，负责服务之间的网络调用、限流、熔断和监控）解决方案，它是一个一个分布式的，高度可用的系统，而且开发使用都很简便。它提供了一个功能齐全的控制平面，主要特点是：**服务发现、健康检查、键值存储、安全服务通信、多数据中心**。
+
+与其它分布式服务注册与发现的方案相比，Consul 的方案更“一站式”——内置了服务注册与发现框架、分布一致性协议实现、健康检查、Key/Value 存储、多数据中心方案，不再需要依赖其它工具。Consul 本身使用 go 语言开发，具有跨平台、运行高效等特点，也非常方便和 Docker 配合使用。
+
+#### Consul的安装与使用
+
+##### 安装
+
+下载地址：https://www.consul.io/downloads
+
+##### 运行
+
+* 查看版本信息
+
+````sh
+consul --version
+````
+
+* 使用开发模式启动
+
+```sh
+consul agent -dev
 ```
 
-![image-20220207062858754](../../../../../../../Pictures/assets/SpringBoot笔记/202202070630386.png)
+* 访问Consul地址：http://localhost:8500/
 
-运行后，看到前端页面，也发什么了修改
+![image-20220410170258065](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117521.png)
 
-![image-20220207062954903](../../../../../../../Pictures/assets/SpringBoot笔记/202202070629293.png)
+#### 服务提供者
 
-#### 设置分组
+##### 新建module
 
-**多个分组就是多人协作开发时每个人分组**，其实就是多个**Docket实例**。
+![image-20220410192418611](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117522.png)
+
+![image-20220410195145268](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117523.png)
+
+##### 改pom
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-consul-discovery</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.atguigu.springcloud</groupId>
+        <artifactId>cloud-api-commons</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <!--spring boot 2.2.2-->
+    <!--图形化监控展现-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <!--mybatis-->
+    <dependency>
+        <groupId>org.mybatis.spring.boot</groupId>
+        <artifactId>mybatis-spring-boot-starter</artifactId>
+    </dependency>
+    <!-- druid-->
+    <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>druid-spring-boot-starter</artifactId>
+        <version>1.1.10</version>
+    </dependency>
+    <!--mysql-connector-java-->
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+    <!--jdbc-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+```
+
+##### 写yml
+
+```yaml
+server:
+  port: 8006 # 端口号
+
+spring:
+  application:
+    name: cloud-payment-service # 应用名称
+  datasource: # 数据库
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db2020?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+  # consul注册中心地址
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.atguigu.springcloud.entities # 所有Entity别名类所在包
+```
+
+##### 主启动
 
 ```java
-@Bean
-public Docket docket1(){
-    return new Docket(DocumentationType.OAS_30).groupName("A");
-}
-
-@Bean
-public Docket docket2(){
-    return new Docket(DocumentationType.OAS_30).groupName("B");
-}
-
-@Bean
-public Docket docket3(){
-    return new Docket(DocumentationType.OAS_30).groupName("C");
+@SpringBootApplication
+@EnableDiscoveryClient
+public class PaymentMain8006 {
+    public static void main(String[] args) {
+        SpringApplication.run(PaymentMain8006.class,args);
+    }
 }
 ```
 
-运行一下就可以看到多个分组了，选择一个分组信息就会发生变化，以及测试路径。
+##### Controller
 
-![image-20220207063512761](../../../../../../../Pictures/assets/SpringBoot笔记/202202070635169.png)
-
-### 注释
-
-#### 常用注解
-
-Swagger的所有注解定义在io.swagger.annotations包下
-
-下面列一些经常用到的，未列举出来的可以另行查阅说明：
-
-| Swagger注解                                            | 简单说明                                             |
-| ------------------------------------------------------ | ---------------------------------------------------- |
-| @Api(tags = "xxx模块说明")                             | 作用在模块类上                                       |
-| @ApiOperation("xxx接口说明")                           | 作用在接口方法上                                     |
-| @ApiModel("xxxPOJO说明")                               | 作用在模型类上：如VO、BO                             |
-| @ApiModelProperty(value = "xxx属性说明",hidden = true) | 作用在类方法和属性上，hidden设置为true可以隐藏该属性 |
-| @ApiParam("xxx参数说明")                               | 作用在参数、方法和字段上，类似@ApiModelProperty      |
-
-#### 实体类注释
-
-先创建pojo编写一个User进行测试
+参考其他的`provider8001`工程项目。
 
 ```java
-public class User {
-    private String username;
-    private String password;
-}
-```
-
-直接启动项目是不能扫描到实体类的。
-
-#### 方法一（不是用注解，也可以扫描到实体类）
-
-实体类不使用注释也可以被扫描，只要请求返回类型是实体类即可。
-
-* 在`HelloController`中添加方法
-
-```java
-@RequestMapping("/user")
-public User getUser(){
-    return new User();
-}
-```
-
-* 运行测试
-
-![image-20220207064413412](../../../../../../../Pictures/assets/SpringBoot笔记/202202070646180.png)
-
-实体有了但是这样的没有属性，这是因为没有给属性添加get set方法。给是实体类添加get set 方法,再次测试
-
-```java
-import lombok.Data;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class User {
-    private String username;
-    private String password;
-}
-```
-
-![image-20220207064600943](../../../../../../../Pictures/assets/SpringBoot笔记/202202070646391.png)
-
-
-
-#### 方法二（注解）
-
-- `@ApiModel("用户实体类")`：用于实体类上，描述实体类
-- `@ApiModelProperty(value = "用户名",hidden = false)`：用于属性上描述实体类属性，hidden功能是，是否隐藏该属性
-
-```java
-@ApiModel("用户实体类")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class User {
-    @ApiModelProperty(value = "用户名",hidden = false)//hidden是否隐藏
-    private String username;
-    @ApiModelProperty(value = "密码")
-    private String password;
-}
-
-```
-
-![image-20220207065026736](../../../../../../../Pictures/assets/SpringBoot笔记/202202070650683.png)
-
-#### 接口注释
-
-接口常用的三个注解
-
-- `@Api(tags = "helloController层")`：放在控制层类上，描述控制层
-
-- `@ApiOperation(value = "hello2方法",notes = "方法描述")`：放在方法控制层上，描述控制层方法
-
-- `@ApiParam("用户名")`：参数描述
-
-```java
-@Api(tags = "HelloController层")
 @RestController
-public class HelloController {
+@Slf4j
+public class PaymentController {
 
-    @ApiOperation("hello方法")
-    @RequestMapping("/")
-    public String hello(){
-        return "hello swagger";
+    @Resource
+    private PaymentService paymentService;
+
+    @Value("${server.port}")
+    private String serverPort;
+
+    @Resource
+    private DiscoveryClient discoveryClient;
+
+    @GetMapping("/payment/discovery")
+    public Object discovery(){
+        // 获取服务列表名单
+        List<String> services = discoveryClient.getServices();
+        for(String service:services)
+            log.info("当前服务service："+service);
+
+        // 获取具体服务名称下的所有实例以及其所有信息
+        List<ServiceInstance> instances = discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE");
+        for(ServiceInstance serviceInstance:instances)
+            log.info("当前实例instance ID："+serviceInstance.getInstanceId() +";端口号："+serviceInstance.getPort());
+
+        return discoveryClient;
     }
 
-    @ApiOperation(value = "用户接口方法",notes = "方法描述")
-    @RequestMapping("/user")
-    public User getUser(@ApiParam("用户名") String username,@ApiParam("密码") String password){
-        return new User(username,password);
+    @PostMapping("/payment/create")
+    public CommonResult create(Payment payment){
+
+        int result = paymentService.create(payment);
+        log.info("插入结果:"+result);
+
+        int code = 404;
+        String message = "当前端口号:"+serverPort;
+
+        if(result > 0){
+            code = 200;
+            message += "插入成功";
+        }else {
+            code = 444;
+            message += "插入数据库失败";
+        }
+
+        return new CommonResult(code,message,result);
+    }
+
+    @GetMapping("/payment/get/{id}")
+    public CommonResult getPaymentById(@PathVariable("id") Long id){
+
+        Payment payment = paymentService.getPaymentById(id);
+        log.info("查询结果:"+payment);
+
+        int code = 404;
+        String message = "当前端口号:"+serverPort;
+
+        if(payment != null ){
+            code = 200;
+            message += "查询成功";
+        }else {
+            code = 444;
+            message += "查询数据库失败";
+        }
+
+        return new CommonResult(code,message,payment);
     }
 }
 ```
 
-![image-20220207065736537](../../../../../../../Pictures/assets/SpringBoot笔记/202202070821709.png)
+![image-20220410205902619](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117524.png)
 
-### 扩展功能
+#### 服务消费者
 
-#### 默认的 
+##### 新建module
 
-Swagger2：http://localhost:8080/swagger-ui.html
-
-Swagger3： http://localhost:8080/swagger-ui/index.html
+##### 改写pom
 
 ```xml
-<dependency>
-   <groupId>io.springfox</groupId>
-   <artifactId>springfox-swagger-ui</artifactId>
-   <version>2.9.2</version>
-</dependency>
+<dependencies>
+
+    <dependency>
+        <groupId>com.atguigu.springcloud</groupId>
+        <artifactId>cloud-api-commons</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-consul-discovery</artifactId>
+    </dependency>
+</dependencies>
 ```
 
-#### Layui-ui
+##### 写yaml
 
- http://localhost:8080/docs.html
+```yaml
+server:
+  port: 80
 
-```xml
-<!-- 引入swagger-ui-layer包 /docs.html-->
-<dependency>
-   <groupId>com.github.caspar-chen</groupId>
-   <artifactId>swagger-ui-layer</artifactId>
-   <version>1.1.3</version>
-</dependency>
+spring:
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
+  application:
+    name: cloud-consumer-order
 ```
 
-#### mg-ui
+##### 主启动
 
-http://localhost:8080/document.html
-
-```xml
-<!-- 引入swagger-mg-ui包 /document.html-->
-<dependency>
-   <groupId>com.zyplayer</groupId>
-   <artifactId>swagger-mg-ui</artifactId>
-   <version>1.0.6</version>
-</dependency>
+```java
+@SpringBootApplication
+@EnableDiscoveryClient
+public class OrderMain80 {
+    public static void main(String[] args) {
+        SpringApplication.run(OrderMain80.class,args);
+    }
+}
 ```
 
-![image-20220207082116083](../../../../../../../Pictures/assets/SpringBoot笔记/202202070821453.png)
-
-需要在`webMvcConfig.java`设置
+##### Config
 
 ```java
 @Configuration
-public class WebMvcConfig implements WebMvcConfigurer {
+public class ApplicationContextConfig {
+    
+    @Bean
+    @LoadBalanced
+    public RestTemplate getRestTemplate(){
+        return new RestTemplate();
+    }
+    
+}
+```
+
+##### Controller
+
+```java
+@RestController
+@Slf4j
+public class OrderController {
+
+    public static final String PAYMENT_URL = "http://CLOUD-PAYMENT-SERVICE";
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @GetMapping("/consumer/payment/create")
+    public CommonResult<Payment> create(Payment payment){
+        return restTemplate.postForObject(PAYMENT_URL+"/payment/create",payment,CommonResult.class);
+
+    }
+
+    @GetMapping("/consumer/payment/get/{id}")
+    public CommonResult<Payment> getPayment(@PathVariable("id") Long id){
+        return restTemplate.getForObject(PAYMENT_URL+"/payment/get/"+id,CommonResult.class);
+    }
+
+}
+```
+
+![image-20220410210820752](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117525.png)
+
+![image-20220410210832362](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117526.png)
+
+### Eureka、Zookeeper与Consul注册中心的异同点
+
+| 组件名    | 语言 | CAP  | 健康检查 | 对外暴露接口 | Spring Cloud 集成 |
+| --------- | ---- | ---- | -------- | ------------ | ----------------- |
+| Eureka    | Java | AP   | 可配支持 | HTTP         | 已集成            |
+| Consul    | Go   | CP   | 支持     | HTTP/DNS     | 已集成            |
+| ZooKeeper | Java | CP   | 支持     | 客户端       | 已集成            |
+
+### CAP理论
+
+- Consistency：强一致性
+
+- Availability：可用性
+
+- Partition tolerance：分区容错性
+
+CAP关注的粒度是数据，而不是整个系统CAP理论的定义和解释上，用的都是system、node这类的系统级概念，容易给我们造成误解，认为系统只能选择AP或者CP。 但是在实际设计中，系统不可能只处理一种数据，有的数据需要使用AP，有的数据需要使用CP。
+
+**最多只能同时较好的满足两个**。
+CAP理论的核心是：**一个分布式系统不可能同时很好的满足一致性，可用性和分区容错性这三个需求**，因此，根据CAP原理将NoSQL数据库分成了满足CA原则、满足CР原则和满足AP原则三大类：
+
+- CA-单点集群，满足—致性，可用性的系统，通常在可扩展性上不太强大。
+
+- CP -满足—致性，分区容忍必的系统，通常性能不是特别高。
+
+- AP–满足可用性，分区容忍性的系统，通常可能对—致性要求低一些。
+
+> 先保证AP，再CP
+
+## 服务调用
+
+### Ribbon负载均衡服务调用
+
+#### Ribbon概述
+
+##### 什么是Ribbon
+
+Spring Cloud Ribbon是基于Netflix Ribbon实现的一套客户端负载均衡的工具。
+
+简单的说，Ribbon是Netflix发布的开源项目，主要功能是提供客户端的软件负载均衡算法和服务调用。Ribbon客户端组件提供一系列完善的配置项如连接超时，重试等。简单的说，就是在配置文件中列出Load Balancer(简称LB)后面所有的机器，Ribbon会自动的帮助你基于某种规则(如简单轮询，随机连接等）去连接这些机器。我们很容易使用Ribbon实现自定义的负载均衡算法。
+
+##### Ribbon官网
+
+官网：https://github.com/Netflix/ribbon/wiki/Getting-Started
+
+目前Ribbon进入维护模式中。
+
+##### Ribbon能做什么
+
+###### LB负载均衡(Load Balance)是什么
+
+简单的说就是将用户的请求平摊的分配到多个服务上，从而达到系统的HA（高可用)。常见的负载均衡有软件Nginx，LVS，硬件F5等。
+
+###### Ribbon本地负载均衡客户端 VS Nginx服务端负载均衡区别
+
+Nginx是服务器负载均衡，客户端所有请求都会交给nginx，然后由nginx实现转发请求。即负载均衡是由服务端实现的。（集中式LB）
+
+Ribbon本地负载均衡，在调用微服务接口时候，会在注册中心上获取注册信息服务列表之后缓存到JVM本地，从而在本地实现RPC远程服务调用技术。（进程式LB）
+
+#### Ribbon负载均衡演示
+
+Ribbon其实就是一个软负载均衡的客户端组件, 他可以和其他所需请求的客户端结合使用，和eureka结合只是其中一个实例。
+
+> 说白了就是通过负载均衡+RestTemplate调用
+
+##### 架构说明
+
+![在这里插入图片描述](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117527.png)
+
+##### pom
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+```
+
+eureka包就已经整合了ribbon的包。
+
+##### RestTemplate使用
+
+语法文档：https://docs.spring.io/spring-framework/docs/5.2.2.RELEASE/javadoc-api/org/springframework/web/client/RestTemplate.html
+
+前面已经写过配置类
+
+```java
+@Configuration
+public class ApplicationContextConfig {
+
+    @Bean
+    @LoadBalanced // 使用@LoadBalanced注解赋予RestTemplate负载均衡的能力
+    public RestTemplate getRestTemplate(){
+        return new RestTemplate();
+    }
+
+}
+```
+
+![image-20220410235447730](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204111117528.png)
+
+
+
+`restTemplate.getForObject`：返回对象为响应体中数据转化成的对象，基本上可以理解为json
+
+`restTemplate.getForEntity`：返回对象为ResponseEntity对象，包含了响应中的一些重要信息，比如响应头、响应状态码、响应体。
+
+```java
+@RestController
+@Slf4j
+public class OrderController {
+
+    public static final String PAYMENT_URL = "http://CLOUD-PAYMENT-SERVICE";
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @GetMapping("/consumer/payment/create")
+    public CommonResult<Payment> create(Payment payment){
+        return restTemplate.postForObject(PAYMENT_URL+"/payment/create",payment,CommonResult.class);
+
+    }
+
+    @GetMapping("/consumer/payment/get/{id}")
+    public CommonResult<Payment> getPayment(@PathVariable("id") Long id){
+        return restTemplate.getForObject(PAYMENT_URL+"/payment/get/"+id,CommonResult.class);
+    }
+
+    @GetMapping("/consumer/payment2/get/{id}")
+    public CommonResult<Payment> getPayment2(@PathVariable("id") Long id){
+        ResponseEntity<CommonResult> entity = restTemplate.getForEntity(PAYMENT_URL+"/payment/get/"+id,CommonResult.class);
+
+        if(entity.getStatusCode().is2xxSuccessful()){
+            return entity.getBody();
+        }else{
+            return new CommonResult<>(444,"操作失败");
+        }
+    }
+
+    @GetMapping("/consumer/payment2/create")
+    public CommonResult<Payment> create2(Payment payment){
+
+        ResponseEntity<CommonResult> entity = restTemplate.postForEntity(PAYMENT_URL+"/payment/create",payment,CommonResult.class);
+
+        if (entity.getStatusCode().is2xxSuccessful()){
+            return entity.getBody();
+        }else{
+            return new CommonResult<>(400,"操作失败");
+        }
+
+    }
+
+}
+```
+
+#### Ribbon核心组件IRule
+
+IRule：根据特点算法中从服务列表中选取一个要访问的服务。
+
+Rule接口常见的有7个实现类，每个实现类代表一个[负载均衡](https://so.csdn.net/so/search?q=负载均衡&spm=1001.2101.3001.7020)算法，默认使用轮询。
+
+| 接口                                    | 作用                                                         |
+| --------------------------------------- | ------------------------------------------------------------ |
+| com.netflix.loadbalancer.RoundRobinRule | 轮询                                                         |
+| com.netflix.loadbalancer.RandomRule     | 随机                                                         |
+| com.netflix.loadbalancer.RetryRule      | 先按照RoundRobinRule的策略获取服务，如果获取服务失败则在指定时间内会进行重试，获取可用的服务 |
+| WeightedResponseTimeRule                | 对RoundRobinRule的扩展，响应速度越快的实例选择权重越大，越容易被选择 |
+| BestAvailableRule                       | 会先过滤掉由于多次访问故障而处于断路器跳闸状态的服务，然后选择一个并发量最小的服务 |
+| AvailabilityFilteringRule               | 先过滤掉故障实例，再选择并发较小的实例                       |
+| ZoneAvoidanceRule                       | 默认规则，复合判断server所在区域的性能和server的可用性选择服务器 |
+
+在springcloud中，如何替换负载均衡算法？
+
+对原来的`cloud-consumer-order80`作为样例进行修改测试，首先需要注意配置细节：
+
+> 这个自定义配置类不能放在@CompanentScan所扫描的当前包下以及子包下，否则我们自定义的这个配置类就会被所有的Ribbon客户端所共享，达不到特殊化定制的目的了。
+
+因此创建`com.atguigu.myrule`，避免放到`com.atguigu.springcloud`被扫描到，就无法实现特殊化定制。在`com.atguigu.myrule`下创建`MySelfRule`规则类：
+
+```java
+@Configuration
+public class MySelfRule {
+
+    @Bean
+    public IRule myRule(){
+        // 定义为随机
+        return new RandomRule();
+    }
+
+}
+```
+
+最后在主启动类中添加`@RibbonClient(name = "CLOUD-PAYMENT-SERVICE",configuration = MySelfRule.class)`，其中参数分别为``服务名``以及``规则类.class``。
+
+````java
+@SpringBootApplication
+@EnableEurekaClient
+@RibbonClient(name = "CLOUD-PAYMENT-SERVICE",configuration = MySelfRule.class)
+public class OrderMain80 {
+    public static void main(String[] args) {
+        SpringApplication.run(OrderMain80.class,args);
+    }
+}
+````
+
+#### Ribbon负载均衡算法
+
+##### 负载均衡算法原理
+
+**负载均衡轮询算法**：rest接口第几次请求次数 % 服务器集群总数量 = 实际调用服务器位置下标，每次服务器重启后，rest接口计数从1开始。
+
+##### 负载均衡算法源码
+
+```java
+private int incrementAndGetModulo(int modulo) {
+    int current;
+    int next;
+    do {
+        current = this.nextServerCyclicCounter.get();
+        next = (current + 1) % modulo;
+    } while(!this.nextServerCyclicCounter.compareAndSet(current, next));
+    return next;
+}
+```
+
+##### 手写负载均衡算法
+
+原理：CAS+自旋锁
+
+* 首先8001、8002服务controller层加上
+
+```java
+@GetMapping("/payment/lb")
+public String getPaymentLB() {
+    return serverPort;
+}
+ 
+```
+
+* 对于服务订单80进行改造
+
+1. 将config中的@LoadBalanced注释
+2. 创建`com.atguigu.springcloud.lb`包，并创建`LoabBalancer`接口类
+
+```java
+public interface LoadBalancer {
+    ServiceInstance instances(List<ServiceInstance> serviceInstances);
+}
+```
+
+之后创建`MyLoadBalancer`实现类。
+
+````java
+@Component
+public class MyLoadBalancer implements LoadBalancer{
+
+    private AtomicInteger atomicInteger = new AtomicInteger(0);
+
+    public final int getAndIncrement(){
+        int current;
+        int next;
+
+        do{
+
+            current = this.atomicInteger.get();
+            next = current >= Integer.MAX_VALUE?0: current+1;
+
+        }while (!atomicInteger.compareAndSet(current,next));
+
+        return next;
+    }
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("swagger-ui.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("document.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("docs.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    public ServiceInstance instances(List<ServiceInstance> serviceInstances) {
+
+        int index = getAndIncrement() % serviceInstances.size();
+
+        return serviceInstances.get(index);
+    }
+
+}
+````
+
+最后对controller进行修改。
+
+```java
+@RestController
+@Slf4j
+public class OrderController {
+
+    public static final String PAYMENT_URL = "http://CLOUD-PAYMENT-SERVICE";
+
+    @Resource
+    private RestTemplate restTemplate;
+    @Resource
+    private MyLoadBalancer loadBalancer;
+    @Resource
+    private DiscoveryClient discoveryClient;
+
+    @GetMapping("/consumer/payment/lb")
+    public String getPaymentLB() {
+        List<ServiceInstance> instances = discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE");
+        if (instances == null || instances.size() <= 0) {
+            return null;
+        }
+        ServiceInstance serviceInstance = loadBalancer.instances(instances);
+        URI uri = serviceInstance.getUri();
+        return restTemplate.getForObject(uri + "/payment/lb", String.class);
+    }
+
+}
+```
+
+![image-20220411125707305](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451543.png)
+
+### OpenFeign服务接口调用
+
+#### OpenFeign概述
+
+##### 官方文档
+
+地址：https://cloud.spring.io/spring-cloud-static/Hoxton.SR1/reference/htmlsingle/#spring-cloud-openfeign
+
+##### 什么是OpenFeign？
+
+Feign是一个声明式WebService客户端。使用Feign能让编写Web Service客户端更加简单。它的使用方法是定义一个服务接口然后在上面添加注解。Feign也支持可拔插式的编码器和解码器。Spring Cloud对Feign进行了封装，使其支持了Spring MVC标准注解和HttpMessageConverters。Feign可以与Eureka和Ribbon组合使用以支持负载均衡。
+
+OpenFeigh地址：https://github.com/spring-cloud/spring-cloud-openfeign
+
+##### OpenFeign能做什么
+
+###### Feign旨在使编写Java Http客户端变得更容易
+
+前面在使用Ribbon+RestTemplate时，利用RestTemplate对http请求的封装处理，形成了—套模版化的调用方法。但是在实际开发中，由于对服务依赖的调用可能不止一处，**往往一个接口会被多处调用，所以通常都会针对每个微服务自行封装一些客户端类来包装这些依赖服务的调用。**所以，Feign在此基础上做了进一步封装，由他来帮助我们定义和实现依赖服务接口的定义。在Feign的实现下，**我们只需创建一个接口并使用注解的方式来配置它{以前是Dao接口上面标注Mapper注解,现在是一个微服务接口上面标注一个Feign注解即可)**，即可完成对服务提供方的接口绑定，简化了使用Spring cloud Ribbon时，自动封装服务调用客户端的开发量。
+
+##### Feign集成了Ribbon
+
+利用Ribbon维护了Payment的服务列表信息，并且通过轮询实现了客户端的负载均衡。而与Ribbon不同的是，**通过feign只需要定义服务绑定接口且以声明式的方法**，优雅而简单的实现了服务调用。
+
+##### Feign与OpenFeign的区别
+
+| Feign                                                        | OpenFeign                                                    |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Feign是Spring Cloud组件中的一个轻量级RESTful的HTTP服务客户端Feign内置了Ribbon，用来做客户端负载均衡，去调用服务注册中心的服务。Feign的使用方式是:使用Feign的注解定义接口，调用这个接口，就可以调用服务注册中心的服务 | OpenFeign是Spring Cloud在Feign的基础上支持了SpringMVC的注解，如@RequesMapping等等。OpenFeign的@FeignClient可以解析SpringMVC的@RequestMapping注解下的接口，并通过动态代理的方式产生实现类，实现类中做负载均衡并调用其他服务。 |
+
+##### 相关依赖
+
+```xml
+<!--openfeign-->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+```
+
+之前使用的ribbon+restTemplate，而OpenFeign整合了之前的。
+
+#### OpenFeign使用步骤
+
+##### 接口+注解
+
+微服务调用接口+@FeignClient。
+
+##### 新建module
+
+新建`cloud-feign-consumer-order80`，并且Feign在消费端使用。
+
+![image-20220411152950676](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451544.png)
+
+
+
+##### 改pom
+
+```xml
+<dependencies>
+    <!--openfeign-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-openfeign</artifactId>
+    </dependency>
+    <!--eureka client-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.atguigu.springcloud</groupId>
+        <artifactId>cloud-api-commons</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <!--监控-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <!--热部署-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+```
+
+##### 写yaml
+
+```yaml
+server:
+  port: 80
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/, http://eureka7002.com:7002/eureka/
+```
+
+##### 主启动
+
+```java
+@SpringBootApplication
+@EnableFeignClients
+public class OrderFeignMain80 {
+    public static void main(String[] args) {
+        SpringApplication.run(OrderFeignMain80.class,args);
     }
 }
 ```
 
-#### knife4j（推荐）
+##### 业务类
 
-#### 配置
+新建`service.PaymentFeignService`
 
-http://localhost:8080/doc.html
+`@FeignClient(value = "CLOUD-PAYMENT-SERVICE")`这里的value是eureka里面注册的服务名称。
 
-```xml
-<dependency>
-    <groupId>com.github.xiaoymin</groupId>
-    <artifactId>knife4j-spring-boot-starter</artifactId>
-    <version>3.0.3</version>
-</dependency>
+```java
+@Component
+@FeignClient(value = "CLOUD-PAYMENT-SERVICE")
+public interface PaymentFeignService {
+
+    @GetMapping("/payment/get/{id}")
+    CommonResult<Payment> getPaymentById(@PathVariable("id") Long id);
+}
 ```
 
-注意
+##### 控制层Controller
 
-- knife4j 已经引入了 springfox，所以在使用的时候无需再次引入
-  springfox，否则有可能会导致版本冲突，如果你在网关聚合时，必须禁用 knife4j 的增强功能。
-- 使用Knife4j2.0.6及以上的版本，Spring Boot的版本必须大于等于2.2.x
+```java
+@RestController
+@Slf4j
+public class OrderController{
 
-**SwaggerConfig 配置依赖**
+    @Resource
+    private PaymentFeignService paymentFeignService;
+
+    @GetMapping(value = "/consumer/payment/get/{id}")
+    public CommonResult<Payment> getPaymentById(@PathVariable("id") Long id) {
+        return paymentFeignService.getPaymentById(id);
+    }
+
+    public String paymentFeignTimeout() {
+        return null;
+    }
+}
+```
+
+##### 测试
+
+启动eureka集群7001/7002，再启动微服务8001/8002，最后启动OpenFeign。
+
+访问地址：http://localhost/consumer/payment/get/31
+
+![image-20220411162949428](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451546.png)
+
+> Feign自带负载均衡配置项。
+
+#### OpenFeign超时控制
+
+##### 超时设置，故意设置超时演示出错情况
+
+服务提供方8001故意写暂停程序
+
+```java
+@GetMapping("/payment/feign/timeout")
+public String paymentFeignTimeout(){
+
+    try {
+        TimeUnit.SECONDS.sleep(3);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+
+    return serverPort;
+}
+```
+
+服务消费方80添加超时方法PaymentFeignService
+
+```java
+@Component
+@FeignClient(value = "CLOUD-PAYMENT-SERVICE")
+public interface PaymentFeignService {
+
+    @GetMapping(value = "/payment/feign/timeout")
+    String paymentFeignTimeout();
+}
+```
+
+服务消费方80添加超时方法OrderFeignController
+
+```java
+@RestController
+@Slf4j
+public class OrderController{
+
+    @GetMapping(value = "/consumer/payment/timeout")
+    public String paymentFeignTimeout() {
+        
+        return paymentFeignService.paymentFeignTimeout();
+    }
+}
+```
+
+##### OpenFeign默认等待1秒钟，超过后报错
+
+访问地址：http://localhost/consumer/payment/timeout
+
+![image-20220411172716997](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451547.png)
+
+##### YML文件里需要开启OpenFeign客户端超时控制
+
+```yaml
+#设置feign客户端超时时间i(openFeign.默认支持ribbon)
+ribbon:
+  ReadTimeout: 5000 # 指的是建立连接所用的时间，适用于网络状况正常的情况下,两端连接所用的时问
+  ConnectTimeout: 5000 # 指的是建立连接后从服务器读取到可用资源所用的时问
+```
+
+#### OpenFeign日志打印功能
+
+##### 日志级别
+
+- NONE：默认的，不显示任何日志;
+- BASIC：仅记录请求方法、URL、响应状态码及执行时间;
+- HEADERS：除了BASIC中定义的信息之外，还有请求和响应的头信息;
+- FULL：除了HEADERS中定义的信息之外，还有请求和响应的正文及元数据。
+
+##### 配置日志Bean
+
+在`cloud-feign-consumer-order80`中创建`config/FeignConfig`：
 
 ```java
 @Configuration
-@EnableOpenApi // 开启Swagger3
-public class SwaggerConfig{
-
-    // 配置Swagger的Docket的Bean实例
+public class FeignConfig {
     @Bean
-    public Docket docket(Environment environment) {
-
-        // 设置要显示的Swagger环境
-        Profiles profiles = Profiles.of("dev","test");
-        // 通过`Environment environment`获取项目环境
-        // 通过environment.acceptsProfiles判断是否处于自己设置的环境中
-        boolean flag = environment.acceptsProfiles(profiles);
-
-
-        return new Docket(DocumentationType.OAS_30)
-                .apiInfo(apiInfo())
-                .enable(flag)
-                .groupName("花儿为什么这样红")
-                .select()
-                // RequestHandlerSelect，配置要扫描的包的接口
-                //basePackage指定要扫描的包
-                .apis(RequestHandlerSelectors.basePackage("com.easy.controller"))
-//                // paths：过滤路径
-//                .paths(PathSelectors.ant("/easy/**"))
-                .build();
+    Logger.Level feignLoggerLevel(){
+        return Logger.Level.FULL;
     }
-
-    @Bean
-    public Docket docket1(){
-        return new Docket(DocumentationType.OAS_30).groupName("A");
-    }
-
-    @Bean
-    public Docket docket2(){
-        return new Docket(DocumentationType.OAS_30).groupName("B");
-    }
-
-    @Bean
-    public Docket docket3(){
-        return new Docket(DocumentationType.OAS_30).groupName("C");
-    }
-
-    // 配置Swagger信息（apiInfo）
-    private ApiInfo apiInfo() {
-
-        Contact contact = new Contact("洛洛历险记", "https://xxx.com", "xxx@qq.com");
-
-        return new ApiInfo(
-                "Api接口文档",
-                "这是一个Api接口文档",
-                "v1.0",
-                "https://xxx.com",
-                contact,
-                "Apache 2.0",
-                "http://www.apache.org/licenses/LICENSE-2.0",
-                new ArrayList());
-    }
-
 }
 ```
 
-如果在启动项目的时候抛出：**Failed to start bean 'documentationPluginsBootstrapper'; nested exception is java.lang.NullPointerException**
-
-那是因为springboot 版本太高，应该是 2.6.x，由于Springfox使用的路径匹配是基于AntPathMatcher，而Spring Boot 2.6.X使用的是PathPatternMatcher，所以将MVC的路径匹配规则改成 AntPathMatcher，在配置文件中加入如下参数即可（如果没有报错，可以跳过这个环节）
+##### yml文件里需要开启日志的Feign客户端
 
 ```yaml
+logging:
+  level:
+    # feign日志以什么级别监控哪个接口
+    com.atguigu.springcloud.service.PaymentFeignService: debug
+```
+
+##### 后台日志查看
+
+访问地址：http://localhost/consumer/payment/get/31
+
+![image-20220411175720381](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451548.png)
+
+## Hystrix断路器
+
+### Hystrix概述
+
+#### 分布式系统面临的问题
+
+分布式系统是一个硬件或者软件分布在不同的网络计算机上，彼此之间仅仅通过消息传递进行通信和协调的系统。
+
+通俗的点说。就是一个任务分成多个子任务，这些子任务部署在不同的服务器节点，共同构成的系统就叫分布式系统。同一个分布式系统的服务及节点在空间上的部署可以是任意的。可以是不同机柜，不同机房，不同的城市中
+
+Tips:分布式和集群的区别
+
+- 集群：同一个服务拷贝部署在多个子节点(多个人在完成同一件事)
+
+- 分布式：一个系统拆分成多个不同服务部署在不同的服务节点上（多个人在完成不同的事情）
+
+服务雪崩：多个微服务之间调用的时候，假设微服务A调用微服务B和微服务C，微服务B和微服务C又调用其它的微服务，这就是所谓的“扇出”。如果扇出的链路上某个微服务的调用响应时间过长或者不可用，对微服务A的调用就会占用越来越多的系统资源，进而引起系统崩溃，所谓的“雪崩效应”。
+
+对于高流量的应用来说，单一的后端依赖可能会导致所有服务器上的所有资源都在几秒钟内饱和。比失败更糟糕的是，这些应用程序还可能导致服务之间的延迟增加，备份队列，线程和其他系统资源紧张，导致整个系统发生更多的级联故障。这些都表示需要对故障和延迟进行隔离和管理，以便单个依赖关系的失败，不能取消整个应用程序或系统。
+
+所以，通常当你发现一个模块下的某个实例失败后，这时候这个模块依然还会接收流量，然后这个有问题的模块还调用了其他的模块，这样就会发生级联故障，或者叫雪崩。|
+
+#### 什么是Hystrix？
+
+Hystrix是一个用于处理分布式系统的延迟和容错的开源库，在分布式系统里，许多依赖不可避免的会调用失败，比如超时、异常等，Hystrix能够保证在一个依赖出问题的情况下，**不会导致整体服务失败，避免级联故障，以提高分布式系统的弹性。**
+
+"断路器”本身是一种开关装置，当某个服务单元发生故障之后，通过断路器的故障监控（类似熔断保险丝)，**向调用方返回一个符合预期的、可处理的备选响应(FallBack)，而不是长时间的等待或者抛出调用方无法处理的异常**，这样就保证了服务调用方的线程不会被长时间、不必要地占用，从而避免了故障在分布式系统中的蔓延，乃至雪崩。
+
+> Hystrix停止更新，进入维护阶段
+
+#### Hystrix的功能
+
+* 服务降级
+* 服务熔断
+* 接近实时的监控
+
+### Hystrix重要概念
+
+#### 服务降级
+
+服务降级一般是指在服务器压力剧增的时候，根据实际业务使用情况以及流量，对一些服务和页面有策略的不处理或者用一种简单的方式进行处理，从而释放服务器资源的资源以保证核心业务的正常高效运行。
+
+> 就是服务器忙，请稍后再试
+
+那些情况会触发降级？
+
+* 程序运行异常
+* 超时
+* 服务熔断触发服务降级
+* 线程池/信号量打满也会导致服务降级
+
+#### 服务熔断
+
+服务熔断是应对雪崩效应的一种微服务链路保护机制。 例如在高压电路中，如果某个地方的电压过高，熔断器就会熔断，对电路进行保护。 同样，在微服务架构中，熔断机制也是起着类似的作用。 **当调用链路的某个微服务不可用或者响应时间太长时，会进行服务熔断，不再有该节点微服务的调用，快速返回错误的响应信息。**当检测到该节点微服务调用响应正常后，恢复调用链路。
+
+
+
+#### 服务限流
+
+限流主要的作用是保护服务节点或者集群后面的数据节点，防止瞬时流量过大使服务和数据崩溃（如前端缓存大量实效），造成不可用；还可用于平滑请求。比如秒杀高并发等操作。
+
+### Hystrix案例
+
+#### 构建服务提供者
+
+##### 新建module
+
+新建一个`cloud-provider-hystrix-payment8001`工程。
+
+![image-20220411211038671](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451549.png)
+
+##### 改pom
+
+```xml
+<dependencies>
+
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.atguigu.springcloud</groupId>
+        <artifactId>cloud-api-commons</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <!--spring boot 2.2.2-->
+    <!--图形化监控展现-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    </dependency>
+</dependencies>
+```
+
+##### 写yaml
+
+```yaml
+server:
+  port: 8001
 spring:
-  mvc:
-    pathmatch:
-      # Springfox使用的路径匹配是基于AntPathMatcher的，而Spring Boot 2.6.X使用的是PathPatternMatcher
-      # 所以需要配置此参数
-      matching-strategy: ant_path_matcher
+  application:
+    name: cloud-provider-hystrix-payment
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka
+    register-with-eureka: true
+    fetch-reistry: true
 ```
 
-启动成功之后，在浏览器中访问：http://localhost:8080/doc.html。
-
-并且在`WebMvcConfig`中配置如下：
+##### 主启动
 
 ```java
-registry.addResourceHandler("doc.html")
-    .addResourceLocations("classpath:/META-INF/resources/");
-```
-
-![image-20220207083032117](../../../../../../../Pictures/assets/SpringBoot笔记/202202070830165.png)
-
-#### knife4j增强功能
-
-什么是 knife4j 的增强功能？我们在前面看到的只是 knife4j 最基础的使用方式，knife4j 还有很多强大的功能还没有展示出来，比如：i18n国际化、接口添加作责、自定义文档、访问权限控制、接口排序、到处离线文档、过滤请求参数等等，这些都是 knife4j 的增强功能，那如何开启 knife4j 的增强功能呢？
-
-Knife4j自2.0.6版本开始,将目前在Ui界面中一些个性化配置剥离,开发者可以在后端进行配置，并且提供的knife4j-spring-boot-strater组件自动装载，开发者可以在配置文件中决定需要开启的功能。
-
-springboot 中 knife4j的完整参数如下：
-
-```yaml
-knife4j:
-  # 开启增强配置 
-  enable: true
-  # 开启生产环境屏蔽
-  production: false
-  documents:
-    -
-      group: 2.X版本
-      name: 接口签名
-      locations: classpath:sign/*
-  setting:
-    language: zh-CN
-    enableSwaggerModels: true
-    enableDocumentManage: true
-    swaggerModelName: 实体类列表
-    enableVersion: false
-    enableReloadCacheParameter: false
-    enableAfterScript: true
-    enableFilterMultipartApiMethodType: POST
-    enableFilterMultipartApis: false
-    enableRequestCache: true
-    enableHost: false
-    enableHostText: 192.168.0.193:8000
-    enableHomeCustom: true
-    homeCustomLocation: classpath:markdown/home.md
-    enableSearch: false
-    enableFooter: false
-    enableFooterCustom: true
-    footerCustomContent: Apache License 2.0 | Copyright  2019-[浙江八一菜刀股份有限公司](https://gitee.com/xiaoym/knife4j)
-    enableDynamicParameter: false
-    enableDebug: true
-    enableOpenApi: false
-    enableGroup: true
-  cors: false
-  basic:
-    enable: false
-    username: test
-    password: 12313
-```
-
-knife4j 的增强功能是需要开启的，默认关闭，开启也是十分的简单，**在以前的版本中,开发者需要在配置文件中手动使用@EnableKnife4j来使用增强，自2.0.6版本后,只需要在配置文件中配置knife4j.enable=true即可不在使用注解**
-**注意：要使用Knife4j提供的增强，knife4j.enable=true必须开启。包括后面所讲解到的所有增强功能，都需要设置这个参数。**
-
-下面来介绍以下上面的这些属性值所表达的是什么意思
-
-| 属性                                               | 默认值         | 说明                                                         |
-| -------------------------------------------------- | -------------- | ------------------------------------------------------------ |
-| knife4j.enable                                     | false          | 是否开启Knife4j增强模式                                      |
-| knife4j.cors                                       | false          | 是否开启一个默认的跨域配置,该功能配合自定义Host使用          |
-| knife4j.production                                 | false          | 是否开启生产环境保护策略,详情参考文档                        |
-| knife4j.basic                                      |                | 对Knife4j提供的资源提供BasicHttp校验,保护文档                |
-| knife4j.basic.enable                               | false          | 关闭BasicHttp功能                                            |
-| knife4j.basic.username                             |                | basic用户名                                                  |
-| knife4j.basic.password                             |                | basic密码                                                    |
-| knife4j.documents                                  |                | 自定义文档集合，该属性是数组                                 |
-| knife4j.documents.group                            |                | 所属分组                                                     |
-| knife4j.documents.name                             |                | 类似于接口中的tag,对于自定义文档的分组                       |
-| knife4j.documents.locations                        |                | markdown文件路径,可以是一个文件夹(classpath:markdowns/*)，也可以是单个文件(classpath:md/sign.md) |
-| knife4j.setting                                    |                | 前端Ui的个性化配置属性                                       |
-| knife4j.setting.enableAfterScript                  | true           | 调试Tab是否显示AfterScript功能,默认开启                      |
-| knife4j.setting.language                           | zh-CN          | Ui默认显示语言,目前主要有两种:中文(zh-CN)、英文(en-US)       |
-| knife4j.setting.enableSwaggerModels                | true           | 是否显示界面中SwaggerModel功能                               |
-| knife4j.setting.swaggerModelName                   | Swagger Models | 重命名SwaggerModel名称,默认                                  |
-| knife4j.setting.enableDocumentManage               | true           | 是否显示界面中"文档管理"功能                                 |
-| knife4j.setting.enableReloadCacheParameter         | false          | 是否在每个Debug调试栏后显示刷新变量按钮,默认不显示           |
-| knife4j.setting.enableVersion                      | false          | 是否开启界面中对某接口的版本控制,如果开启，后端变化后Ui界面会存在小蓝点 |
-| knife4j.setting.enableRequestCache                 | true           | 是否开启请求参数缓存                                         |
-| knife4j.setting.enableFilterMultipartApis          | false          | 针对RequestMapping的接口请求类型,在不指定参数类型的情况下,如果不过滤,默认会显示7个类型的接口地址参数,如果开启此配置,默认展示一个Post类型的接口地址 |
-| knife4j.setting.enableFilterMultipartApiMethodType | POST           | 具体接口的过滤类型                                           |
-| knife4j.setting.enableHost                         | false          | 是否启用Host                                                 |
-| knife4j.setting.enableHomeCustom                   | false          | 是否开启自定义主页内容                                       |
-| knife4j.setting.homeCustomLocation                 |                | 主页内容Markdown文件路径                                     |
-| knife4j.setting.enableSearch                       | false          | 是否禁用Ui界面中的搜索框                                     |
-| knife4j.setting.enableFooter                       | true           | 是否显示Footer                                               |
-| knife4j.setting.enableFooterCustom                 | false          | 是否开启自定义Footer                                         |
-| knife4j.setting.footerCustomContent                | false          | 自定义Footer内容                                             |
-| knife4j.setting.enableDynamicParameter             | false          | 是否开启动态参数调试功能                                     |
-| knife4j.setting.enableDebug                        | true           | 启用调试                                                     |
-| knife4j.setting.enableOpenApi                      | true           | 显示OpenAPI规范                                              |
-| knife4j.setting.enableGroup                        | true           | 显示服务分组                                                 |
-
-以下增强功能都需要
-
-#### 接口添加作者
-
-用于查看谁实现的接口
-
-使用方式：添加注解 `@ApiOperationSupport(author = "胡桃最棒")`
-
-```java
-@ApiImplicitParam(name = "name",value = "姓名",required = true)
-@ApiOperationSupport(author = "胡桃最棒")
-@ApiOperation("hello方法")
-@GetMapping("/hello")
-public String hello(@RequestParam("name") String name){
-    return "hello "+name;
+@SpringBootApplication
+@EnableEurekaClient
+@EnableHystrix
+public class PaymentHystrixMain8001 {
+    public static void main(String[] args) {
+        SpringApplication.run(PaymentHystrixMain8001.class,args);
+    }
 }
 ```
 
-![image-20220207084050177](../../../../../../../Pictures/assets/SpringBoot笔记/202202070840949.png)
+##### 业务类
 
-#### 访问权限控制
-
-虽然 knife4j给我们提供了很方便的在线接口文档，俗话说的好，凡事都具有两面性，有利自然也有弊，那就是在生茶环境上，也会显示出接口文档，这是非常危险的一件事情，问题如下：
-
-- 系统部署生产环境时,我们想屏蔽Swagger的文档功能,不管是接口或者html文档
-- 通常我们有时候需要生产环境部署后,又需要Swagger的文档调试功能,辅助开发者调试,但是存在安全隐患,没有对Swagger的资源接口过滤
-
-Knife4j 基于 Servlet 体系提供了过滤 Filter 功能,如果开发者使用 Spring Boot 开发框架进行开发的话,只需在`application.properties`或者`application.yml`配置文件中配置相关属性即可方便的解决上面的问题,不用删除 Springfox-swagger 的 jar 包或者删除相关代码等复杂的操作,提升开发体验。
-
-#### 资源屏蔽
-
-目前`Springfox-Swagger`以及`Knife4j`提供的资源接口包括如下
-
-| 资源                                      | 说明                                          |
-| ----------------------------------------- | --------------------------------------------- |
-| /doc.html                                 | Knife4j提供的文档访问地址                     |
-| /v2/api-docs-ext                          | Knife4j提供的增强接口地址,自`2.0.6`版本后删除 |
-| /swagger-resources                        | Springfox-Swagger提供的分组接口               |
-| /v2/api-docs                              | Springfox-Swagger提供的分组实例详情接口       |
-| /swagger-ui.html                          | Springfox-Swagger提供的文档访问地址           |
-| /swagger-resources/configuration/ui       | Springfox-Swagger提供                         |
-| /swagger-resources/configuration/security | Springfox-Swagger提供                         |
-
-项目发布到生产环境之后，我们需要屏蔽 swagger 相关的资源，由于 Knife4j 基于 Servlet 体系提供了过滤 Filter 功能，所以就不需要我们再去造轮子了，直接使用即可。
-
-springboot 只需要在配置文件中做如下修改即可
-
-```yaml
-knife4j:
-  # 开启增强配置 
-  enable: true
-　# 开启生产环境屏蔽
-  production: true
-```
-
-然后重启项目
-
-![image-20220207084512721](../../../../../../../Pictures/assets/SpringBoot笔记/202202070845305.png)
-
-如果看到如下信息，说明资源已经屏蔽成功，但是你又不想在生产环境中屏蔽 swagger 资源，只想给一部分人使用，也是可以的，加入权限校验即可。
-
-#### 访问页面加权控制
-
-针对Swagger的资源接口,`Knife4j`提供了简单的**Basic认证功能**
-
-简单点说，指定一个用户名和密码，访问 Swagger 文档需要验证登录名和密码，验证通过之后才能正常访问。
-
-knife4 允许开发者在配置文件（application.yml/properties）中增加一组用户名和密码。
-
-```yaml
-knife4j:
-  # 开启增强配置 
-  enable: true
-　# 开启Swagger的Basic认证功能,默认是false
-  basic:
-      enable: true
-      # Basic认证用户名
-      username: test
-      # Basic认证密码
-      password: 123
-```
-
-如果用户开启了 basic （knife4j.basic.enable = true）认证功能，但是没有指定 username 和password，那么 knife4j 提供了一组默认的用户名密码
-
-配置好application.yml 文件之后，我们再次重启项目（这个时候需要将之前设置的资源屏蔽需要去掉哦）
-
-![image-20220207084656872](../../../../../../../Pictures/assets/SpringBoot笔记/202202070846052.png)
-
-#### 接口排序
-
-们在开发中，一个 controller 中往往会存在很多的接口，这样我们在文档查找的时候就会变得很苦恼，所以 knife4j 在 `@ApiOperationSupport`注解中增加了 order 字段,用于接口排序。
-
-**在使用此注解之前需要开启增强功能。**
-
-```java
-@Api(tags = "HelloController层")
-@RestController
-public class HelloController {
-
-    @ApiImplicitParam(name = "name",value = "姓名",required = true)
-    @ApiOperationSupport(author = "胡桃最棒",order = 1)
-    @ApiOperation("hello方法")
-    @GetMapping("/hello")
-    public String hello(@RequestParam("name") String name){
-        return "hello "+name;
-    }
-
-    @ApiOperation(value = "用户接口方法",notes = "方法描述")
-    @ApiOperationSupport(author = "胡桃最棒",order = 2)
-    @RequestMapping("/user")
-    public User getUser(@ApiParam("用户名") String username,@ApiParam("密码") String password){
-        return new User(username,password);
-    }
-
-}
-```
-
-![image-20220207084938784](../../../../../../../Pictures/assets/SpringBoot笔记/image-20220207084938784.png)
-
-[更多方法，查看该文档](https://doc.xiaominfo.com/knife4j/documentation/)
-
-## 任务
-
-### 前言
-
-在工作中，常常会用到异步处理任务，比如在网站上发送邮件，后台会去发送邮件，此时前台会造成响应不动，直到邮件发送完毕，响应才会成功，所以一般会采用多线程的方式去处理这些任务。
-
-还有一些定时任务，比如需要在每天凌晨的时候，分析一次前一天的日志信息。
-
-还有就是邮件的发送，微信的前身也是邮件服务呢？这些东西都是怎么实现的呢？其实SpringBoot都给提供了对应的支持，上手使用十分的简单，只需要开启一些注解支持，配置一些配置文件即可！
-
-### 异步任务
-
-* 创建一个新项目`springboot-08-schedule`，添加web基础模块
-
-* 创建一个service包
-* 创建一个类AsyncService
-
-异步处理还是非常常用的，比如在网站上发送邮件，后台会去发送邮件，此时前台会造成响应不动，直到邮件发送完毕，响应才会成功，所以一般会采用多线程的方式去处理这些任务。
-
-编写方法，假装正在处理数据，使用线程设置一些延时，模拟同步等待的情况；
+###### service
 
 ```java
 @Service
-public class AsyncService {
+public class PaymentService {
 
-    public void test(){
+    //正常访问
+    public String paymentInfo(Integer id){
+        return "线程池：" + Thread.currentThread().getName() + "  paymentInfo,id" + id +"\n";
+    }
+
+    // 超时访问
+    public String paymentInfoTimeout(Integer id){
+        int seconds = 5;
         try {
-            Thread.sleep(3000);
-        }catch (InterruptedException e){
+            TimeUnit.SECONDS.sleep(seconds);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("正在等待中~");
+        return "线程池：" + Thread.currentThread().getName() + "  paymentInfo,id" + id + " 耗时"+seconds+"秒钟"+"\n";
     }
+
 }
 ```
 
-* 编写controller包
-* 编写AsyncController类
+###### controller
 
 ```java
 @RestController
-public class AsyncController {
+@Slf4j
+public class PaymentController {
 
-    @Autowired
-    AsyncService asyncService;
+    @Resource
+    private PaymentService paymentService;
 
-    @GetMapping("/test")
-    public String test(){
-        asyncService.test();
-        return "success";
+    @Value("${server.port}")
+    private String serverPort;
+
+    @GetMapping("/payment/hystrix/info/{id}")
+    public String paymentInfo(@PathVariable("id") Integer id){
+
+        String result = paymentService.paymentInfo(id);
+
+        log.info("result = " + result);
+
+        return result;
     }
+
+    @GetMapping("/payment/hystrix/timeout/{id}")
+    public String paymentInfoTimeout(@PathVariable("id") Integer id){
+        String result = paymentService.paymentInfoTimeout(id);
+
+        log.info("result = " + result);
+
+        return result;
+    }
+
 }
 ```
 
-* 访问http://localhost:8080/test进行测试，3秒后出现success，这是同步等待的情况。
+##### 正常测试
 
-问题：如果想让用户直接得到消息，就在后台使用多线程的方式进行处理即可，但是每次都需要自己手动去编写多线程的实现的话，太麻烦了，只需要用一个简单的办法，在方法上加一个简单的注解即可。
+正常访问地址：http://localhost:8001/payment/hystrix/info/1
 
-* 给test方法添加@Async注解；
+![image-20220412112650236](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451550.png)
 
-```java
-@Service
-public class AsyncService {
+超时访问地址：http://localhost:8001/payment/hystrix/timeout/1
 
-    //告诉Spring这是一个异步方法
-    @Async
-    public void test(){
-        try {
-            Thread.sleep(3000);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
-        System.out.println("正在等待中~");
-    }
-}
+![image-20220412112659061](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451551.png)
+
+> 从上面开始为根基，开始学习：正确-> 错误->服务熔断->服务恢复
+
+##### 高并发测试
+
+下载地址：https://jmeter.apache.org/download_jmeter.cgi
+
+在非高并发情形下，还能勉强满足，但是在高并发情况下，就不能满足了。
+
+通过开启Jmeter对8001进行测试，能够压死8001。
+
+* 开启Jmeter，并选择options下的语言选择，换成中文界面。
+
+![image-20220412114506294](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451552.png)
+
+* 填写测试信息，开启20000个请求，之后保存测试信息
+
+![image-20220412114712183](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451553.png)
+
+* 之后，添加>Sampler>Http请求
+
+![image-20220412114827511](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451554.png)
+
+![image-20220412115132270](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451555.png)
+
+* 保存信息，之后启动测试，点击启动按钮
+
+![image-20220412115226573](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451556.png)
+
+访问：http://localhost:8001/payment/hystrix/info/1，发现现在这个也需要等待一些时间了。
+
+停掉线程测试后，该网址又恢复秒回的状态了。
+
+#### 构建服务消费者
+
+上面还是服务提供者8001自己测试，假如此时外部的消费者80也来访问，那消费者只能干等，最终导致消费端80不满意，服务端8001直接被拖死。
+
+##### 新建module
+
+![image-20220412132744265](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451557.png)
+
+##### 改pom
+
+```xml
+<dependencies>
+    <!--hystrix-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+    </dependency>
+    <!--openfeign-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-openfeign</artifactId>
+    </dependency>
+    <!--eureka client-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.atguigu.springcloud</groupId>
+        <artifactId>cloud-api-commons</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <!--监控-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <!--热部署-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
 ```
 
-SpringBoot就会自己开一个线程池，进行调用！但是要让这个注解生效，还需要在主程序上添加一个注解@EnableAsync ，开启异步注解功能；
+##### 写yaml
+
+```yaml
+server:
+  port: 80
+
+spring:
+  application:
+    name: cloud-consumer-hystrix-order
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/
+
+```
+
+##### 主启动
 
 ```java
-@EnableAsync //开启异步注解功能
 @SpringBootApplication
-public class Springboot09ScheduleApplication {
-
+@EnableFeignClients
+@EnableHystrix
+public class OrderHystrixMain80 {
     public static void main(String[] args) {
-        SpringApplication.run(Springboot09ScheduleApplication.class, args);
+        SpringApplication.run(OrderHystrixMain80.class,args);
     }
+}
+```
+
+##### 业务类
+
+###### service
+
+```java
+@Component
+@FeignClient(value = "CLOUD-PROVIDER-HYSTRIX-PAYMENT")
+public interface PaymentHystrixService {
+
+    @GetMapping("/payment/hystrix/info/{id}")
+    public String paymentInfo(@PathVariable("id") Integer id);
+
+    @GetMapping("/payment/hystrix/timeout/{id}")
+    public String paymentInfoTimeout(@PathVariable("id") Integer id);
 
 }
 ```
 
-* 重启测试，网页瞬间响应，后台代码依旧执行！
-
-### 定时任务
-
-项目开发中经常需要执行一些定时任务，比如需要在每天凌晨的时候，分析一次前一天的日志信息，Spring为我们提供了异步执行任务调度的方式，提供了两个接口。
-
-- TaskExecutor接口
-- TaskScheduler接口
-
-两个注解：
-
-- @EnableScheduling
-- @Scheduled
-
-**cron表达式：**
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070914986)
-
-
-
-![Image](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070921239)
-
-**测试步骤：**
-
-1、创建一个ScheduledService
-
-里面存在一个hello方法，他需要定时执行，怎么处理呢？
+###### controller
 
 ```java
+@RestController
+@Slf4j
+public class OrderHystrixController {
+
+    @Resource
+    private PaymentHystrixService paymentHystrixService;
+
+    @GetMapping("/consumer/hystrix/info/{id}")
+    public String paymentInfo(@PathVariable("id")Integer id) {
+        return paymentHystrixService.paymentInfo(id);
+    }
+
+    @GetMapping("/consumer/hystrix/timeout/{id}")
+    public String paymentInfoTimeout(@PathVariable("id") Integer id) {
+        return paymentHystrixService.paymentInfoTimeout(id);
+    }
+}
+```
+
+##### 正常测试
+
+正常访问地址：http://localhost/consumer/hystrix/info/2
+
+![image-20220412140104495](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451558.png)
+
+超时访问地址：http://localhost/consumer/hystrix/timeout/2
+
+![image-20220412140133295](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451559.png)
+
+需要在yaml中添加超时设置
+
+```yaml
+#设置feign客户端超时时间(openFeign.默认支持ribbon)
+ribbon:
+  ReadTimeout: 6000 # 指的是建立连接所用的时间，适用于网络状况正常的情况下,两端连接所用的时问
+  ConnectTimeout: 6000 # 指的是建立连接后从服务器读取到可用资源所用的时问
+```
+
+重新访问，最好是在服务端修改为等待时间为3秒，这样就不影响后面测试。
+
+![image-20220412141239295](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204121451560.png)
+
+##### 高并发测试
+
+开启20000个线程给8001压力，消费端80微服务再去访问正常的微服务8001地址。
+
+访问地址：http://localhost/consumer/hystrix/info/2，会发现消费者端80，要么转圈圈等待，要么消费端报超时错误。
+
+#### 故障现象和导致原因
+
+8001同一层次的其它接口服务被困死，因为tomcat线程池里面的工作线程已经被挤占完毕；
+
+80此时调用8001，客户端访问响应缓慢，转圈圈。
+
+#### 如何解决所存在的问题？
+
+所存在的问题：
+
+- 超时导致服务器变慢(转圈)-超时不再等待
+
+- 出错(宕机或程序运行出错)-出错要有兜底
+
+解决：
+
+- 对方服务(8001)超时了，调用者(80)不能一直卡死等待，必须有服务降级
+
+- 对方服务(8001)down机了，调用者(80)不能一直卡死等待，必须有服务降级
+
+- 对方服务(8001)OK，调用者(80)自己出故障或有自我要求(自己的等待时间小于服务提供者），自己处理降级
+
+#### 服务降级
+
+##### 降级配置
+
+使用`@HystrixCommmand`。
+
+##### 8001先从自身找问题
+
+设置自身调用超时时间的峰值，峰值内可以正常运行，超过了需要有兜底的方法处理，作服务降级fallback。
+
+##### 8001fallback
+
+在`cloud-provider-hystrix-payment8001`中的`PaymentService`设置一个兜底的方法。
+
+```java
+// 超时访问
+@HystrixCommand(fallbackMethod = "paymentInfoTimeoutHandler",commandProperties = {
+    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")
+})
+public String paymentInfoTimeout(Integer id){
+    int seconds = 5;
+    try {
+        TimeUnit.SECONDS.sleep(seconds);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+    return "线程池：" + Thread.currentThread().getName() + "  paymentInfo,id" + id + " 耗时"+seconds+"秒钟"+"\n";
+}
+
+public String paymentInfoTimeoutHandler(Integer id){
+    return "线程池：" + Thread.currentThread().getName() + "  paymentInfoTimeoutHandler,id" + id+"\n";
+}
+```
+
+`@HystrixCommand`报异常后如何处理？
+
+##### 80fallback
+
+对消费者80端，也就是设置降级保护。
+
+对yaml添加一些配置：
+
+```yaml
+server:
+  port: 80
+
+spring:
+  application:
+    name: cloud-consumer-hystrix-order
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/
+
+feign:
+  hystrix:
+    enabled: true
+```
+
+在主启动中需要保证开启了``@EnableHystrix``。然后在`controller.OrderHystrixController`中修改为如下：
+
+```java
+@GetMapping("/consumer/hystrix/timeout/{id}")
+@HystrixCommand(fallbackMethod = "paymentInfoTimeoutHandler",commandProperties = {
+    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")
+})
+public String paymentInfoTimeout(@PathVariable("id") Integer id) {
+
+    int age = 0 /10;
+
+    return paymentHystrixService.paymentInfoTimeout(id);
+}
+
+public String paymentInfoTimeoutHandler(Integer id){
+    return "消费者80出错了";
+}
+```
+
+和8001端一样，也需要一个兜底的方法。访问地址：http://localhost/consumer/hystrix/timeout/2
+
+![image-20220412151304193](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127472.png)
+
+##### 目前问题
+
+每个业务方法对应一个兜底的方法，代码膨胀，需要**统一**（全局的）和自定义（特定的）的分开。
+
+##### 解决问题
+
+* 每个方法都配置一个兜底的方法，会导致代码膨胀，如何解决？
+
+通过`@DefaultProperties(defaultFallback = "")`实现全局的服务降级的保护。还需要在每个函数上添加`@HystrixCommand`表示开启了服务降级。
+
+除了个别重要的核心业务，其他都可以跳转到去全局配置。
+
+对`cloud*consumer-feign-hystrix-order80.controller.OrderHystrixController`进行修改测试：
+
+```java
+@RestController
+@Slf4j
+@DefaultProperties(defaultFallback = "paymentGlobalFallbackMethod")
+public class OrderHystrixController {
+
+    @Resource
+    private PaymentHystrixService paymentHystrixService;
+
+    @GetMapping("/consumer/hystrix/timeout/{id}")
+    @HystrixCommand
+    public String paymentInfoTimeout(@PathVariable("id") Integer id) {
+        int age = 0 /10;
+        return paymentHystrixService.paymentInfoTimeout(id);
+    }
+
+    public String paymentGlobalFallbackMethod(){
+        return "全局服务";
+    }
+}
+```
+
+之后重启测试：http://localhost/consumer/hystrix/timeout/2
+
+![image-20220412154622108](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127474.png)
+
+* 配置的指定服务降级保护的方法和业务逻辑混在一起，导致代码混乱，如何解决？
+
+>  服务降级，客户端去调用服务端，碰上服务端宕机或关闭
+
+本次案例服务降级处理是在客户端80处实现完成的，与服务端8001没有关系，只需要为Feign客户端定义的接口添加一个服务降级处理的实现类即可实现解耦。
+
+>  未来需要面对的异常：运行、超时、宕机。
+
+现在开始修改代码，根据`cloud-consumer-feign-hystrix-order80`已经有的`PaymentHystrixService`接口，重新新建一个类`PaymentFallbackService`实现该接口，统一为接口里面的方法进行异常处理。
+
+````java
 @Service
-public class ScheduledService {
+public class PaymentFallbackService implements PaymentHystrixService{
+    @Override
+    public String paymentInfo(Integer id) {
+        return "==============PaymentFallbackService paymentInfo================";
+    }
 
-    //秒   分   时     日   月   周几
-    //0 * * * * MON-FRI
-    //注意cron表达式的用法；
-    @Scheduled(cron = "0 * * * * 0-7")
-    public void hello(){
-        System.out.println("hello.....");
+    @Override
+    public String paymentInfoTimeout(Integer id) {
+        return "==============PaymentFallbackService paymentInfoTimeout================";
     }
 }
+````
+
+然后修改`PaymentHystrixService`中的`@FeignClient`，fallback表示如果失败了，就调用这里面的相对应的实现方法。
+
+````java
+@FeignClient(value = "CLOUD-PROVIDER-HYSTRIX-PAYMENT", fallback = PaymentFallbackService.class)
+````
+
+注意yaml文件中一定要保证hystrix开启。
+
+```yaml
+feign:
+  hystrix:
+    enabled: true
 ```
 
-* 这里写完定时任务之后，需要在主程序上增加@EnableScheduling 开启定时任务功能
+重启之后，访问正常的；如果8001挂了后，运行测试：http://localhost/consumer/hystrix/timeout/2
+
+![image-20220412161226536](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127475.png)
+
+#### 服务熔断
+
+##### 概述
+
+在Spring Cloud框架里，熔断机制通过Hystrix实现。Hystrix会监控微服务间调用的状况，当失败的调用到一定阈值，缺省是5秒内20次调用失败，就会启动熔断机制。熔断机制的注解是``@HystrixCommand``。
+
+地址：https://martinfowler.com/bliki/CircuitBreaker.html
+
+##### 重构服务提供者
+
+对`cloud-provider-hystrix-payment8001`进行修改。
+
+首先先对`PaymentService`进行修改：
+
+| 参数                                                         | 含义                 |
+| ------------------------------------------------------------ | -------------------- |
+| `@HystrixProperty(name = "circuitBreaker.enabled",value = "true")` | 是否开启断路器       |
+| `@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold",value = "true")` | 请求次数，有没有达到 |
+| `@HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds",value = "10000")` | 时间窗口期           |
+| `@HystrixProperty(name = "circuitBreaker.errorThresholdPercentage",value = "60")` | 失败率达到多少后跳闸 |
 
 ```java
-@EnableAsync //开启异步注解功能
-@EnableScheduling //开启基于注解的定时任务
-@SpringBootApplication
-public class Springboot09ScheduleApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(Springboot09ScheduleApplication.class, args);
+// === 服务熔断
+@HystrixCommand(fallbackMethod = "paymentCircuitBreakerFallback",commandProperties = {
+
+    @HystrixProperty(name = "circuitBreaker.enabled",value = "true"), // 是否开启断路器
+    @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold",value = "10"), // 请求次数
+    @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds",value = "10000"), // 时间窗口期
+    @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage",value = "60"), // 失败率达到多少后跳闸
+
+})
+public String paymentCircuitBreaker(Integer id){
+    if(id < 0){
+        throw new RuntimeException("id不能为负数");
     }
+    String serialNumber = IdUtil.simpleUUID();
+
+    return Thread.currentThread().getName() + "\t" + "调用成功，流水号："+serialNumber;
+}
+
+public String paymentCircuitBreakerFallback(Integer id){
+    return "id 不能为负数，请稍后再试o(╥﹏╥)o ~~~~ id:"+id;
 }
 ```
 
-* 详细了解下cron表达式：http://www.bejson.com/othertools/cron/
-* 常用的表达式
+```tex
+hystrix.command.default和hystrix.threadpool.default中的default为默认CommandKey
+======================================================================================================================
+Command Properties
+Execution相关的属性的配置：
+hystrix.command.default.execution.isolation.strategy 隔离策略，默认是Thread, 可选Thread｜Semaphore
 
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds 命令执行超时时间，默认1000ms
+
+hystrix.command.default.execution.timeout.enabled 执行是否启用超时，默认启用true
+hystrix.command.default.execution.isolation.thread.interruptOnTimeout 发生超时是是否中断，默认true
+hystrix.command.default.execution.isolation.semaphore.maxConcurrentRequests 最大并发请求数，默认10，该参数当使用ExecutionIsolationStrategy.SEMAPHORE策略时才有效。如果达到最大并发请求数，请求会被拒绝。理论上选择semaphore size的原则和选择thread size一致，但选用semaphore时每次执行的单元要比较小且执行速度快（ms级别），否则的话应该用thread。
+semaphore应该占整个容器（tomcat）的线程池的一小部分。
+Fallback相关的属性
+这些参数可以应用于Hystrix的THREAD和SEMAPHORE策略
+
+hystrix.command.default.fallback.isolation.semaphore.maxConcurrentRequests 如果并发数达到该设置值，请求会被拒绝和抛出异常并且fallback不会被调用。默认10
+hystrix.command.default.fallback.enabled 当执行失败或者请求被拒绝，是否会尝试调用hystrixCommand.getFallback() 。默认true
+======================================================================================================================
+Circuit Breaker相关的属性
+hystrix.command.default.circuitBreaker.enabled 用来跟踪circuit的健康性，如果未达标则让request短路。默认true
+hystrix.command.default.circuitBreaker.requestVolumeThreshold 一个rolling window内最小的请求数。如果设为20，那么当一个rolling window的时间内（比如说1个rolling window是10秒）收到19个请求，即使19个请求都失败，也不会触发circuit break。默认20
+hystrix.command.default.circuitBreaker.sleepWindowInMilliseconds 触发短路的时间值，当该值设为5000时，则当触发circuit break后的5000毫秒内都会拒绝request，也就是5000毫秒后才会关闭circuit。默认5000
+hystrix.command.default.circuitBreaker.errorThresholdPercentage错误比率阀值，如果错误率>=该值，circuit会被打开，并短路所有请求触发fallback。默认50
+hystrix.command.default.circuitBreaker.forceOpen 强制打开熔断器，如果打开这个开关，那么拒绝所有request，默认false
+hystrix.command.default.circuitBreaker.forceClosed 强制关闭熔断器 如果这个开关打开，circuit将一直关闭且忽略circuitBreaker.errorThresholdPercentage
+======================================================================================================================
+Metrics相关参数
+hystrix.command.default.metrics.rollingStats.timeInMilliseconds 设置统计的时间窗口值的，毫秒值，circuit break 的打开会根据1个rolling window的统计来计算。若rolling window被设为10000毫秒，则rolling window会被分成n个buckets，每个bucket包含success，failure，timeout，rejection的次数的统计信息。默认10000
+hystrix.command.default.metrics.rollingStats.numBuckets 设置一个rolling window被划分的数量，若numBuckets＝10，rolling window＝10000，那么一个bucket的时间即1秒。必须符合rolling window % numberBuckets == 0。默认10
+hystrix.command.default.metrics.rollingPercentile.enabled 执行时是否enable指标的计算和跟踪，默认true
+hystrix.command.default.metrics.rollingPercentile.timeInMilliseconds 设置rolling percentile window的时间，默认60000
+hystrix.command.default.metrics.rollingPercentile.numBuckets 设置rolling percentile window的numberBuckets。逻辑同上。默认6
+hystrix.command.default.metrics.rollingPercentile.bucketSize 如果bucket size＝100，window＝10s，若这10s里有500次执行，只有最后100次执行会被统计到bucket里去。增加该值会增加内存开销以及排序的开销。默认100
+hystrix.command.default.metrics.healthSnapshot.intervalInMilliseconds 记录health 快照（用来统计成功和错误绿）的间隔，默认500ms
+Request Context 相关参数
+hystrix.command.default.requestCache.enabled 默认true，需要重载getCacheKey()，返回null时不缓存
+hystrix.command.default.requestLog.enabled 记录日志到HystrixRequestLog，默认true
+======================================================================================================================
+Collapser Properties 相关参数
+hystrix.collapser.default.maxRequestsInBatch 单次批处理的最大请求数，达到该数量触发批处理，默认Integer.MAX_VALUE
+hystrix.collapser.default.timerDelayInMilliseconds 触发批处理的延迟，也可以为创建批处理的时间＋该值，默认10
+hystrix.collapser.default.requestCache.enabled 是否对HystrixCollapser.execute() and HystrixCollapser.queue()的cache，默认true
+======================================================================================================================
+ThreadPool 相关参数
+线程数默认值10适用于大部分情况（有时可以设置得更小），如果需要设置得更大，那有个基本得公式可以follow：
+requests per second at peak when healthy × 99th percentile latency in seconds + some breathing room
+每秒最大支撑的请求数 (99%平均响应时间 + 缓存值)
+比如：每秒能处理1000个请求，99%的请求响应时间是60ms，那么公式是：
+（0.060+0.012）
+
+基本得原则时保持线程池尽可能小，他主要是为了释放压力，防止资源被阻塞。
+当一切都是正常的时候，线程池一般仅会有1到2个线程激活来提供服务
+
+hystrix.threadpool.default.coreSize 并发执行的最大线程数，默认10
+hystrix.threadpool.default.maxQueueSize BlockingQueue的最大队列数，当设为－1，会使用SynchronousQueue，值为正时使用LinkedBlcokingQueue。该设置只会在初始化时有效，之后不能修改threadpool的queue size，除非reinitialising thread executor。默认－1。
+hystrix.threadpool.default.queueSizeRejectionThreshold 即使maxQueueSize没有达到，达到queueSizeRejectionThreshold该值后，请求也会被拒绝。因为maxQueueSize不能被动态修改，这个参数将允许我们动态设置该值。if maxQueueSize == -1，该字段将不起作用
+hystrix.threadpool.default.keepAliveTimeMinutes 如果corePoolSize和maxPoolSize设成一样（默认实现）该设置无效。如果通过plugin（https://github.com/Netflix/Hystrix/wiki/Plugins）使用自定义实现，该设置才有用，默认1.
+hystrix.threadpool.default.metrics.rollingStats.timeInMilliseconds 线程池统计指标的时间，默认10000
+hystrix.threadpool.default.metrics.rollingStats.numBuckets 将rolling window划分为n个buckets，默认10
 ```
-（1）0/2 * * * * ?   表示每2秒 执行任务
-（1）0 0/2 * * * ?   表示每2分钟 执行任务
-（1）0 0 2 1 * ?   表示在每月的1日的凌晨2点调整任务
-（2）0 15 10 ? * MON-FRI   表示周一到周五每天上午10:15执行作业
-（3）0 15 10 ? 6L 2002-2006   表示2002-2006年的每个月的最后一个星期五上午10:15执行作
-（4）0 0 10,14,16 * * ?   每天上午10点，下午2点，4点
-（5）0 0/30 9-17 * * ?   朝九晚五工作时间内每半小时
-（6）0 0 12 ? * WED   表示每个星期三中午12点
-（7）0 0 12 * * ?   每天中午12点触发
-（8）0 15 10 ? * *   每天上午10:15触发
-（9）0 15 10 * * ?     每天上午10:15触发
-（10）0 15 10 * * ?   每天上午10:15触发
-（11）0 15 10 * * ? 2005   2005年的每天上午10:15触发
-（12）0 * 14 * * ?     在每天下午2点到下午2:59期间的每1分钟触发
-（13）0 0/5 14 * * ?   在每天下午2点到下午2:55期间的每5分钟触发
-（14）0 0/5 14,18 * * ?     在每天下午2点到2:55期间和下午6点到6:55期间的每5分钟触发
-（15）0 0-5 14 * * ?   在每天下午2点到下午2:05期间的每1分钟触发
-（16）0 10,44 14 ? 3 WED   每年三月的星期三的下午2:10和2:44触发
-（17）0 15 10 ? * MON-FRI   周一至周五的上午10:15触发
-（18）0 15 10 15 * ?   每月15日上午10:15触发
-（19）0 15 10 L * ?   每月最后一日的上午10:15触发
-（20）0 15 10 ? * 6L   每月的最后一个星期五上午10:15触发
-（21）0 15 10 ? * 6L 2002-2005   2002年至2005年的每月的最后一个星期五上午10:15触发
-（22）0 15 10 ? * 6#3   每月的第三个星期五上午10:15触发
+
+接下来对`controller.PaymentController`进行修改：
+
+```java
+@GetMapping("/payment/circuit/{id}")
+public String paymentCircuitBreaker(@PathVariable("id") Integer id){
+    String result = paymentService.paymentCircuitBreaker(id);
+    log.info(result);
+    return result;
+}
 ```
 
-### 邮件任务
+配置完后，进行测试：http://localhost:8001/payment/circuit/1
 
-邮件发送，在日常开发中，也非常的多，Springboot也帮我们做了支持
+![image-20220413110226266](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127476.png)
 
-- 邮件发送需要引入spring-boot-start-mail
-- SpringBoot 自动配置MailSenderAutoConfiguration
-- 定义MailProperties内容，配置在application.yml中
-- 自动装配JavaMailSender
-- 测试邮件发送
+之后访问http://localhost:8001/payment/circuit/-1，连续访问超过10次以上。之后又马上去访问正确的上述地址：
 
-**测试：**
+![image-20220413110613946](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127477.png)
 
-1. 引入pom依赖
+这时会发现，服务不可用了，但是过一会儿服务又可以恢复使用了。
+
+> 错误->恢复->正确
+
+##### 总结
+
+###### 降级与熔断
+
+**降级一般而言指的是我们自身的系统出现了故障而降级。而熔断一般是指依赖的外部接口出现故障的情况断绝和外部接口的关系**。
+
+###### 熔断类型
+
+- 熔断打开：请求不再进行调用当前服务，内部设置时钟一般为MTTR(平均故障处理时间)，当打开时长达到所设时钟则进入半熔断状态
+- 熔断关闭：熔断关闭不会对服务进行熔断
+- 熔断半开：部分请求根据规则调用当前服务，如果请求成功且符合规则则认为当前服务恢复正常，关闭熔断
+
+###### 断路器相关信息
+
+涉及到断路器的三个重要参数：快照时间窗、请求总数阀值、错误百分比阀值。
+
+- 快照时间窗:断路器确定是否打开需要统计一些请求和错误数据，而统计的时间范围就是快照时间窗，默认为最近的10秒。
+- 请求总数阀值:在快照时间窗内，必须满足请求总数阀值才有资格熔断。默认为20，意味着在10秒内，如果该hystrix命令的调用次数不足20次,即使所有的请求都超时或其他原因失败，断路器都不会打开。
+- 错误百分比阀值:当请求总数在快照时间窗内超过了阀值，比如发生了30次调用，如果在这30次调用中，有15次发生了超时异常，也就是超过50%的错误百分比，在默认设定50%阀值情况下，这时候就会将断路器打开。 
+
+断路器开启或者关闭的条件：
+
+到达以下阀值，断路器将会开启
+
+- 当满足一定的阀值的时候（默认10秒内超过20个请求次数)
+
+- 当失败率达到一定的时候（默认10秒内超过50%的请求失败)
+
+当开启的时候：
+
+- 所有请求都不会进行转发
+
+- 一段时间之后（默认是5秒)，这个时候断路器是半开状态，会让其中一个请求进行转发。如果成功，断路器会关闭，若失败，继续开启。重复如此上述两项。
+
+断路器打开之后：
+
+再有请求调用的时候，将不会调用主逻辑，而是直接调用降级fallback。通过断路器，实现了自动地发现错误并将降级逻辐切换为主逻辑，减少响应延迟的效果。
+
+原来的主逻辑要如何恢复呢?
+
+对于这一问题，hystrix也为我们实现了自动恢复功能。当断路器打开，对主逻辑进行熔断之后，hystrix会启动一个休眠时间窗，在这个时间窗内，降级逻辑是临时的成为主逻辑，当休眠时间窗到期，断路器将进入半开状态，释放一次请求到原来的主逻辑上，如果此次请求正常返回，那么断路器将继续闭合,主逻辑恢复，如果这次请求依然有问题，断路器继续进入打开状态，休眠时间窗重新计时。
+
+#### 服务限流
+
+由于hystrix已经停止更新，所以把限流放在 `Alibaba`的 `Sentinel` 说明。
+
+### Hystrix工作流程
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127478)
+
+### 服务监控hystrixDashborad
+
+创建`cloud-consumer-hystrix-dashboard9001`，添加依赖
 
 ```xml
 <dependency>
-   <groupId>org.springframework.boot</groupId>
-   <artifactId>spring-boot-starter-mail</artifactId>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+    <version>2.2.1.RELEASE</version>
 </dependency>
 ```
 
-看它引入的依赖，可以看到 jakarta.mail
+并设置端口为9001
 
-```xml
-<dependency>
-   <groupId>com.sun.mail</groupId>
-   <artifactId>jakarta.mail</artifactId>
-   <version>1.6.4</version>
-   <scope>compile</scope>
-</dependency>
+```yaml
+server:
+  port: 9001
 ```
 
-* 查看自动配置类：MailSenderAutoConfiguration
-
-![image-20220207092111823](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070921240.png)
-
-点击`MailSenderJndiConfiguration`，这个类中存在bean，`JavaMailSenderImpl`
-
-![image-20220207092935036](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070929211.png)
-
-然后去看下配置文件
-
-![image-20220207093121954](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070931474.png)
-
-* 配置文件
-
-```properties
-spring.mail.username=xxxxx@qq.com
-spring.mail.password=你的qq授权码
-spring.mail.host=smtp.qq.com
-# qq需要配置ssl
-spring.mail.properties.mail.smtp.ssl.enable=true
-```
-
-* 获取QQ授权码：在QQ邮箱中的设置->账户->开启pop3和smtp服务
-
-![image-20220207094035800](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070940371.png)
-
-* Spring单元测试
+之后在主启动类上添加配置。
 
 ```java
-@SpringBootTest
-class Springboot09ScheduleApplicationTests {
-
-    @Autowired
-    JavaMailSenderImpl mailSender;
-
-    @Test
-    public void contextLoads() {
-        //邮件设置1：一个简单的邮件
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setSubject("通知-明天来狂神这听课");
-        message.setText("今晚7:30开会");
-
-        message.setTo("24736743@qq.com");
-        message.setFrom("24736743@qq.com");
-        mailSender.send(message);
+@SpringBootApplication
+@EnableHystrixDashboard // 开启仪表盘
+public class DashBoardMain9001 {
+    public static void main(String[] args) {
+        SpringApplication.run(DashBoardMain9001.class,args);
     }
-
-    @Test
-    public void contextLoads2() throws MessagingException {
-        //邮件设置2：一个复杂的邮件
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-
-        helper.setSubject("通知-明天来狂神这听课");
-        helper.setText("<b style='color:red'>今天 7:30来开会</b>",true);
-
-        //发送附件
-        helper.addAttachment("1.jpg",new File(""));
-        helper.addAttachment("2.jpg",new File(""));
-
-        helper.setTo("24736743@qq.com");
-        helper.setFrom("24736743@qq.com");
-
-        mailSender.send(mimeMessage);
-    }
-
 }
 ```
 
-查看邮箱，邮件接收成功！
-
->  只需要使用Thymeleaf进行前后端结合即可开发自己网站邮件收发功能了！
-
-## 集成Redis
-
-### 准备工作
-
-* 创建新项目`springboot-10-redis`
-
-![image-20220207095638339](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202070956107.png)
-
-
-
-* 导入依赖（前面勾选了，不需要导入了）
+注意所有服务提供者(8001/8002)都需要引入以下依赖，前面已经配置过了。
 
 ```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-data-redis</artifactId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
 </dependency>
 ```
 
-> 在 SpringBoot 2.X 之后，原来的 Jedis 被替换为了 lettuce
->
-> **Jedis 和 lettuce 区别**
->
-> Jedis ：采用的是直连的服务，如果有多个线程操作的话是不安全的，就需要使用 Jedis Pool 连接池取解决。问题就会比较多。
->
-> lettuce ：底层采用 Netty ，实例可以在多个线程中共享，不存在线程不安全的情况。可以减少线程数据了，性能更高。
+然后启动9001，访问地址：http://localhost:9001/hystrix
 
-* 配置`application.yaml`
+![image-20220413120219651](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127479.png)
 
-```yaml
-# 配置 Redis
-spring:
-  redis:
-    host: localhost
-    port: 6379
-```
-
-* Spring单元测试
+配置好了，接下来进行断路器演示。还需要在8001的主启动类，进行添加如下配置：
 
 ```java
-@SpringBootTest
-class Springboot10RedisApplicationTests {
+@SpringBootApplication
+@EnableEurekaClient
+@EnableHystrix
+@EnableCircuitBreaker
+public class PaymentHystrixMain8001 {
+    public static void main(String[] args) {
+        SpringApplication.run(PaymentHystrixMain8001.class,args);
+    }
 
-    @Autowired
-    private RedisTemplate redisTemplate;
+    /**
+     * 注意：新版本Hystrix需要在主启动类中指定监控路径
+     * 此配置是为了服务监控而配置，与服务容错本身无关，spring cloud升级后的坑
+     * ServletRegistrationBean因为springboot的默认路径不是"/hystrix.stream"，
+     * 只要在自己的项目里配置上下面的servlet就可以了
+     *
+     * @return ServletRegistrationBean
+     */
+    @Bean
+    public ServletRegistrationBean getServlet() {
+        HystrixMetricsStreamServlet streamServlet = new HystrixMetricsStreamServlet();
+        ServletRegistrationBean registrationBean = new ServletRegistrationBean(streamServlet);
 
-    @Test
-    void contextLoads() {
-        /** redisTemplate 操作不同的数据类型，API 和 Redis 中的是一样的
-         * opsForValue 类似于 Redis 中的 String
-         * opsForList 类似于 Redis 中的 List
-         * opsForSet 类似于 Redis 中的 Set
-         * opsForHash 类似于 Redis 中的 Hash
-         * opsForZSet 类似于 Redis 中的 ZSet
-         * opsForGeo 类似于 Redis 中的 Geospatial
-         * opsForHyperLogLog 类似于 Redis 中的 HyperLogLog
-         */
-
-        // 除了基本的操作，常用的命令都可以直接通过redisTemplate操作，比如事务……
-
-        // 和数据库相关的操作都需要通过连接操作
-        //RedisConnection connection = redisTemplate.getConnectionFactory().getConnection();
-        //connection.flushDb();
-
-        redisTemplate.opsForValue().set("key", "呵呵");
-        System.out.println(redisTemplate.opsForValue().get("key"));
+        // 一启动就加载
+        registrationBean.setLoadOnStartup(1);
+        // 添加url
+        registrationBean.addUrlMappings("/hystrix.stream");
+        // 设置名称
+        registrationBean.setName("HystrixMetricsStreamServlet");
+        return registrationBean;
     }
 
 }
 ```
 
-### 自定义配置类
+现在开始启动测试，先进行熔断测试，在观察仪表盘。然后访问：http://localhost:9001/hystrix，之后在对应地方填上地址，然后点击按钮，就可以看到图表了。
 
-* `RedisConfig.java`，从`RedisAutoConfiguration`中粘贴过来`RedisTemplate`，进行修改
+![image-20220413121854741](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127480.png)
+
+之后不停点击：http://localhost:8001/payment/circuit/1和http://localhost:8001/payment/circuit/-1进行测试观察如下图表。
+
+![image-20220413122022082](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127481.png)
+
+实心圆：共有两种含义。它通过颜色的变化代表了实例的健康程度，它的健康度从绿色<黄色<橙色<红色递减。
+该实心圆除了颜色的变化之外，它的大小也会根据实例的请求流量发生变化，流量越大该实心圆就越大。所以通过该实心圆的展示，就可以在大量的实例中快速的发现故障实例种高压力实例。
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127482.png)
+
+## 服务网关
+
+### Zuul路由网关
+
+#### 概述
+
+#### 路由基本配置
+
+#### 路由访问映射规则
+
+#### 查看路由信息
+
+#### 过滤器
+
+### Zuul2路由网关
+
+#### 概述
+
+#### 路由基本配置
+
+#### 路由访问映射规则
+
+#### 查看路由信息
+
+#### 过滤器
+
+### **Gateway新一代网关**
+
+#### 概述
+
+##### 官网
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127483.png)
+
+官网地址：https://github.com/spring-cloud/spring-cloud-gateway
+
+##### 什么是Gateway？
+
+SpringCloud Gateway 是 Spring Cloud 的个全新项目，基于 Spring5.0+ Spring Boot2.0 和 Project Reactor 等技术开发的网关，它旨在为微服务架构提供一种简单有效的统一的API路由管理方式。
+
+SpringCloud Gateway 作为 Spring Cloud 生态系统中的网关，**目标是替代zuul**，在 Spring Cloud2.0以上版本中，没有对新版本的zuul2.0以上最新高性能版本进行集成，仍然还是使用的 zuul1.× 非 Reactor 模式的老版本。
+
+**Spring Cloud Gateway使用的 Webflux中的 reactor-netty响应式编程组件，底层使用了 Netty通讯框架，是基于异步非阻塞模型上进行开发的**。
+
+Spring Cloud Gateway的目标提供统-的路由方式且基于 Filter 链的方式提供了网关基本的功能，例如：**安全，监控/指标，和限流**。
+
+##### 微服务架构中网关在哪里？
+
+![image-20220413163055400](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127484.png)
+
+##### zuul与gateway
+
+###### 为什么有了zuul还需要gateway？
+
+一方面因为Zuul1.0已经进入了维护阶段，而且Gateway是SpringCloud团队研发的，是亲儿子产品，值得信赖。而且很多功能Zuul都没有用起来也非常的简单便捷。
+
+Gateway是基于异步非阻塞模型上进行开发的，性能方面不需要担心。虽然Netflix早就发布了最新的Zuul 2.x，但Spring Cloud貌似没有整合计划。而且Netflix相关组件都宣布进入维护期；不知前景如何?
+
+多方面综合考虑Gateway是很理想的网关选择。
+
+###### **Spring Cloud Gateway具有如下特性**
+
+- 基于Spring Framework 5, Project Reactor和 Spring Boot 2.0进行构建；
+
+- 动态路由：能够匹配任何请求属性；
+
+- 可以对路由指定Predicate (断言）和Filter (过滤器);集成Hystrix的断路器功能；
+
+- 集成Spring Cloud 服务发现功能；
+
+- 易于编写的Predicate (断言）和Filter (过滤器);请求限流功能；
+
+- 支持路径重写
+
+###### **Spring Cloud Gateway 与Zuul的区别**
+
+在SpringCloud Finchley 正式版之前，Spring Cloud推荐的网关是Netflix提供的Zuul：
+
+1. Zuul 1.x，是一个基于阻塞V/O的API Gateway；
+2. Zuul 1.x**基于Servlet 2.5使用阻塞架构**它不支持任何长连接(如WebSocket)Zuul的设计模式和Nginx较像，每次V/О操作都是从工作线程中选择一个执行，请求线程被阻塞到工作线程完成，但是差别是Nginx用C++实现，Zuul用Java 实现，而JVM本身会有第一次加载较慢的情况，使得Zuul的性能相对较差；
+3. Zuul 2.x理念更先进，**想基于Netty非阻塞和支持长连接**，但SpringCloud目前还没有整合。Zul 2.x的性能较Zuul 1.x有较大提升。在性能方面，根据官方提供的基准测试,Spring Cloud Gateway的RPS(每秒请求数)是Zuul的1.6倍；
+4. Spring Cloud Gateway建立在Spring Framework 5、Project Reactor和Spring Boot 2之上，使用非阻塞API；
+5. Spring Cloud Gateway还支持WebSocket，并且与Spring紧密集成拥有更好的开发体验。
+
+###### zuul1模型
+
+![image-20220413164135173](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127485.png)
+
+上述模式的缺点，servlet是一个简单的网络IO模型，当请求进入servlet container时，servlet container就会为其绑定一个线程，在并发不高的场景下这种模型是适用的。但是一旦高并发(比如抽风用jemeter压)，线程数量就会上涨，而线程资源代价是昂贵的(上线文切换，内存消耗大)严重影响请求的处理时间。在一些简单业务场景下，不希望为每个request分配一个线程，只需要1个或几个线程就能应对极大并发的请求，这种业务场景下servlet模型没有优势。
+
+所以**Zuul 1.X是基于servlet之上的一个阻塞式处理模型**，即spring实现了处理所有request请求的一个servlet (Dispatcherservlet)并由该servlet阻塞式处理处理。所以Springcloud Zuul无法摆脱servlet模型的弊端。
+
+###### geteway模型
+
+传统的Web框架，比如说: struts2，springmvc等都是基于Servlet API与Servlet容器基础之上运行的。但是
+**在Servlet3.1之后有了异步非阻塞的支持**。而WebFlux是一个典型非阻塞异步的框架，它的核心是基于Reactor的相关API实现的。相对于传统的web框架来说，它可以运行在诸如Netty,Undertow及支持Servlet3.1的容器上。非阻塞式+函数式编程（Spring5必须让你使用java8)。
+
+Spring WebFlux是 Spring 5.0 引入的新的响应式框架，区别于Spring MVC，它不需要依赖Servlet API，它是完全异步非阻塞的，并且基于Reactor来实现响应式流规范。
+
+#### 三大核心概念
+
+**Route（路由）**：路由是构建网关的基本模块，它由 ID，目标URI，一系列的断言和过滤器组成，如果断言为 true 则匹配该路由
+
+**Predicate（断言）**：开发人员可以匹配HTTP请求中的所有内容（例如请求头或请求参数），如果请求与断言相匹配则进行路由
+
+**Filter（过滤）**：指的是 Spring框架中 Gateway Filter的实例，使用过滤器，可以在请求被路由前或者之后对请求进行修改。
+
+![在这里插入图片描述](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127486.png)
+
+web请求，通过一些匹配条件，定位到真正的服务节点。并在这个转发过程的前后，进行一些精细化控制。
+
+**predicate就是我们的匹配条件，而 Filter，就可以理解为个无所不能的拦截器有了这两个元素，再加上目标 uri 就可以实现一个具体的路由了**。
+
+#### Gateway工作流程
+
+<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127487.png" alt="在这里插入图片描述" style="zoom:50%;" />
+
+客户端向Spring Cloud Gateway发出请求。然后在Gateway Handler Mapping中找到与请求相匹配的路由，将其发送到Gateway Web Handler。
+
+Handler再通过指定的过滤器链来将请求发送到我们实际的服务执行业务逻辑，然后返回。过滤器之间用虚线分开是因为过滤器可能会再发送代理请求之前（Pre）或之后（post）执行业务逻辑。
+
+#### 入门配置
+
+##### 新建module
+
+新建一个module`cloud-gateway-gateway9527`。
+
+![image-20220413171547132](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127488.png)
+
+##### 改pom
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-gateway</artifactId>
+    </dependency>
+    <!--eureka-client-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    </dependency>
+    <!-- 引入自己定义的api通用包，可以使用Payment支付Entity -->
+    <dependency>
+        <groupId>com.atguigu.springcloud</groupId>
+        <artifactId>cloud-api-commons</artifactId>
+        <version>${project.version}</version>
+        <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+```
+
+##### 写yaml
+
+```yaml
+server:
+  port: 9527
+
+spring:
+  application:
+    name: cloud-gateway
+
+eureka:
+  instance:
+    hostname: cloud-gateway-service
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+```
+
+##### 业务类
+
+跳过
+
+##### 主启动类
+
+```java
+@SpringBootApplication
+@EnableEurekaClient
+public class GateWayMain9527 {
+    public static void main(String[] args) {
+        SpringApplication.run(GateWayMain9527.class,args);
+    }
+}
+```
+
+##### 网关如何做路由映射
+
+###### 需求
+
+首先找到`cloud-provider-payment8001`看看里面controller的访问地址，有`get`以及lb。由于我们目前不想暴露8001端口，希望在8001外面套一层9527。
+
+###### yaml网关配置
+
+```yaml
+server:
+  port: 9527
+
+spring:
+  application:
+    name: cloud-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true                       # 开启从注册中心动态创建路由的功能，利用微服务名进行路由
+      routes:
+        - id: payment_routh # payment_route   # 路由的ID，没有固定规则但要求唯一，建议配合服务名
+          uri: http://localhost:8001          # 匹配后提供服务的路由地址
+          predicates:
+            - Path=/payment/get/**            # 断言，路径相匹配的进行路由
+
+        - id: payment_routh2 #payment_route   # 路由的ID，没有固定规则但要求唯一，建议配合服务名
+          uri: http://localhost:8001          # 匹配后提供服务的路由地址
+          predicates:
+            - Path=/payment/lb/**             # 断言，路径相匹配的进行路由
+
+eureka:
+  instance:
+    hostname: cloud-gateway-service
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+```
+
+##### 测试
+
+启动7001、8001、9527，进行测试：http://localhost:9527/payment/get/31
+
+![image-20220413174227118](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127489.png)
+
+#### Gateway的两种配置方式
+
+##### 在配置文件yaml文件中配置
+
+* 在配置文件yaml文件中配置，见前面的步骤
+
+##### 在Java代码中配置
+
+> 在代码中注入RouteLocator的Bean
+
+业务需求：通过9527网关访问到外网的百度新闻网址(http://news.baidu.com/guonei)
+
+在之前的9527工程下创建`config.GatewayConfig.java`
+
+```java
+ */
+@Configuration
+public class GatewayConfig {
+
+    @Bean
+    public RouteLocator customerRouteLocator(RouteLocatorBuilder routeLocatorBuilder){
+
+        RouteLocatorBuilder.Builder routes = routeLocatorBuilder.routes();
+
+        // id是全局唯一的，可以随意取名
+        // 其中path是匹配规则，uri是对应的跳转地址
+        routes.route("payment_id_route_path",
+                r -> r.path("/guonei")
+                        .uri("http://news.baidu.com/guonei")).build();
+
+        return routes.build();
+    }
+
+}
+```
+
+测试：http://localhost:9527/guonei。注意其中，
+
+- id是全局唯一的，可以随意取名
+- path是匹配地址的规则，uri是对应的跳转地址
+
+#### Route动态路由
+
+通常情况下 Gateway 会根据注册中心注册的服务列表，以**注册中心上微服务为路径创建动态路由进行转发，从而实现动态路由的功能**，所谓的动态路由就是将**写死的地址转化为注册在 Eureka 中新的 Application **。
+
+在yaml文件如下修改：
+
+```yaml
+server:
+  port: 9527
+
+spring:
+  application:
+    name: cloud-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true                       # 开启从注册中心动态创建路由的功能，利用微服务名进行路由
+      routes:
+        - id: payment_routh # payment_route   # 路由的ID，没有固定规则但要求唯一，建议配合服务名
+#          uri: http://localhost:8001          # 匹配后提供服务的路由地址
+          uri: lb://cloud-payment-service
+          predicates:
+            - Path=/payment/get/**            # 断言，路径相匹配的进行路由
+
+        - id: payment_routh2 #payment_route   # 路由的ID，没有固定规则但要求唯一，建议配合服务名
+#          uri: http://localhost:8001          # 匹配后提供服务的路由地址
+          uri: lb://cloud-payment-service
+          predicates:
+            - Path=/payment/lb/**             # 断言，路径相匹配的进行路由
+
+eureka:
+  instance:
+    hostname: cloud-gateway-service
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+```
+
+只需要修改`uri: lb://cloud-payment-service`即可，即`lb://服务名`。
+
+在配置类中如下修改：
 
 ```java
 @Configuration
-public class RedisConfig {
+public class GatewayConfig {
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> template = new RedisTemplate();
-        template.setConnectionFactory(redisConnectionFactory);
-        return template;
+    public RouteLocator customerRouteLocator(RouteLocatorBuilder routeLocatorBuilder){
+
+        RouteLocatorBuilder.Builder routes = routeLocatorBuilder.routes();
+
+        // id是全局唯一的，可以随意取名
+        // 其中path是匹配规则，uri是对应的跳转地址
+        routes
+                .route("payment_discovery_path",r->r.path("/payment/discovery")
+                        .uri("lb://cloud-payment-service"));
+        return routes.build();
     }
 
 }
 ```
 
-### 序列化
+之后进行测试，开启eureka7001、服务提供者8001/8002，gateway9527进行测试：http://localhost:9527/payment/discovery
 
-* 导入json相关依赖
+#### Predicate的使用
+
+##### 什么是predicate？
+
+什么是断言，简而言之就是**在什么情况下，进行路由转发（可以使用这个地址）**。
+
+##### 内置断言工厂
+
+###### 基于Datetime类型的断言工厂
+
+此类型的断言根据时间做判断，主要有三个：
+
+- AfterRoutePredicateFactory： 接收一个日期参数，判断请求日期是否晚于指定日期
+
+- BeforeRoutePredicateFactory： 接收一个日期参数，判断请求日期是否早于指定日期
+
+- BetweenRoutePredicateFactory： 接收两个日期参数，判断请求日期是否在指定时间段内
+
+```yaml
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: shop-product            # 路由的唯一标识
+          uri: lb://shop-product      # 如果断言成功，将要转发去的地址
+          order: 0                    # 优先级，越小优先级越高
+          predicates:                 # 断言，满足所有断言，才会进行转发
+          	# 在这个时间之后才能进行访问
+            - After=2022-04-13T20:48:17.866+08:00[Asia/Shanghai]
+```
+
+但是有个问题，如何获取时间，如下：
+
+```java
+ZonedDateTime zbj = ZonedDateTime.now(); // 默认时区
+System.out.println(zbj);
+```
+
+###### 基于远程地址的断言工厂
+
+- RemoteAddrRoutePredicateFactory： 接收一个IP地址段，判断请求主机地址是否在地址段中
+
+```yaml
+- RemoteAddr=192.168.1.1/24 
+```
+
+###### 基于Cookie的断言工厂
+
+- CookieRoutePredicateFactory：接收两个参数，cookie 名字和一个正则表达式。 判断请求cookie是否具有给定名称且值与正则表达式匹配。
+
+```yaml
+- Cookie=chocolate, ch.p
+```
+
+通过`curl`进行测试有无cookie两种地址，在yaml中添加`- Cookie=username,zzzz`。
+
+然后使用`curl`命令。
+
+```sh
+curl http://localhost:9527/payment/lb
+curl http://localhost:9527/payment/lb --cookie "username=zzzz"
+```
+
+###### 基于Header的断言工厂
+
+- HeaderRoutePredicateFactory：接收两个参数，标题名称和正则表达式。 判断请求Header是否具有给定名称且值与正则表达式匹配。
+
+```yaml
+- Header=X-Request-Id, \d+
+```
+
+通过`curl`进行测试有无Header两种地址，在yaml中添加`- Header=X-Request-Id, \d+`表示请求头要有X-Request-Id属性并且值为整数的正则表达式。
+
+然后使用`curl`命令。
+
+```sh
+curl http://localhost:9527/payment/lb
+curl http://localhost:9527/payment/lb -H "X-Request-Id:1234"
+```
+
+###### 基于Host的断言工厂
+
+- HostRoutePredicateFactory：接收一个参数，主机名模式。判断请求的Host是否满足匹配规则。
+
+```yaml
+- Host=**.testhost.org
+```
+
+###### 基于Method请求方法的断言工厂
+
+- MethodRoutePredicateFactory：接收一个参数，判断请求类型是否跟指定的类型匹配。
+
+```yaml
+- Method=GET
+```
+
+###### 基于Path请求路径的断言工厂
+
+- PathRoutePredicateFactory：接收一个参数，判断请求的URI部分是否满足路径规则。
+
+```
+- Path=/foo/{segment}
+```
+
+###### 基于Query请求参数的断言工厂
+
+- QueryRoutePredicateFactory ：接收两个参数，请求param和正则表达式， 判断请求参数是否具有给定名称且值与正则表达式匹配。
+
+```yaml
+- Query=baz, ba. 
+```
+
+###### 基于路由权重的断言工厂
+
+- WeightRoutePredicateFactory：接收一个 **[组名,权重]** 然后对于**同一个组**内的路由按照权重转发
+
+```
+gateway:
+  routes:
+  - id: weight_route1
+    uri: host1
+    predicates:
+      - Path=/product/**
+      - Weight=group3, 1
+  - id: weight_route2
+    uri: host2
+    predicates:
+      # 路径一致，组一致，权重不同
+      - Path=/product/**
+      - Weight= group3, 9
+```
+
+##### 自定义断言工厂
+
+我们来设定一个场景: 假设我们的应用仅仅让age在(min,max)之间的人来访问。使用例子来体验一把自定义路由断言工厂。
+
+###### 定义一个断言工厂，实现断言方法
+
+新建一个类，继承 `AbstractRoutePredicateFactory` 类，这个类的泛型是 自定义断言工厂的一个内部类叫做``Config` 是一个固定的名字，在Config 类中定义自定义断言需要的一些属性，并且自定义断言工厂使用 `@Component` 注解，交给spring容器创建。
+
+```java
+@Component
+public class AgeRoutePredicateFactory extends AbstractRoutePredicateFactory<AgeRoutePredicateFactory.Config> {
+    public AgeRoutePredicateFactory() {
+        super(AgeRoutePredicateFactory.Config.class);
+    }
+
+    //读取配置文件中的内容并配置给配置类中的属性
+    @Override
+    public List<String> shortcutFieldOrder() {
+        return Arrays.asList("minAge","maxAge");
+    }
+
+    @Override
+    public Predicate<ServerWebExchange> apply(Config config) {
+        return exchange -> {
+            // 获取请求参数中的 age 属性
+            String age = exchange.getRequest().getQueryParams().getFirst("age");
+            if(StringUtils.isNotEmpty(age)) {
+                try {
+                    int a = Integer.parseInt(age);
+                    boolean res = a >= config.minAge && a <= config.maxAge;
+                    return res;
+                } catch (Exception e) {
+                    System.out.println("输入的参数不是数字格式");
+                }
+            }
+            return false;
+        };
+    }
+
+    @Validated
+    public static class Config {
+        private Integer minAge;
+        private Integer maxAge;
+
+        public Integer getMinAge() {
+            return minAge;
+        }
+
+        public void setMinAge(Integer minAge) {
+            this.minAge = minAge;
+        }
+
+        public Integer getMaxage() {
+            return maxAge;
+        }
+
+        public void setMaxage(Integer maxage) {
+            this.maxAge = maxage;
+        }
+    }
+}
+```
+
+在这个自定义断言中，`.Config` 中有两个属性 minAge 和 maxAge；在 `apply()` 方法中编写断言的比较逻辑。
+
+###### 在yml中使用自定义的断言
+
+```yaml
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: shop-product            # 路由的唯一标识
+          uri: lb://shop-product      # 如果断言成功，将要转发去的地址
+          order: 0                    # 优先级，越小优先级越高
+          predicates:                 # 断言，满足所有断言，才会进行转发
+            - Path=/product/**        # 注意：这是使用= 不是：
+            # 自定义断言，第一个参数对应minAge，第二个参数对应maxAge
+            - Age=18, 60
+```
+
+从这里的演示应该可以看出来，自定义断言与系统自带断言的配置，在yml中只需要使用首部名称，默认忽略类名中的 RoutePredicateFactory。
+
+#### Filter的使用
+
+##### 什么是Filter？
+
+概念：路由过滤器可用于修改进入的 HTTP 请求和返回的 HTTP 响应，路由过滤器只能指定路由进行使用。
+
+##### SpringCloud Gateway的Filter
+
+- 按生命周期分为pre和post
+
+- 按种类分为GatewayFilter和Globalfilter
+
+地址：https://docs.spring.io/spring-cloud-gateway/docs/2.2.9.RELEASE/reference/html/#gatewayfilter-factories
+
+一共有31中过滤器。。。示例：
+
+```yaml
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: add_request_header_route
+        uri: https://example.org
+        filters:
+        - AddRequestHeader=X-Request-red, blue # 表示需要添加请求头X-Request-red:blue
+```
+
+##### **自定义过滤器**
+
+我们实现一个自定义过滤器（常用），`MyLogGateWayFilter` 实现 `GlobalFilter，Ordered` 两个接口。
+
+```java
+@Component
+@Slf4j
+public class MyLogGatewayFilter implements GlobalFilter, Ordered {
+
+
+    /**
+     * 执行过滤逻辑
+     */
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        log.info("进入过滤器   " + new Date());
+
+        //得到请求参数
+        String name = exchange.getRequest().getQueryParams().getFirst("name");
+        //执行过滤逻辑
+        if (name == null || "".equals(name)) {
+            log.info("name为null，非法用户");
+            //定义拦截返回状态码
+            exchange.getResponse().setStatusCode(HttpStatus.NOT_ACCEPTABLE);
+            return exchange.getResponse().setComplete();
+        }
+        // 放行
+        return chain.filter(exchange);
+    }
+
+    /**
+     * 过滤器加载的顺序 越小,优先级别越高
+     */
+    @Override
+    public int getOrder() {
+        return 0;
+    }
+}
+```
+
+访问地址：http://localhost:9527/payment/lb
+
+![image-20220413221151402](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127490.png)
+
+访问地址：http://localhost:9527/payment/lb?name=1234
+
+![image-20220413221216179](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127491.png)
+
+## SpringCloud Config分布式配置中心
+
+### 概述
+
+#### 分布式系统面临的配置问题
+
+微服务意味着要将单体应用中的业务拆分成一个个子服务，每个服务的粒度相对较小，因此系统会出现大量的服务，**由于每个服务都需要必要的配置信息才能运行**，所以一套集中的、动态的配置管理设施必不可少。
+
+Spring Cloud 提供了 ConfigServer 来解决这个问题，我们每一个微服务自己带着一个``application.yml ``，上百个配置就挺 **emo** 😈 的。
+
+#### 什么是分布式配置中心
+
+![image-20220413223843844](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127492.png)
+
+SpringCloud Config为微服务架构中的微服务提供集中化的外部配置支持，配置服务器为各个不同微服务应用的所有环境提供了一个中心化的外部配置。
+
+SpringCloud Config分为服务端和客户端两部分。
+
+- 服务端也称为分布式配置中心，它是一个独立的微服务应用，用来连接配置服务器并为客户端提供获取配置信息，加密/解密信息等访问接口。
+
+- 客户端则是通过指定的配置中心来管理应用资源，以及与业务相关的配置内容，并在启动的时候从配置中心获取和加载配置信息配置服务器默认采用git来存储配置信息，这样就有助于对环境配置进行版本管理，并且可以通过git客户端工具来方便的管理和访问配置内容。
+
+#### SpringCloud Config的用途
+
+- 集中管理配置文件
+
+- 不同环境不同配置，动态化的配置更新，分环境部署比如dev/test/prod/beta/release
+
+- 运行期间动态调整配置，不再需要在每个服务部署的机器上编写配置文件，服务会向配置中心统一拉取配置自己的信息
+
+- 当配置发生变动时，服务不需要重启即可感知到配置的变化并应用新的配置
+
+- 将配置信息以REST接口的形式暴露 - post/crul访问刷新即可…
+
+#### 与Github整合配置
+
+由于SpringCloud Config默认使用Git来存储配置文件(也有其它方式,比如支持SVN和本地文件),但最推荐的还是Git,而且使用的是http/https访问的形式。建议使用gitee，和github操作一样。
+
+### Config服务端配置与测试
+
+#### 创建仓库
+
+首先在自己的Github账号上新建一个`springcloud-config`的新Repository。
+
+![image-20220414102136673](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127493.png)
+
+仓库地址：https://github.com/TheFoxFairy/springcloud-config
+
+#### 构建步骤
+
+##### 新建module
+
+然后在当前仓库里面创建一个新的module模块`cloud-config-center-3344`它即为cloud的配置中心模块cloudConfig Center。
+
+##### 改pom
+
+```xml
+<dependencies>
+    <!--    Config服务端-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-config-server</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+```
+
+##### 写yaml
+
+```yaml
+server:
+  port: 3344
+
+spring:
+  application:
+    name: cloud-config-center
+  cloud:
+    config:
+      server:
+        git:
+          username: xxxx # github账户和密码
+          password: xxxx
+          uri: https://github.com/TheFoxFairy/springcloud-config.git # Github上面的git仓库名字，这里最好填写为https形式
+          search-paths:
+            - springcloud-config # 搜索目录
+      label: main # 读取仓库分支
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+```
+
+##### 主启动类
+
+```java
+@SpringBootApplication
+@EnableEurekaClient
+@EnableConfigServer
+public class ConfigMain3344 {
+    public static void main(String[] args) {
+        SpringApplication.run(ConfigMain3344.class,args);
+    }
+}
+```
+
+##### 修改hosts文件
+
+windows下修改hosts文件，增加映射
+
+```xml
+127.0.0.1 config-3344.com
+```
+
+##### 测试
+
+通过访问 http://config-3344.com:3344/main/config-dev.yml 进行测试。
+
+![image-20220414103734832](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127494.png)
+
+> `http://配置中心地址/{label}/{仓库文件地址}`
+
+#### 配置读取规则
+
+```tex
+/{label}/{application}-{profile}.yml => http://config-3344.com:3344/main/config-test.yml
+
+label:仓库分支
+{application}-{profile}:就是对应的文件
+
+
+/{application}-{profile}.yml => 会去自动查找相应文件
+
+/{profile}/{application}/{label}.yml => json串
+```
+
+### Config客户端配置与测试
+
+#### 构建步骤
+
+##### 新建module
+
+新建一个客户端``cloud-config-client-3355``
+
+![image-20220414105035354](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127495.png)
+
+##### 改pom
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-config</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+```
+
+##### 写boostrap.yml
+
+- applicaiton.ynl是用户级的资源配置项
+
+- bootstrap.yml是系统级的，优先级更加高
+
+Spring Cloud会创建一个“Bootstrap Context”，作为Spring应用的`Application Context`的父上下文。初始化的时候，``BootstrapContext``负责从外部源加载配置属性并解析配置。这两个上下文共享一个从外部获取的``Environment``。
+
+`Bootstrap`属性有高优先级，默认情况下，它们不会被本地配置覆盖。`Bootstrap context和Application Context有着不同的约定，所以新增了一个'bootstrap.yml'文件，保证`Bootstrap Context'和'Application Context'配置的分离。
+
+要将Client模块下的application.yml文件改为bootstrap.yml，这是很关键的，因为bootstrap.yml是比application.yml先加载的。bootstrap.yml优先级高于application.yml。
+
+```yaml
+server:
+  port: 3355
+
+spring:
+  application:
+    name: config-client
+  cloud:
+    config:
+      label: main # 分支名称
+      name: config # 配置文件名称
+      profile: dev # 读取后缀名称，这三个加起来就是main分支上的config-dev.yml配置文件
+      uri: http://localhost:3344 # 配置中心地址
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+```
+
+##### 主启动类
+
+```java
+@SpringBootApplication
+@EnableEurekaClient
+public class ConfigClientMain3355 {
+    public static void main(String[] args) {
+        SpringApplication.run(ConfigClientMain3355.class, args);
+    }
+}
+```
+
+##### 业务类
+
+创建 controller 层方法
+
+```java
+@RestController
+public class ConfigClientController {
+
+    @Value("${config.info}")
+    private String configInfo;
+
+    @GetMapping("/configInfo")
+    public String getConfigInfo(){
+        return configInfo;
+    }
+}
+```
+
+##### 测试
+
+启动Copfig配置中心3344微服务并自测，然后启动3355作为Client准备访问。
+
+访问地址：http://localhost:3355/configInfo
+
+![image-20220414111332504](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127496.png)
+
+成功实现了客户端3355访问SpringCloud Config3344通过GitHub获取配置信息。
+
+#### 分布式配置的动态刷新问题
+
+现在修改config-dev.yml配置并提交到GitHub中，比如加个变量age或者版本号version。
+
+![image-20220414112157599](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127497.png)
+
+之后刷新3344，发现ConfigServer配置中心立刻响应；
+
+![image-20220414112418120](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127498.png)
+
+然后刷新3355，发现ConfigClient客户端没有任何响应。3355没有变化，除非3355重启或者重新加载，难到每次运维修改配置文件，客户端都需要重启，这将是一个可怕的噩梦！！！
+
+访问地址：http://localhost:3355/configInfo
+
+![image-20220414112513052](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204141127499.png)
+
+### Config客户端之动态刷新
+
+为了避免每次更新配置都要重启客户端微服务3355。采用如下步骤，进行动态刷新。
+
+* 首先修改3355模块
+* 在pom引入actuator监控
 
 ```xml
 <dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-databind</artifactId>
-    <version>2.13.1</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-core</artifactId>
-    <version>2.13.1</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-annotations</artifactId>
-    <version>2.13.1</version>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
 </dependency>
 ```
 
-* 创建实体类
+* 修改yaml，暴露监控端口
+
+```yaml
+server:
+  port: 3355
+
+spring:
+  application:
+    name: config-client
+  cloud:
+    config:
+      label: main # 分支名称
+      name: config # 配置文件名称
+      profile: dev # 读取后缀名称，这三个加起来就是main分支上的config-dev.yml配置文件
+      uri: http://localhost:3344 # 配置中心地址
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+```
+
+* `@RefreshScope`业务类controller修改
+
+```java
+@RestController
+@RefreshScope
+public class ConfigClientController {
+
+    @Value("${config.info}")
+    private String configInfo;
+
+    @GetMapping("/configInfo")
+    public String getConfigInfo(){
+        return configInfo;
+    }
+}
+```
+
+* 此时修改github->3344->3355
+
+![image-20220414141338435](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204151350671.png)
+
+还需要发送post请求，对3355进行刷新，就是手动激活3355….
+
+```sh
+curl -X POST "http://localhost:3355/actuator/refresh" 
+```
+
+访问地址1：http://localhost:3344/main/config-dev.yml
+
+![image-20220414141348266](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204151350672.png)
+
+访问地址2：http://localhost:3355/configInfo
+
+![image-20220414141734702](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204151350673.png)
+
+现在就已经成功更新了。避免了服务重启。
+
+## SpringCloud Bus消息总线
+
+### 概述
+
+Spring Cloud Bus 使用轻量级的消息代理来连接微服务架构中的各个服务，可以将其用于广播状态更改（例如配置中心配置更改）或其他管理指令。
+
+通常会使用消息代理来构建一个主题，然后把微服务架构中的所有服务都连接到这个主题上去，当我们向该主题发送消息时，所有订阅该主题的服务都会收到消息并进行消费。
+
+使用 Spring Cloud Bus 可以方便地构建起这套机制，所以 **Spring Cloud Bus 又被称为消息总线**。
+
+**Spring Cloud Bus 配合 Spring Cloud Config 使用可以实现配置的动态刷新。**
+
+目前 Spring Cloud Bus 支持两种消息代理：**RabbitMQ 和 Kafka。**
+
+![image-20220415132606002](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204151350674.png)
+
+
+
+但是该图不合适，原因如下：
+
+- 破坏了微服务间的职责单一性，因为微服务 3355 本身是业务模块，他本不应该承担配置刷新的职责
+
+- 破坏了微服务各节点的对等性，3355 不能特殊，不能和 3366 不一样，得藏拙
+
+- 有一定的局限性，例如：微服务在迁移时，他的网络地址常常会发生变化，此时如果想要做到自动刷新，那就会增加更多修改。
+
+![image-20220415133234722](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204151350675.png)
+
+为什么被称为总线？
+
+在微服务架构的系统中，通常会使用**轻量级的消息代理**来构建一个**共用的消息主题**，并让系统中所有微服务实例都连接上来。由于**该主题中产生的消息会被所有实例监听和消费，所以称它为消息总线**。在总线上的各个实例，都可以方便地广播一些需要让其他连接在该主题上的实例都知道的消息。
+
+基本原理：ConfigClient实例都监听MQ中同一个topic(默认是springCloudBus)。当一个服务刷新数据的时候，它会把这个信息放入到Topic中，这样其它监听同一Topic的服务就能得到通知，然后去更新自身的配置。
+
+### RabbitMQ环境配置
+
+[RabbitMQ笔记](/编程笔记/Java笔记/常用中间件/RabbitMQ笔记.md)
+
+**然后进入网址测试 http://192.168.183.102:15672/** 是否访问成功。
+
+### SpringCloud Bus动态刷新全局广播
+
+创建一个新模块3366，配与3355完全相同（端口3366）
+
+以上两种服务（刷新客户端、刷新服务端）我们选择通过利用消息总线触发一个服务端ConfigServer的`/bus/refresh`端点，进而刷新所有客户端的配置。
+
+**bootstrap.yaml**
+
+```yaml
+server:
+  port: 3366
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+
+spring:
+  application:
+    name: config-client
+  cloud:
+    config:
+      label: main
+      profile: dev
+      uri: http://localhost:3344
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+```
+
+**ConfigClientController.java**
+
+```java
+@RestController
+@RefreshScope # 一定要添加这个，动态刷新
+public class ConfigClientController {
+
+    @Value("${config.info}")
+    private String configInfo;
+
+    @GetMapping("/configInfo")
+    public String getConfigInfo(){
+        return configInfo;
+    }
+
+}
+```
+
+为了实现动态的全局刷新，我们将 `3344 、3355、3366` 均加入以下依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-bus-amqp</artifactId>
+</dependency>
+```
+
+在所有的 `application.yml（bootstrap.yml）`文件中加入如下配置 `rabbitMQ`，注意RabbitMQ的端口是5672，而界面管理的端口是15672。
+
+```yaml
+spring:
+  rabbitmq: # 配置rabbitmq
+    host: 192.168.183.102 # rabbitmq服务器
+    port: 5672           # rabbitmq端口
+    username: admin       # 用户名以及密码
+    password: 123456
+```
+
+然而服务端的配置略有不同
+
+```yaml
+server:
+  port: 3344
+
+spring:
+  application:
+    name: cloud-config-center
+  cloud:
+    config:
+      server:
+        git:
+          username: xxxx
+          password: xxxx
+          uri: https://gitee.com/TheFoxFairy/springcloud-config.git # Gitee
+          search-paths:
+            - springcloud-config # 搜索目录
+      label: main # 读取仓库分支
+  
+  rabbitmq:  ##rabbitmq相关配置,暴露bus刷新配置的端点
+    host: 192.168.183.102
+    port: 5672
+    username: admin
+    password: 123456
+    
+#rabbitmq相关配置,暴露bus刷新配置的端点 SpringCloud Bus动态刷新全局广播
+management:
+  endpoints: #暴露bus刷新配置的端点
+    web:
+      exposure:
+        include: 'bus-refresh'
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+```
+
+**此处暴露的端点为 `bus-refresh`，作为服务端与客户端的区别**。之后，启动`7001,3344,3355,3366`进行测试。
+
+![image-20220415163841377](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204161502391.png)
+
+访问地址：http://localhost:3344/main/config-dev.yml，可能需要等一段时间，速度有一点慢。
+
+访问地址：http://localhost:3355/configInfo
+
+访问地址：http://localhost:3366/configInfo
+
+将所有服务启动后，我们修改 gitee 中的文件，然后观察 3344 与 3355、3366 的区别。
+
+![image-20220415152339868](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204161502393.png)
+
+证明只有3344可以同步gitee的变化，此时我们需要进行POST进行全局广，进行刷新：http://localhost:3344/actuator/bus-refresh，而后，3355与3366均可同步3344的信息。 
+
+```sh
+curl -X POST "http://localhost:3344/actuator/bus-refresh"
+```
+
+### SpringCloud Bus动态刷新定点通知
+
+此处的 config-client 为 spring-application-name ，3344 为 Config 服务端的端口号，bus-refresh 为 3344 端口中 yaml 配置文件中刷新配置的端点名称。
+
+指定刷新地址：http://localhost:3344/actuator/bus-refresh/config-client:3355
+
+```sh
+curl -X POST "http://localhost:3344/actuator/bus-refresh/config-client:3355"
+```
+
+## SpringCloud Stream消息驱动
+
+### 概述
+
+#### 什么是Spring Cloud Stream
+
+简而言之：**Spring Cloud Stream 就是屏蔽底层消息中间件（ActiveMQ、RabbitMQ、RocketMQ、Kafka）的差异，降低切换成本，统一消息的编程模型**。
+
+Spring Cloud Stream 的官方定义为 **是一个构建消息驱动微服务的框架**。
+
+**应用程序通过 inputs 或 outputs 来与 Spring Cloud Stream 中 binder 对象交互，通过我们配置 binding（绑定），而 Spring Cloud Stream 的 binder 对象负责与消息中间件交互**，所以我们只需要搞清楚如何与 Spring Cloud Stream 交互就可以方便实用消息驱动的方式。
+
+通过使用 Spring Integration 来链接消息代理中间件以实现消息事件驱动，Spring Cloud Stream 为一些供应商的消息中间件产品**提供了个性化的自动化配置**，引用了 **发布-订阅、消费组、分区**的三个概念。
+
+Spring Cloud Stream由一个中立的中间件内核组成。Spring Cloud Stream会**注入输入和输出的channels**，应用程序通过这些channels与外界通信，而**channels则是通过一个明确的中间件Binder与外部brokers连接**。
+
+> （目前仅支持 RabbitMQ、Kafka）
+
+#### 文档
+
+官网地址：
+
+* https://spring.io/projects/spring-cloud-stream#overview
+* https://cloud.spring.io/spring-cloud-static/spring-cloud-stream/3.0.1.RELEASE/reference/html/
+* SpringCloud Steam中文指导手册：https://m.wang1314.com/doc/webapp/topic/20971999.html
+
+#### 设计思想
+
+##### 标准MQ
+
+![image-20220415193705333](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204161502394.png)
+
+- 生产者/消费者之间靠**消息**媒介传递信息内容——`Message`
+- 消息必须走特定的**通道**——消息通道 `MessageChannel`
+- 消息通道里的消息如何被消费呢，谁负责收发**处理**——消息通道`MessageChannel`的子接口`SubscribableChannel`，由`MessageHandler`消息处理器订阅
+
+##### 为什么用Cloud Stream
+
+###### stream凭什么可以统一底层差异
+
+与MQ的实现解耦，统一底层差异：
+
+在没有绑定器这个概念的情況下，我们的 Spring Boot 应用要直接与消息中间件进行信息交互的时侯，由于各消息中间件构建的初衷不同，它们的实现细节上会有较大的差异性。
+
+通过定义绑定器作为中间层，完美地实现了**应用程序与消息中间件细节之间的隔离**。通过向应用程序暴露统一的 Channel 通道，使得应用程序不需要再考虑各种不同的消息中间件实现。
+
+**通过定义绑定器 Binder 作为中间层，实现了应用程序与消息中间件细节之间的隔离。**
+
+###### Binder
+
+- INPUT 对应于消费者
+- OUTPUT对应于生产者
+
+Stream对消息中间件的进一步封装，可以做到代码层面对中间件的无感知,甚至于动态的切换中间件（RabbitMQ 切换为 Kafka），使得微服务开发的高度解耦，服务可以关注更多自己的业务流程。
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204161502395.png)
+
+###### Stream中的消息通信方式遵循了发布-订阅模式
+
+Topic主题进行广播：
+
+- 在 RabbitMQ 就是 Exchange
+- 在 Kafka 中就是 Topic
+
+#### SpringCloudStream标准流程套路
+
+![image-20220415203233319](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204161502396.png)
+
+- Binder：很方便的连接中间件，屏蔽差异
+- Channel：通道，是队列Queue的一种抽象，在消息通讯系统中就是实现存储和转发的媒介，通过对Channel对队列进行配置
+- Source 和 Sink：简单的可理解为参照对象是 Spring Cloud Stream 自身，从 Stream 发布消息就是输出，接受消息就是输入
+
+#### 编码API和常用注解
+
+| 组成            | 说明                                                         |
+| --------------- | ------------------------------------------------------------ |
+| Middleware      | 中间件，目前只支持 RabbitMQ 和 Kaka                          |
+| Binder          | Binder 是应用与消息中间件之间的封装，目前实现了Kafka 和 RabbitMQ 的 Binder，通过 Binder 可以很方便的连接中间件，可以动态的改变消息类型（对应于 Kafka 的 topic，RabbitMQ 的 exchange），这些都可以通过配置文件来实现 |
+| @Input          | 注解标识输入通道，通过该输入通道接收到的消息进入应用程序     |
+| @Output         | 注解标识输出通道，发布的消息将通过该通道离开应用程序         |
+| @StreamListener | 监听队列，用于消费者的队列的消息接收                         |
+| @Enablebinding  | 指信道 channel 和 exchange 绑定在一起                        |
+
+### 实现
+
+新建三个子模块
+
+* `cloud-stream-rabbitmq-provider8801`作为生产者进行发消息模块
+
+添加依赖
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-eureka-server -->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
+
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+
+</dependencies>
+```
+
+配置文件如下：
+
+```yaml
+server:
+  port: 8801
+
+spring:
+  application:
+    name: cloud-stream-provider
+  cloud:
+    stream:
+      bindings: # 服务的整合处理
+        output: # 这个名字是一个通道的名称
+          destination: studyExchange # 表示要使用的Exchange名称定义
+          content-type: text/plain # 设置消息类型，本次为json，文本则设置“text/plain”
+  rabbitmq:
+    host: 192.168.183.102
+    port: 5672
+    username: admin
+    password: 123456
+
+eureka:
+  client: # 客户端进行Eureka注册的配置
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+  instance:
+    lease-renewal-interval-in-seconds: 2 # 设置心跳的时间间隔（默认是30秒）
+    lease-expiration-duration-in-seconds: 5 # 如果现在超过了5秒的间隔（默认是90秒）
+    instance-id: send-8801.com  # 在信息列表时显示主机名称
+    prefer-ip-address: true     # 访问的路径变为IP地址
+
+#rabbitmq关闭检查
+management:
+  health: # 关闭 RabbitMQ 的 health check
+    rabbit:
+      enabled: false
+```
+
+然后配置主启动类，然后创建`service.IMessageProvider`以及`serviceImpl.MessageProviderImpl`
+
+```java
+import org.springframework.cloud.stream.messaging.Source;
+import org.springframework.integration.support.MessageBuilder;
+
+// 定义消息的推送管道
+@EnableBinding(Source.class) // 包别引入错了
+public class MessageProviderImpl implements IMessageProvider {
+
+    @Resource
+    private MessageChannel output; // 消息发送管道
+
+    @Override
+    public String send() {
+        String serial = UUID.randomUUID().toString();
+        output.send(MessageBuilder.withPayload(serial).build());
+        System.out.println("serial="+serial);
+        return serial;
+    }
+
+}
+```
+
+接下来创建`controller.SendMessageController`。
+
+```java
+@RestController
+public class SendMessageController {
+    @Resource
+    private IMessageProvider provider;
+
+    @GetMapping("/send")
+    public String sendMessage(){
+        return provider.send();
+    }
+}
+```
+
+之后，访问http://localhost:8801/send，然后观察rabbitmq的web界面
+
+![image-20220416122030812](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204161502397.png)
+
+* `cloud-stream-rabbitmq-consumer8802`作为消息接收模块
+
+依赖于8801完全相同。
+
+配置如下：
+
+```yaml
+server:
+  port: 8802
+
+spring:
+  application:
+    name: cloud-stream-consumer
+  cloud:
+    stream:
+      bindings: # 服务的整合处理
+        input: # 这个名字是一个通道的名称
+          destination: studyExchange # 表示要使用的Exchange名称定义
+          content-type: text/plain # 设置消息类型，本次为json，文本则设置“text/plain”
+  rabbitmq:
+    host: 192.168.183.102
+    port: 5672
+    username: admin
+    password: 123456
+eureka:
+  client: # 客户端进行Eureka注册的配置
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+  instance:
+    lease-renewal-interval-in-seconds: 2 # 设置心跳的时间间隔（默认是30秒）
+    lease-expiration-duration-in-seconds: 5 # 如果现在超过了5秒的间隔（默认是90秒）
+    instance-id: send-8802.com  # 在信息列表时显示主机名称
+    prefer-ip-address: true     # 访问的路径变为IP地址
+
+#rabbitmq相关配置,暴露bus刷新配置的端点 SpringCloud Bus动态刷新全局广播
+management:
+  health: # 关闭 RabbitMQ 的 health check
+    rabbit:
+      enabled: false
+```
+
+创建`controller.ReceiveMessageListenerController`
+
+```java
+import org.springframework.cloud.stream.messaging.Sink;
+import org.springframework.messaging.Message;
+
+@Component
+@EnableBinding(Sink.class)
+public class ReceiveMessageListenerController {
+    @Value("${server.port}")
+    public String serverPort;
+
+    @StreamListener(Sink.INPUT)
+    public void input(Message<String> message){
+        System.out.println("消费者 1 号，---》》》收到的消息："+message.getPayload()+"/t"+serverPort);
+    }
+}
+```
+
+之后运行测试，8001与8002。访问地址：http://localhost:8801/sendMessage。
+
+### 分组消费
+
+然后与建立与8002相同的8003，`cloud-stream-rabbitmq-consumer8803`作为消息接收模块。然后运行测试：http://localhost:8801/sendMessage，会发现消息被重复消息了，以及还存在一个持久化问题。
+
+现在先了解为什么会有重复消费问题？
+
+因为默认分组 group 是不同的，组流水号不同，被认为不同组，所以重复消费，同一个组会产生竞争，只有一个可以消费。
+
+**故可以采用分组解决重复消费问题**：只需要 8802、8803 加入 group： group_id，但是group_id用来表示是否在同一组
+
+```yaml
+group: ${spring.application.name}
+```
+
+此处再次使用 8801 发送两条信息，就会发现 8802、8803 各一条。
+
+### 消息的持久化
+
+当你没有分组时，8802（没有 group） 宕机，此时8801 一直在发送信息，但是 8802 重启后接受不到宕机这段时间 8801 发送的消息。
+
+但是 group 的 8803 却可以在重启后，接收到 8801 的消息。
+
+原理：由于数据发送者将数据发送到队列中，由于 8002 没有设置分组，会重新创建队列并监听，而 8003 创建了分组，再次启动会直接返回分组中监听到的。
+
+**故group 可以解决分组消费和消息持久化两个问题**。
+
+## SpringCloud Sleuth分布式请求链路追踪
+
+### 概述
+
+#### 分布式服务追踪与调用链系统产生的背景
+
+在微服务框架中，一个由客户端发起的请求在后端系统中会经过多个不同的服务节点调用来协同产生最后的请求结果，每一个前端请求都会形成一条**复杂的分布式服务调用链路**，链路中的任何一环出现高延时或错误都会引起整个请求最后的失败。
+
+#### SpringCloud Sleuth是什么
+
+Spring Cloud Sleuth为Spring Cloud实现了一种分布式跟踪解决方案。在分布式系统中提供追踪解决方案并且兼容支持了zipkin。
+
+完整的调用链路：一条链路通过Trace Id唯一标识，Span标识发起的请求信息，各span通过parent id关联起来。
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204161906962.png)
+
+
+
+### 搭建链路监控步骤
+
+#### Zipkin环境搭建
+
+下载地址：
+
+- https://repo1.maven.org/maven2/io/zipkin/java/zipkin-server/2.12.9
+
+或者通过如下下载
+
+```sh
+curl -sSL https://zipkin.io/quickstart.sh | bash -s
+```
+
+运行zipkin：
+
+```sh
+java -jar zipkin.jar
+```
+
+访问：http://localhost:9411/zipkin/
+
+![image-20220416164211483](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204161906963.png)
+
+#### 链路追踪演示
+
+本次链路追踪的演示，选择不新建项目，选取老项目演示。
+
+选取`cloud-provider-payment8001`作为服务的提供者，选取`cloud-consumer-order80`作为服务的消费者。
+
+服务提供者和消费者配置，都添加配置pom.xml
+
+```xml
+<!--包含了sleuth+zipkin-->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-zipkin</artifactId>
+</dependency>
+```
+
+俩服务都添加配置yml
+
+```yaml
+spring:
+  application:
+    name: cloud-payment-service # 应用名称 
+  zipkin:
+    base-url: http://localhost:9411 # 监控中心
+  sleuth:
+    sampler: # 采样率值介于0到1之间，则表示全部采集
+      probability: 1
+```
+
+服务提供者提供测试接口
+
+```java
+@GetMapping("/payment/zipkin")
+public String paymentZipkin(){
+    return "payment zipkin!";
+}
+```
+
+服务消费者提供测试接口
+
+```java
+@GetMapping("/payment/zipkin")
+public String paymentZipkin(){
+    return restTemplate.getForObject(PAYMENT_URL+"/payment/zipkin",String.class);
+}
+```
+
+之后，依次启动7001,80,8001模块，消费者调用测试接口，产生调用链路，进入zipkin管理页面，可以观测调用链路的响应情况等。
+
+![image-20220416183944690](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204161906964.png)
+
+## SpringCloud Alibaba入门简介
+
+### 概述
+
+官网：https://spring.io/projects/spring-cloud-alibaba
+
+中文文档：https://github.com/alibaba/spring-cloud-alibaba/blob/master/README-zh.md
+
+为什么要是用SpringCloud Alibaba？因为Netflix进入了维护模式，陆陆续续停更了其他相关组件。
+
+什么是维护模式？将模块置于维护模式，意味着Spring Cloud团队将不会再向模块添加新功能。我们将修复block级别的bug以及安全问题，我们也会考虑并审查社区的小型pull request。
+
+Spring Cloud Alibaba 致力于提供微服务开发的一站式解决方案。此项目包含开发分布式应用微服务的必需组件，方便开发者通过 Spring Cloud 编程模型轻松使用这些组件来开发分布式应用服务。
+
+依托 Spring Cloud Alibaba，您只需要添加一些注解和少量配置，就可以将 Spring Cloud 应用接入阿里微服务解决方案，通过阿里中间件来迅速搭建分布式应用系统。
+
+### 主要功能
+
+- **服务限流降级**：默认支持 WebServlet、WebFlux, OpenFeign、RestTemplate、Spring Cloud Gateway, Zuul, Dubbo 和 RocketMQ 限流降级功能的接入，可以在运行时通过控制台实时修改限流降级规则，还支持查看限流降级 Metrics 监控。
+- **服务注册与发现**：适配 Spring Cloud 服务注册与发现标准，默认集成了 Ribbon 的支持。
+- **分布式配置管理**：支持分布式系统中的外部化配置，配置更改时自动刷新。
+- **消息驱动能力**：基于 Spring Cloud Stream 为微服务应用构建消息驱动能力。
+- **分布式事务**：使用 @GlobalTransactional 注解， 高效并且对业务零侵入地解决分布式事务问题。。
+- **阿里云对象存储**：阿里云提供的海量、安全、低成本、高可靠的云存储服务。支持在任何应用、任何时间、任何地点存储和访问任意类型的数据。
+- **分布式任务调度**：提供秒级、精准、高可靠、高可用的定时（基于 Cron 表达式）任务调度服务。同时提供分布式的任务执行模型，如网格任务。网格任务支持海量子任务均匀分配到所有 Worker（schedulerx-client）上执行。
+- **阿里云短信服务**：覆盖全球的短信服务，友好、高效、智能的互联化通讯能力，帮助企业迅速搭建客户触达通道。
+
+### 依赖版本
+
+```xml
+<!--spring boot 2.2.x-->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-dependencies</artifactId>
+    <version>2.2.7.RELEASE</version>
+    <type>pom</type>
+    <scope>import</scope>
+</dependency>
+<!--spring cloud Hoxton.SR9-->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-dependencies</artifactId>
+    <version>Hoxton.SR9</version>
+    <type>pom</type>
+    <scope>import</scope>
+</dependency>
+<!--spring cloud alibaba-->
+<dependency>
+    <groupId>com.alibaba.cloud</groupId>
+    <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+    <version>2.2.3.RELEASE</version>
+    <type>pom</type>
+    <scope>import</scope>
+</dependency>
+```
+
+## SpringCloud Alibaba Nacos服务注册与配置中心
+
+### Nacos简介
+
+#### 什么是Nacos
+
+**Nacos** = (Dynamic) **Na**ming and **Co**nfiguration **S**ervice 注册中心+配置中心，也就是代替**Eureka**作为服务注册中心，替代**Config**作为配置中心，替代**Bus**作为消息总线。也就是**Nacos = Eureka + Config + Bus**。
+
+Nacos是一个更易于构建云原生应用的**动态服务发现、配置管理和服务管理**平台。
+
+服务是Nacos中的头等公民，Nacos支持几乎所有类型的服务：Dubbo/GRPC，Spring Cloud RESTFUL服务或Kubernetes服务。
+
+#### Nacos文档
+
+官方网站: [http://nacos.io](http://nacos.io/)
+
+#### Nacos与其他注册中心对比
+
+|                 | **Nacos**                  | **Eureka**  | **Consul**        | **CoreDNS** | **Zookeeper** |
+| --------------- | -------------------------- | ----------- | ----------------- | ----------- | ------------- |
+| 一致性协议      | CP+AP                      | AP          | CP                | —           | CP            |
+| 健康检查        | TCP/HTTP/MYSQL/Client Beat | Client Beat | TCP/HTTP/gRPC/Cmd | —           | Keep Alive    |
+| 负载均衡策略    | 权重/ metadata/Selector    | Ribbon      | Fabio             | RoundRobin  | —             |
+| 雪崩保护        | 有                         | 有          | 无                | 无          | 无            |
+| 自动注销实例    | 支持                       | 支持        | 支持              | 不支持      | 支持          |
+| 访问协议        | HTTP/DNS                   | HTTP        | HTTP/DNS          | DNS         | TCP           |
+| 监听支持        | 支持                       | 支持        | 支持              | 不支持      | 支持          |
+| 多数据中心      | 支持                       | 支持        | 支持              | 不支持      | 不支持        |
+| 跨注册中心同步  | 支持                       | 不支持      | 支持              | 不支持      | 不支持        |
+| SpringCloud集成 | 支持                       | 支持        | 支持              | 不支持      | 支持          |
+| Dubbo集成       | 支持                       | 不支持      | 支持              | 不支持      | 支持          |
+| K8S集成         | 支持                       | 不支持      | 支持              | 支持        | 不支持        |
+
+### Nacos主要提供的四种功能
+
+**服务发现和服务运行状况检查**：Nacos使服务易于注册自己并通过DNS或HTTP接口发现其他服务。 Nacos还提供服务的实时运行状况检查，以防止向不正常的主机或服务实例发送请求。
+
+**动态配置管理**：动态配置服务使您可以在所有环境中以集中和动态的方式管理所有服务的配置。 Nacos消除了在更新配置时重新部署应用程序和服务的需求，这使配置更改更加有效和敏捷。
+
+**动态DNS服务**：Nacos支持加权路由，使您可以更轻松地在数据中心内的生产环境中实施中间层负载平衡，灵活的路由策略，流控制和简单的DNS解析服务。它可以帮助您轻松实现基于DNS的服务发现，并防止应用程序耦合到特定于供应商的服务发现API。
+
+**服务和元数据管理**：Nacos提供了易于使用的服务仪表板，可帮助您管理服务元数据，配置，kubernetes DNS，服务运行状况和指标统计信息。
+
+### Nacos的安装及运行
+
+#### Windows安装
+
+* 下载地址：https://github.com/alibaba/nacos/releases
+
+* 解压后，切换到bin目录，然后打开cmd，启动服务
+
+```sh
+startup.cmd -m standalone # 启动单机模式
+```
+
+![image-20220417134343500](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181100397.png)
+
+接着访问：http://localhost:8848/nacos/，账号密码都是`nacos`。
+
+![image-20220417134631011](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181100399.png)
+
+#### Linux安装
+
+```sh
+wget https://github.com/alibaba/nacos/releases/download/1.4.3/nacos-server-1.4.3.tar.gz
+
+tar -zxvf nacos-server-1.4.3.tar.gz
+
+sudo cp nacos /usr/local/nacos -r
+
+cd /usr/local/nacos
+```
+
+### 作为服务注册中心演示
+
+#### 新建服务模块
+
+新建一个module`cloudalibaba-provider-payment9001`
+
+注意，父pom中依赖为：
+
+```xml
+<!--spring cloud 阿里巴巴-->
+<dependency>
+    <groupId>com.alibaba.cloud</groupId>
+    <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+    <version>2.1.0.RELEASE</version>
+    <type>pom</type>
+    <scope>import</scope>
+</dependency>
+```
+
+#### 编写yaml配置
+
+```yaml
+server:
+  port: 9001
+
+spring:
+  application:
+    name: nacos-payment-provider
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 # 配置Nacos地址
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+```
+
+#### 主启动类
+
+```java
+@SpringBootApplication
+@EnableDiscoveryClient
+public class PaymentMain9001 {
+    public static void main(String[] args) {
+        SpringApplication.run(PaymentMain9001.class,args);
+    }
+}
+```
+
+#### Controller接口
+
+```java
+@RestController
+public class PaymentController {
+    @Value("${server.port}")
+    private String serverPort;
+
+    @GetMapping(value = "/payment/nacos/{id}")
+    public String getPayment(@PathVariable("id") Integer id){
+        return "nacos registry,serverPort："+serverPort + "\t id" + id;
+    }
+    
+}
+```
+
+#### 测试
+
+启动nacos，启动9001服务，访问：
+
+- http://localhost:9001/payment/nacos/1
+
+- http://localhost:8848/nacos
+
+![image-20220417153657365](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181100400.png)
+
+### 演示负载均衡
+
+#### 新建服务提供者
+
+仿照9001模块再建一个9002模块，具体步骤就省略了，端口号改一改就可以。接着依次启动nacos，9001，9002，观察nacos服务注册中心的情况：
+
+![image-20220417161528346](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181100401.png)
+
+#### 新建消费者模块
+
+新建一个`cloudalibaba-consumer-nacos-order83`模块，然后导入的依赖于9001与9002配置相同。
+
+```xml
+<dependencies>
+    <!--spring cloud 阿里巴巴-->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.atguigu.springcloud</groupId>
+        <artifactId>cloud-api-commons</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <!--spring boot 2.2.2-->
+    <!--图形化监控展现-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+```
+
+#### 编写yaml配置
+
+```yaml
+server:
+  port: 83
+
+spring:
+  application:
+    name: nacos-order-consumer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+
+# 消费者将要去访问的微服务名称(注册成功进nacos的微服务提供者)
+service-url:
+  nacos-user-service: http://nacos-payment-provider
+```
+
+#### 主启动类
+
+```java
+@SpringBootApplication
+@EnableDiscoveryClient
+public class OrderMain83 {
+    public static void main(String[] args) {
+        SpringApplication.run(OrderMain83.class, args);
+    }
+}
+```
+
+#### 配置类
+
+```java
+@Configuration
+public class ApplicaitonContextConfig {
+
+    @Bean
+    @LoadBalanced
+    public RestTemplate getRestRemplate(){
+        return new RestTemplate();
+    }
+
+}
+```
+
+#### Controller接口
+
+```java
+@RestController
+@Slf4j
+public class OrderNacosController {
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    @Value("${service-url.nacos-user-service}")
+    private String serverURL;
+
+    @GetMapping(value = "/consumer/payment/nacos/{id}")
+    public String paymentInfo(@PathVariable("id") Long id) {
+        return restTemplate.getForObject(serverURL + "/payment/nacos/" + id, String.class);
+    }
+
+}
+```
+
+#### 测试
+
+启动83,9001,9002观察：http://localhost:8848/nacos
+
+![image-20220417172037345](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181100402.png)
+
+访问地址：http://localhost:83/consumer/payment/nacos/1，发现是轮询负载的。是因为这个是套ribbon壳的。。。做了封装方便使用。
+
+![image-20220417173028742](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181100403.png)
+
+#### 总结
+
+$C$是所有节点在同一时间看到的数据是一致的（一致性）；而$A$的定义是所有的请求都会收到响应（高响应）。nacos支持AP和CP的切换。
+
+何时选择何种模式？
+
+一般来说，如果不需要存储服务级别的信息旦服务实例是通过nacos-clent注册，并能够保持心跳上报，那么就可以选择AP模式。当前主流的服务如 Spring cloud 和Dubbo服务，都适用于AP模式，AP模式为了服务的可能性而减弱了一致性，因此AP模式下只支持注册临时实例。
+
+如果需要在服务级别编辑或者存储配置信息，那么CP是必须，K8S服务和DNS服务则适用于CP模式。
+CP模式下则支持注册持久化实例，此时则是以Raft协议为集群运行模式，该模式下注册实例之前必须先注册服务，如果服务不存在，则会返回错误。
+
+```sh
+curl -X PUT '$NACOS_SERVER:8848/nacos/v1/ns/operator/switches?entry=serverMode&value=CP'
+```
+
+### Nacos服务配置中心
+
+#### 基础配置
+
+##### 构建步骤
+
+###### 新建module模块 
+
+新建一个module模块`cloudalibaba-config-nacos-client3377`
+
+###### pom
+
+```xml
+<dependencies>
+    <!--nacos-config-->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+    </dependency>
+    <!--nacos-discovery-->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+    </dependency>
+    <!--spring boot 2.2.2-->
+    <!--图形化监控展现-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+```
+
+###### yaml
+
+Nacos同springcloud-config一样，在项目初始化时，要保证先从配置中心进行配置拉取，拉取配置之后，才能保证项目的正常启动。
+springboot中配置文件的加载是存在优先级顺序的，bootstrap优先级高于application。
+
+**bootstrap.yml**
+
+```yaml
+server:
+  port: 3377
+
+spring:
+  application:
+    name: nacos-config-client
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 # Nacos服务注册中心地址
+      config:
+        server-addr: localhost:8848 # Nacos作为配置中心地址
+        file-extension: yaml # 指定yaml格式的位置
+```
+
+###### 主启动
+
+```java
+@EnableDiscoveryClient
+@SpringBootApplication
+public class NacosConfigClientMain3377 {
+    public static void main(String[] args) {
+        SpringApplication.run(NacosConfigClientMain3377.class,args);
+    }
+}
+```
+
+###### 业务类
+
+创建`controller.CofigClientController.java`
+
+```java
+@RestController
+@RefreshScope // 支持Nacos的动态刷新功能
+public class ConfigClientController {
+
+    @Value("${config.info}")
+    private String configInfo;
+
+    @GetMapping("/config/info")
+    public String getConfigInfo(){
+        return configInfo;
+    }
+
+}
+```
+
+##### 在Nacos中添加配置信息
+
+在 Nacos Spring Cloud 中，`dataId` 的完整格式如下：
+
+```plain
+${prefix}-${spring.profiles.active}.${file-extension}
+```
+
+- `prefix` 默认为 `spring.application.name` 的值，也可以通过配置项 `spring.cloud.nacos.config.prefix`来配置。
+- `spring.profiles.active` 即为当前环境对应的 profile，详情可以参考 [Spring Boot文档](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-profiles.html#boot-features-profiles)。 **注意：当 `spring.profiles.active` 为空时，对应的连接符 `-` 也将不存在，dataId 的拼接格式变成 `${prefix}.${file-extension}`**
+- `file-exetension` 为配置内容的数据格式，可以通过配置项 `spring.cloud.nacos.config.file-extension` 来配置。目前只支持 `properties` 和 `yaml` 类型。
+
+综上所述，按照我们的配置，最后的dataId结果应该为：
+
+```tex
+nacos-config-client-dev.yaml
+```
+
+我们选中配置列表，选择新建配置，DataID就是我们刚刚得到的`nacos-config-client-dev.yaml`。
+
+![image-20220417202420622](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181100404.png)
+
+新建配置完成之后是这样：
+
+![image-20220417202504311](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181100405.png)
+
+##### 测试
+
+运行3377服务，调用接口http://localhost:3377/config/info测试配置读取是否成功。
+
+![image-20220417203024051](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181100406.png)
+
+##### 自带动态刷新
+
+它支持动态刷新，当我们修改手动修改配置中心数据时，修改的配置会被动态刷新，自动读取。
+
+> 如何能和github/gitee结合就好了，好想自己写一个类似框架。
+
+#### 分类配置
+
+##### 多环境多项目管理问题
+
+1. 实际开发中，一个系统会准备多个环境，如dev开发环境，test测试环境，prod生产环境等，如何保证指定环境启动时服务能正确读取到Nacos上相应环境的配置文件？
+2. 一个大型分布式微服务系统会有很多微服务子项目，每个微服务项目都会有相应的开发环境、测试环境等，如何管理这些微服务配置呢？
+
+##### 命名空间：DataId和Group的关系 
+
+Namespace默认为空串，公共命名空间（public），分组默认是DEFAULT_GROUP。
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181100407.png)
+
+Nacos的数据模型如下：
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181100408.jpg)
+
+namespace用于区分部署环境【开发、测试、生产】，创建三个不同的namespace相互隔离。
+
+Group可以把不同的微服务划分到同一个分组中。
+
+Service可以包含多个Cluster集群，Nacos默认Cluster是DEFAULT，Cluster是对指定微服务的一个虚拟划分。
+
+**比方说为了容灾，将Service微服务分别部署在了杭州机房和广州机房，这时就可以给杭州机房的Service微服务起一个集群名称(HZ) ,给广州机房的Service微服务起一个集群名称(GZ)，还可以尽量让同一个机房的微服务互相调用，以提升性能。**
+
+最后，Instance是微服务的实例。
+
+#### 三种方案的加载配置
+
+##### Data Id的方案
+
+> 保证命名空间相同，分组相同，只有DataId不同。
+
+指定`spring.profile.active`和配置文件的`DataId`来使不同环境下读取不同的配置。为了演示这个效果，我们总共新建以下两个配置，保证它们命名空间相同，分组相同，只有Data Id不同：
+
+````tex
+nacos-config-client-dev.yaml
+nacos-config-client-test.yaml
+````
+
+![image-20220418112012362](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181642500.png)
+
+通过`spring.profile.active`属性就能进行多环境下配置文件的读取，刚刚已经测试过dev环境，我们测试以下test环境，是否能够读取到：`nacos-config-client-test.yaml`的配置呢，答案是肯定的，可以访问：http://localhost:3377/config/info测试一下。
+
+```yaml
+spring:
+  profiles:
+    active: test # 表示开发环境
+```
+
+##### Group方案
+
+> 保证命名空间相同，Data相同，只有分组不同
+
+![image-20220418113727079](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181642501.png)
+
+注意，这里我们需要在application.yml中指定profile为info，在bootstrap.yml指定group。
+
+```yaml
+### boostrap.yml
+
+server:
+  port: 3377
+
+spring:
+  application:
+    name: nacos-config-client
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 # Nacos服务注册中心地址
+      config:
+        server-addr: localhost:8848 # Nacos作为配置中心地址
+        file-extension: yaml # 指定yaml格式的位置
+        group: DEV_GROUP
+
+# ${spring.application.name}-${spring.profile.active}.${spring.cloud.nacos.config.file-extension}
+
+
+### application.yml
+spring:
+  profiles:
+    active: info
+```
+
+在TEST_GROUP和DEV_GROUP之间切换进行测试。
+
+##### namespace方案
+
+> 保证命名空间不同
+
+新建两个命名空间：dev和test。
+
+![image-20220418114232243](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181642502.png)
+
+如果需要指定命名空间，则指定yml中的namespace属性即可。
+
+```yaml
+### bootstrap.yml
+server:
+  port: 3377
+
+spring:
+  application:
+    name: nacos-config-client
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 # Nacos服务注册中心地址
+      config:
+        server-addr: localhost:8848 # Nacos作为配置中心地址
+        file-extension: yaml # 指定yaml格式的位置
+        group: TEST_GROUP
+        namespace: ee5472fd-039c-472b-89f0-0fbf9efefc04 # 命名空间ID
+
+### application.yml
+
+spring:
+  profiles:
+    active: test
+```
+
+将会从命名空间ID为`ee5472fd-039c-472b-89f0-0fbf9efefc04`的`TEST_GROUP`组中，读取`nacos-config-client-test`的配置文件。
+
+### **Nacos集群和持久化配置**
+
+#### Nacos部署模式
+
+**Nacos三种部署模式：（默认自带是嵌入式数据库derby）**
+
+- 单机模式-用于测试和单机使用
+- 集群模式-用于生产环境，确保高可用
+- 多集群模式-用于多数据中心模式
+
+**支持MySQL数据源：**
+
+- 安装数据库版本5.6.5+
+- 初始化mysql数据库，数据库初始文件nacos-mysql.sql
+- 修改conf-application.properties文件，增加支持mysql数据源配置，添加mysql数据源的URL、用户名和密码。
+
+#### 集群部署架构图
+
+官网地址：https://nacos.io/zh-cn/docs/cluster-mode-quick-start.html
+
+因此开源的时候推荐用户把所有服务列表放到一个vip下面，然后挂到一个域名下面
+
+[http://ip1](http://ip1/):port/openAPI 直连ip模式，机器挂则需要修改ip才可以使用。
+
+[http://SLB](http://slb/):port/openAPI 挂载SLB模式(内网SLB，不可暴露到公网，以免带来安全风险)，直连SLB即可，下面挂server真实ip，可读性不好。
+
+[http://nacos.com](http://nacos.com/):port/openAPI 域名 + SLB模式(内网SLB，不可暴露到公网，以免带来安全风险)，可读性好，而且换ip方便，推荐模式
+
+![deployDnsVipMode.jpg](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181642503.jpg)
+
+更详细的架构图
+
+![在这里插入图片描述](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181642504.png)
+
+#### Nacos集群配置
+
+默认Nacos使用嵌入式数据库实现数据的存储。所以，如果启动多个默认配置下的Nacos节点，数据存储是存在一致性问题的。为了解决这个问题，Nacos采用了集中式存储的方式来支持集群化部署，目前只支持MySQL的存储。
+
+配置要求：1个Nginx+3个注册中心+1个Mysql
+
+* 直接复制三份nacos文件夹
+
+```sh
+cp -r nacos nacos-01
+cp -r nacos nacos-02
+cp -r nacos nacos-03
+```
+
+* 导入`` nacos/conf`` 下的 sql 文件 ， 导入到 Mysql 数据库中
+
+![image-20220418140331194](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181642505.png)
+
+* 创建数据库
+
+```mysql
+create database nacosexample character set utf8;
+```
+
+* 导入数据库
+
+```mysql
+use nacosexample;12wq23123w
+source /usr/local/nacos/conf/nacos-mysql.sql
+```
+
+* 修改数据库配置
+
+配置数据库连接。 修改 `conf/application.properties` 配置文件， 在尾部额外增加 Mysql 数据库配置如下 ，记得修改 三个 nacos 都要修改。
+
+![image-20220418145222372](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181642506.png)
+
+* 修改 application.properties 下的端口号。 三个文件夹都要修改 分别为 `3333,4444,5555`
+
+![image-20220418162235834](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181642507.png)
+
+* 配置nacos集群
+
+在 nacos-01, 02 .03 文件夹中创建 `conf/cluster.conf` 配置文件。配置每一个Nacos 集群的所有节点。 具体内容如下：
+
+![image-20220418161636745](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181642508.png)
+
+> ip addr或者ifconfig查看本机ip地址。
+
+* 编写nacos的启动脚本startup.sh，使它能够接收不同的启动端口
+
+![image-20220418162144466](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181642509.png)
+
+> 注意可能会不成功，注意端口的设置以及虚拟机中内存的大小。如果是不同的机器进行配置的话，就没有这么多问题，单机配置集群即使步骤正确，但不容易成功。
+
+* Nginx配置，去查看linux运维笔记中的Nginx笔记。
+
+首先添加源
+
+```sh
+vim /etc/yum.repos.d/nginx.repo
+##### 
+
+[nginx]
+name=nginx repo
+baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
+gpgcheck=0
+enabled=1
+
+
+### 之后安装
+yum install nginx
+
+### 查看nginx位置
+nginx -t
+```
+
+切换到`/etc/nginx`，编写`nginx.conf`
+
+```tex
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    # log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    #                  '$status $body_bytes_sent "$http_referer" '
+    #                  '"$http_user_agent" "$http_x_forwarded_for"';
+
+    # access_log  /var/log/nginx/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    keepalive_timeout  65;
+
+    #gzip  on;
+
+
+    upstream cluster{
+        server 192.168.183.102:3333;
+        server 192.168.183.102:4444;
+        server 192.168.183.102:5555;
+    }
+
+    server {
+        listen       1111;
+        listen       8848;
+        server_name  localhost;
+        #charset koi8-r;
+
+        #access_log  logs/host.access.log  main;
+
+        location / {
+           # root   html;
+           # index  index.html index.htm;
+            proxy_pass http://cluster;
+        }
+   }
+    # include /etc/nginx/conf.d/*.conf;
+}
+```
+
+重启 Nginx ，访问 Nacos 接口：http://192.168.183.102:8848/nacos 。
+
+```sh
+nginx -s reload
+```
+
+![image-20220418164230762](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181642510.png)
+
+然后启动9001进行测试，是否进行注册成功。
+
+![image-20220418165950826](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204181742056.png)
+
+
+
+## SpringCloud Alibaba Sentinel实现熔断与限流
+
+### 概述
+
+#### 文档
+
+Github中文文档：https://github.com/alibaba/Sentinel/wiki/%E4%BB%8B%E7%BB%8D
+
+SpringCloud Alibaba：https://spring-cloud-alibaba-group.github.io/github-pages/greenwich/spring-cloud-alibaba.html#_spring_cloud_alibaba_sentinel
+
+#### Sentinel是什么
+
+随着微服务的流行，服务和服务之间的稳定性变得越来越重要。Sentinel 以流量为切入点，从流量控制、熔断降级、系统负载保护等多个维度保护服务的稳定性。
+
+Sentinel 具有以下特征:
+
+- **丰富的应用场景**：Sentinel 承接了阿里巴巴近 10 年的双十一大促流量的核心场景，例如秒杀（即突发流量控制在系统容量可以承受的范围）、消息削峰填谷、集群流量控制、实时熔断下游不可用应用等。
+- **完备的实时监控**：Sentinel 同时提供实时的监控功能。您可以在控制台中看到接入应用的单台机器秒级数据，甚至 500 台以下规模的集群的汇总运行情况。
+- **广泛的开源生态**：Sentinel 提供开箱即用的与其它开源框架/库的整合模块，例如与 Spring Cloud、Apache Dubbo、gRPC、Quarkus 的整合。您只需要引入相应的依赖并进行简单的配置即可快速地接入 Sentinel。同时 Sentinel 提供 Java/Go/C++ 等多语言的原生实现。
+- **完善的 SPI 扩展机制**：Sentinel 提供简单易用、完善的 SPI 扩展接口。您可以通过实现扩展接口来快速地定制逻辑。例如定制规则管理、适配动态数据源等。
+
+Sentinel 的主要特性：
+
+![Sentinel-features-overview](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300624.png)
+
+Sentinel 分为两个部分:
+
+- 核心库（Java 客户端）不依赖任何框架/库，能够运行于所有 Java 运行时环境，同时对 Dubbo / Spring Cloud 等框架也有较好的支持。
+- 控制台（Dashboard）基于 Spring Boot 开发，打包后可以直接运行，不需要额外的 Tomcat 等应用容器。默认使用8080端口。
+
+#### 下载
+
+github：https://github.com/alibaba/Sentinel/releases
+
+#### 运行
+
+默认端口运行
+
+```sh
+java -jar sentinel-dashboard-1.8.4.jar
+```
+
+指定端口运行
+
+```sh
+java -Dserver.port=9999 -Dcsp.sentinel.dashboard.server=localhost:9999 -Dproject.name=sentinel-dashboard -jar sentinel-dashboard-1.8.4.jar
+```
+
+访问sentinel管理界面，默认用户和密码为：sentinel。
+
+![image-20220419122638107](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300625.png)
+
+### 初始化演示工程
+
+#### 启动服务
+
+启动nacos以及sentinel。
+
+#### 新建module
+
+新建一个`cloudalibaba-sentinel-service8401`
+
+#### pom
+
+```xml
+<dependencies>
+    <!--SpringCloud ailibaba nacos -->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+    </dependency>
+    <!--SpringCloud ailibaba sentinel-datasource-nacos 后续做持久化用到-->
+    <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-datasource-nacos</artifactId>
+    </dependency>
+    <!--SpringCloud ailibaba sentinel -->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+    </dependency>
+
+</dependencies>
+```
+
+#### yaml
+
+````yaml
+server:
+  port: 8401
+
+spring:
+  application:
+    name: cloudalibaba-sentinel-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        dashboard: localhost:9999
+        port: 8719
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+````
+
+#### 主启动
+
+```java
+@SpringBootApplication
+@EnableDiscoveryClient
+public class SentinelMain8401 {
+    public static void main(String[] args) {
+        SpringApplication.run(SentinelMain8401.class,args);
+    }
+}
+```
+
+#### 业务类
+
+```java
+@RestController
+@Slf4j
+public class FlowLimitController {
+    @GetMapping("/testA")
+    public String testA() {
+        return "------testA";
+    }
+
+    @GetMapping("/testB")
+    public String testB() {
+        log.info(Thread.currentThread().getName() + "\t" + "...testB");
+        return "------testB";
+    }
+}
+```
+
+#### 启动微服务
+
+启动微服务8401，然后访问请求，刷新sentinel，可以在控制平台看到此请求。
+
+> sentinel使用的是懒加载机制，需要先访问请求，刷新。
+
+* http://localhost:8401/testA
+* http://localhost:8401/testB
+
+![image-20220419140852119](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300626.png)
+
+### 流控规则
+
+#### 基本介绍
+
+![image-20220419141425234](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300627.png)
+
+- 资源名：唯一名称，默认请求路径
+- 针对来源：Sentinel 可以针对调用者进行限流，填写微服务名，默认 default（不区分来源）
+- 阈值类型/单机阈值：
+  - QPS（Queries-per-second，每秒钟的请求数量）：当调用该 api 的 QPS 达到阈值的时候，进行限流
+  - 线程数：当调用该 api 的线程数达到阈值的时候，进行限流
+- 是否集群：不需要集群
+- 流控模式：
+  - 直接：api达到限流条件时，直接限流
+  - 关联：当关联的资源达到阈值时，就限流自己
+  - 链路：只记录指定链路上的流量（指定资源从入口资源进来的流量，如果达到阈值，就进行限流）【api 级别的针对来源 】
+- 流控效果：
+  - 快速失败：直接失败，抛异常
+  - Warm Up：根据 codeFactor（冷加載因子，默认3）的值，从阈值/codefactor，经过预热时长，才达到设置的 QPS 阈值
+  - 排队等待：匀速排队，让请求以匀速的速度通过，阈值类型必须设置为 QPS，否则无效
+
+#### 流控模式
+
+##### 直接（默认）
+
+######  QPS直接失败
+
+![image-20220419141745857](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300628.png)
+
+快速刷新访问 `http://localhost:8401/testA`，出现 Sentinel 提示：
+
+```tex
+Blocked by Sentinel (flow limiting)
+```
+
+###### 线程数直接失败
+
+![image-20220419142318197](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300629.png)
+
+在业务代码中增加延时，之后操作如上，也会出现 Sentinel 提示
+
+```java
+Blocked by Sentinel (flow limiting)
+```
+
+##### 关联
+
+###### 什么是关联
+
+- 当关联的资源达到阈值时，就限流自己
+- 当与A关联的资源B达到阈值后，就限流自己
+- B惹事，A挂了
+
+###### QPS-关联-快速失败
+
+![image-20220419143443253](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300630.png)
+
+是否流控 `/testA` 取决于 `/testB` 的 QPS，如果超过阈值，访问 `/testA` 会出现 Sentinel 提示信息，而 `/testB` 不受影响。
+
+使 `/testB` QPS 超过阈值，可以使用 Postman 的 【Run Collection】 功能。也即是模拟并发访问。
+
+![image-20220419144502230](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300631.png)
+
+之后访问`testA`，发现被限制了。
+
+##### 链路
+
+多个请求调用了同一个微服务。
+
+添加相关依赖
+
+```xml
+<dependency>
+    <groupId>com.alibaba.csp</groupId>
+    <artifactId>sentinel-web-servlet</artifactId>
+    <version>1.7.0</version>
+</dependency>
+```
+
+添加配置
+
+```java
+@Configuration
+public class FilterContextConfig {
+    @Bean
+    public FilterRegistrationBean sentinelFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new CommonFilter());
+        registration.addUrlPatterns("/*");
+        // 入口资源关闭聚合
+        registration.addInitParameter(CommonFilter.WEB_CONTEXT_UNIFY, "false");
+        registration.setName("sentinelFilter");
+        registration.setOrder(1);
+        return registration;
+    }
+}
+```
+
+然后在yml文件中，添加如下：
+
+```properties
+spring.cloud.sentinel.filter.enabled=false
+```
+
+链路流控模式指的是，当从某个接口过来的资源达到限流条件时，就开启限流；
+
+![image-20220419145753933](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300632.png)
+
+然后进行访问测试。
+
+举个例子：/test1接口去调用/test2接口，调用QPS超出阈值了，此时对/test1进行限流。总结就是针对上级接口。
+
+#### 流控效果
+
+##### 直接->快速失败（默认的流控处理）
+
+直接失败，抛出异常
+
+```tex
+Blocked by Sentinel (flow limiting)
+```
+
+源码
+
+```tex
+com.alibaba.csp.sentinel.slots.block.flow.controller.DefaultController
+```
+
+##### 预热
+
+**公式**：阈值会经过变化，开始为阈值除以coldFactor（默认值为3），经过预热时长后才会达到阈值。
+
+![image-20220419153154584](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300633.png)
+
+```tex
+com.alibaba.csp.sentinel.slots.block.flow.controller.WarmUpController
+```
+
+Warm up ( Ruleconstant.cONTROL_BEHAVIOR_MAR_uP )方式，即预热/冷启动方式。当系统长期处于低水位的情况下，当流星突然增加时，直接把系统拉升到高水位可能瞬间把系统压垮。通过"冷启动"，让通过的流呈缓慢增加，在一定时间内逐渐增加到阈值上限，给冷系统一个预热的时间，避免冷系统被压垮。
+
+> 案例：阈值为10，预热市场 5s
+>
+> 系统初始化阈值为 10/3，约等于 3，即阈值开始为 3；经过 5s 后阈值慢慢升高，恢复到 10
+
+应用场景：
+
+如：**秒杀系统**在开启的瞬间，会有很多流量上来，很有可能把系统打死，预热方式就是把为了保护系统，可慢慢的把流量放进来，慢慢的把阀值增长到设置的阀值。
+
+##### 排队等待
+
+匀速排队，阈值必须设置为 QPS
+
+```tex
+com.alibaba.csp.sentinel.slots.block.flow.controller.RateLimiterController
+```
+
+匀速排队( Ruleconstant.CONTROL_EEHAVIOR_RATE_LIMITER ）方式会严格控制请求通过的间隔时间，也即是让请求以均匀的速度通过，对应的是漏桶算法。
+
+![image-20220419153638448](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300634.png)
+
+### 熔断降级
+
+#### 概述
+
+Sentinel 提供以下几种熔断策略：
+
+- 慢调用比例 (`SLOW_REQUEST_RATIO`)：选择以慢调用比例作为阈值，需要设置允许的慢调用 RT（即最大的响应时间），请求的响应时间大于该值则统计为慢调用。当单位统计时长（`statIntervalMs`）内请求数目大于设置的最小请求数目，并且慢调用的比例大于阈值，则接下来的熔断时长内请求会自动被熔断。经过熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求响应时间小于设置的慢调用 RT 则结束熔断，若大于设置的慢调用 RT 则会再次被熔断。
+- 异常比例 (`ERROR_RATIO`)：当单位统计时长（`statIntervalMs`）内请求数目大于设置的最小请求数目，并且异常的比例大于阈值，则接下来的熔断时长内请求会自动被熔断。经过熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求成功完成（没有错误）则结束熔断，否则会再次被熔断。异常比率的阈值范围是 `[0.0, 1.0]`，代表 0% - 100%。
+- 异常数 (`ERROR_COUNT`)：当单位统计时长内的异常数目超过阈值之后会自动进行熔断。经过熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求成功完成（没有错误）则结束熔断，否则会再次被熔断。
+
+![image-20220419154736467](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300635.png)
+
+#### 熔断降级策略
+
+##### 慢调用比例
+
+慢调用比例 (`SLOW_REQUEST_RATIO`)：选择以慢调用比例作为阈值，需要设置允许的慢调用 RT（即最大的响应时间），请求的响应时间大于该值则统计为慢调用。当单位统计时长（`statIntervalMs`）内请求数目大于设置的最小请求数目（默认为5），并且慢调用的比例大于阈值，则接下来的熔断时长内请求会自动被熔断。经过熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求响应时间小于设置的慢调用 RT 则结束熔断，若大于设置的慢调用 RT 则会再次被熔断。
+
+![image-20220419164950384](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300636.png)
+
+解读：RT超过200ms的调用是慢调用，统计最近1000ms内的请求，如果请求量超过5次，并且有80%的接口超过了200ms的时间，则触发熔断，熔断时长为10秒。然后进入half-open状态（半开路状态），放行一次请求做测试。
+
+也可以这样说：在1ms内请求数目大于5，并且慢调用的比例大于80%，则接下来的熔断时长内请求会自动被熔断，熔断时长是10秒，10秒之后会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求响应时间小于200ms， 则结束熔断，若大于200ms 则会再次被熔断。
+
+为了更直观的观察学习，在代码层添加时间进行模拟延时。
+
+```java
+@GetMapping("/testD")
+public String testD() {
+
+    try {
+        TimeUnit.SECONDS.sleep(1);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+    log.info("慢调用测试");
+    return "-----------testD-------------";
+}
+```
+
+然后通过使用jmeter进行多线程访问测试：
+
+![image-20220419165101440](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300637.png)
+
+然后在访问http://localhost:8401/testD。可以看到被限制了。
+
+##### 异常比例
+
+异常比例或异常数：统计指定时间内的调用，如果调用次数超过指定请求数，并且出现异常的比例达到设定的比例阈值（或超过指定异常数），则触发熔断。例如：
+
+![image-20220419163540024](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204192300638.png)
+
+解读：统计最近1000ms内的请求，如果请求量超过10次，并且异常比例不低于0.4，则触发熔断，熔断时长为5秒。然后进入half-open状态，放行一次请求做测试。
+
+然后修改代码：
+
+```java
+@GetMapping("/testD")
+public String testD() {
+    int age = 10 / 0;
+    log.info("慢调用测试");
+    return "-----------testD-------------";
+}
+```
+
+之后，进行访问测试：http://localhost:8401/testD，如果失败，就重新配置规则。
+
+##### 异常数
+
+异常数 (`ERROR_COUNT`)：当单位统计时长内的异常数目超过阈值之后会自动进行熔断。经过熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求成功完成（没有错误）则结束熔断，否则会再次被熔断。
+
+#### 服务熔断
+
+sentinel整合ribbon+openFeign+fallback
+
+##### Ribbon系列
+
+###### 启动服务
+
+启动nacos和sentinel
+
+###### 搭建module
+
+- 生产者：``cloudalibaba-provider-payment9003``、``cloudalibaba-provider-payment9004``
+
+导入依赖
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <!-- nacos-discovery -->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+    </dependency>
+    <!--sentinel datasource nacos  持久化会用到-->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+    </dependency>
+    <!--openfeign-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-openfeign</artifactId>
+    </dependency>
+    <!--引入自己定义的api通用包， 可以使用Payment支付Entity-->
+    <dependency>
+        <groupId>com.atguigu.springcloud</groupId>
+        <artifactId>cloud-api-commons</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+    </dependency>
+</dependencies>
+```
+
+配置yaml文件
+
+```yaml
+server:
+  port: 9003
+
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+  application:
+    name: nacos-payment-provider
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+```
+
+创建controller
+
+```java
+@RestController
+public class PaymentController {
+    @Value("${server.port}")
+    private String serverPort;
+
+    public static HashMap<Long,Payment> hashMap=new HashMap<>();
+
+    static {
+        hashMap.put(1L, new Payment(1L,"199811046510"));
+        hashMap.put(2L, new Payment(2L,"199811046511"));
+        hashMap.put(3L, new Payment(3L,"199811046512"));
+    }
+
+    @GetMapping(value = "/payment/{id}")
+    public CommonResult<Payment> paymentSQL(@PathVariable("id")Long id){
+        Payment payment=hashMap.get(id);
+        CommonResult<Payment> result=new CommonResult(200,"from mysql ,serverport: "+serverPort ,payment);
+        return result;
+    }
+}
+```
+
+启动9003以及9004，进行测试。
+
+- 消费者：``cloudalibaba-consumer-nacos-order84``
+
+导入相关依赖与上面一样。一定要保证导入的依赖正确。
+
+配置yaml文件
+
+```yaml
+server:
+  port: 84
+
+spring:
+  application:
+    name: nacos-order-consumer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        dashboard: localhost:9999
+        port: 8719
+
+service-url:
+  nacos-user-service: http://nacos-payment-provider
+```
+
+配置类
+
+```java
+@Configuration
+public class ApplicationContextConfig {
+    @Bean
+    @LoadBalanced
+    public RestTemplate getRestTemplate(){
+        return new RestTemplate();
+    }
+}
+```
+
+controller，创建`CircleBreakerController`
+
+```java
+@RestController
+@Slf4j
+public class CircleBreakerController {
+    public static final String SERVICE_URL="http://nacos-payment-provider";
+
+    @Resource
+    private RestTemplate restTemplate;
+    @RequestMapping("/consumer/fallback/{id}")
+    @SentinelResource(value = "fallback") //没有配置
+    public CommonResult<Payment> fallback(@PathVariable Long id){
+        CommonResult<Payment> result=restTemplate.getForObject(SERVICE_URL+"/payment/"+id,
+                CommonResult.class,id);
+        if(id == 4){
+            throw  new IllegalArgumentException("IllegalArgumentException,非法参数异常.....");
+        }else if(result.getData()==null){
+            throw new NullPointerException("NullPointerException,该Id没有对应记录.空指针异常.....");
+        }
+        return  result;
+    }
+}
+```
+
+启动测试。
+
+###### 配置fallback
+
+`@SentinelResource` 注解的 `fallback` 和 `blockHandler` 属性中`fallback` 管运行异常，无 `blockHandler` 时，也管配置违规。
+
+```java
+@SentinelResource(value = "fallback",fallback = "handlerFallback") //fallback只负责业务异常
+
+//本例是fallback的兜底
+public CommonResult handlerFallback(@PathVariable Long id,Throwable e){
+    Payment payment = new Payment(id,"null");
+    return new CommonResult<>(444,"兜底异常类handlerFallback,Exception内容: "+ e.getMessage(),payment);
+}
+```
+
+###### 配置blockHandler
+
+`@SentinelResource` 注解的 `fallback` 和 `blockHandler` 属性中`blockHandler` 管配置违规
+
+![image-20220420162828888](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204201836201.png)
+
+```java
+@SentinelResource(value = "fallback",blockHandler = "blockHandlerFallback") 
+
+public CommonResult blockHandlerFallback(@PathVariable Long id, BlockException blockException){
+    Payment payment = new Payment(id,"null");
+    return new CommonResult<>(444,"兜底异常类blockHandlerFallback,Exception内容: "+ blockException.getMessage(),payment);
+}
+```
+
+访问次数超过两次以上：http://localhost:84/consumer/fallback/5
+
+###### 同时配置两个
+
+`@SentinelResource` 注解的 `fallback` 和 `blockHandler` 属性中`fallback` 管运行异常，无 `blockHandler` 时，也管配置违规。
+
+```java
+@SentinelResource(value = "fallback",fallback = "handlerFallback",blockHandler = "blockHandlerFallback")
+```
+
+> 实际上我这里`fallback`优先级比`blockHandler`高，其他都一样。。
+
+###### 忽略异常属性
+
+`exceptionsToIgnore = {IllegalArgumentException.class}`能够忽略指定的异常。
+
+```java
+@SentinelResource(value = "fallback",fallback = "handlerFallback",
+                  exceptionsToIgnore = {IllegalArgumentException.class})
+```
+
+##### Feign系列
+
+首先在工程项目中，引入以下依赖：
+
+```xml
+<!--openfeign-->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+```
+
+然后在yaml文件中，激活sentinel对Feign的支持。
+
+```yaml
+# 激活sentinel对Feign的支持
+feign:
+  sentinel:
+    enabled: true
+```
+
+然后在主启动类中开启Feign服务。
+
+```java
+@SpringBootApplication
+@EnableDiscoveryClient
+@EnableFeignClients
+public class SentinelOrderMain84 {
+    public static void main(String[] args) {
+        SpringApplication.run(SentinelOrderMain84.class,args);
+    }
+}
+```
+
+新增service接口：feign 接口+注解
+
+```java
+@FeignClient(value = "nacos-payment-provider",fallback = PaymentFallBackService.class)
+public interface PaymentService {
+
+    @GetMapping("/payment/{id}")
+    public CommonResult<Payment> payment(@PathVariable("id") Long id);
+}
+```
+
+兜底实现类
+
+```java
+@Component
+public class PaymentFallBackService implements PaymentService{
+    @Override
+    public CommonResult<Payment> payment(Long id) {
+        return new CommonResult<>(444,"服务降级返回--PaymentFallBackService",new Payment(id,null));
+    }
+}
+```
+
+controller类加入新代码
+
+```java
+@Resource
+private PaymentService paymentService;
+@GetMapping(value = "/consumer/payment/{id}")
+public CommonResult<Payment> payment(@PathVariable("id")Long id) {
+    return paymentService.payment(id);
+}
+```
+
+启动测试，正常测试无异常。关闭生产者，会调用服务降级。
+
+![image-20220420171107256](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204201836203.png)
+
+#### 熔断框架比较
+
+|                | Sentinel                                                   | Hystrix                 | Resilience4j                     |
+| -------------- | ---------------------------------------------------------- | ----------------------- | -------------------------------- |
+| 隔离策略       | 信号量隔离（并发线程数限流）                               | 线程池隔离/信号量隔离   | 信号量隔离                       |
+| 熔断降级策略   | 基于响应时间、异常比率、异常数                             | 基于异常比率            | 基于异常比率、响应时间           |
+| 实时统计实现   | 滑动窗口（Leaparray）                                      | 滑动窗口（基于 RxJava） | Ring Bit Buffer                  |
+| 动态规则配置   | 支持多种数据源                                             | 支持多种数据源          | 有限支持                         |
+| 扩展性         | 多个扩展点                                                 | 插件的形式              | 接口的形式                       |
+| 限流           | 基于QPS，支持基于调用关系的限流                            | 有限的支持              | Rate Limiter                     |
+| 流量整形       | 支持预热模式、匀速器模式、预热排队模式                     | 不支持                  | 简单的 Rate Limiter 模式         |
+| 系统自适应保护 | 支持                                                       | 不支持                  | 不支持                           |
+| 控制台         | 提供开箱即用的控制台，可配置规则、查看秒级监控、机器发现等 | 简单的监控查看          | 不提供控制台，可对接其他监控系统 |
+
+### 热点参数限流
+
+#### 什么是热点参数限流
+
+何为热点？热点即经常访问的数据。很多时候我们希望统计某个热点数据中访问频次最高的 Top K 数据，并对其访问进行限制。比如：
+
+- 商品 ID 为参数，统计一段时间内最常购买的商品 ID 并进行限制
+- 用户 ID 为参数，针对一段时间内频繁访问的用户 ID 进行限制
+
+热点参数限流会统计传入参数中的热点参数，并根据配置的限流阈值与模式，对包含热点参数的资源调用进行限流。热点参数限流可以看做是一种特殊的流量控制，仅对包含热点参数的资源调用生效。
+
+```java
+com.alibaba.csp.sentinel.slots.block.BlockException
+```
+
+#### 承上启下
+
+承接 Hystrix，能够实现兜底方法，分为系统默认和客户自定义，两种
+
+之前的case，限流出问题后，都是用 sentinel 系统默认的提示：**Blocked by Sentinel (flow limiting)**。
+
+**`@SentinelResource` 只管 Sentinel 配置违规，不处理代码异常**。
+
+#### 代码
+
+```java
+@GetMapping("/testHotKey")
+@SentinelResource(value = "testHotKey",blockHandler = "dealTestHostKey")
+public String testHotKey(@RequestParam(value = "p1", required = false) String p1,
+                         @RequestParam(value = "p2", required = false) String p2){
+    return "testHotKey：p1="+p1+",p2="+p2;
+}
+public String dealTestHostKey(String p1, String p2, BlockException blockException){
+    return "dealTestHostKey：p1="+p1+",p2="+p2;
+}
+```
+
+如果使用了 `@SentinelResource` ，但是没有配置 `blockHandler` 属性，违反热点规则会出现错误页面，而不是 Sentinel 默认的错误提示。
+
+#### 参数例外项
+
+上述案例演示了第一个参数p1，当QPS超过1秒1次点击后马上被限流
+
+![image-20220420121148491](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204201836204.png)
+
+热点参数的注意点，参数必须是基本类型或者String
+
+特殊情况：
+
+- 普通：超过1秒钟一个后，达到阈值1后马上被限流
+
+- 我们期望p1参数当它是某个特殊值时，它的限流值和平时不一样
+- 特例：假如当p1的值等于5时，它的阈值可以达到200
+
+访问：
+
+* http://localhost:8401/testHotKey?p1=2
+* http://localhost:8401/testHotKey?p1=5
+
+![image-20220420122448800](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204201836205.png)
+
+> @SentinelResource主管配置出错，运行出错该走异常走异常。
+
+### 系统规则
+
+![image-20220420124323245](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204201836206.png)
+
+系统保护规则是从应用级别的入口流量进行控制，从单台机器的 load、CPU 使用率、平均 RT、入口 QPS 和并发线程数等几个维度监控应用指标，让系统尽可能跑在最大吞吐量的同时保证系统整体的稳定性。
+
+系统保护规则是应用整体维度的，而不是资源维度的，并且**仅对入口流量生效**。入口流量指的是进入应用的流量（`EntryType.IN`），比如 Web 服务或 Dubbo 服务端接收的请求，都属于入口流量。
+
+系统规则支持以下的模式：
+
+- **Load 自适应**（仅对 Linux/Unix-like 机器生效）：系统的 load1 作为启发指标，进行自适应系统保护。当系统 load1 超过设定的启发值，且系统当前的并发线程数超过估算的系统容量时才会触发系统保护（BBR 阶段）。系统容量由系统的 `maxQps * minRt` 估算得出。设定参考值一般是 `CPU cores * 2.5`。
+- **CPU usage**（1.5.0+ 版本）：当系统 CPU 使用率超过阈值即触发系统保护（取值范围 0.0-1.0），比较灵敏。
+- **平均 RT**：当单台机器上所有入口流量的平均 RT 达到阈值即触发系统保护，单位是毫秒。
+- **并发线程数**：当单台机器上所有入口流量的并发线程数达到阈值即触发系统保护。
+- **入口 QPS**：当单台机器上所有入口流量的 QPS 达到阈值即触发系统保护。
+
+### @SentinelResource
+
+#### 按资源名称限流+后续处理
+
+* 启动服务
+
+启动Nacos+Sentinel
+
+* 在`cloudalibaba-sentinel-service8401`中引入自定义的依赖
+
+```xml
+<dependency>
+    <groupId>com.atguigu.springcloud</groupId>
+    <artifactId>cloud-api-commons</artifactId>
+    <version>${project.version}</version>
+</dependency>
+```
+
+* 创建`RateLimitController.java`
+
+```java
+@RestController
+public class RateLimitController {
+
+    @GetMapping("/byResource")
+    @SentinelResource(value = "byResource", blockHandler = "handleException")
+    public CommonResult<Payment> byResource(){
+        return new CommonResult<Payment>(200,"按资源名称限流测试OK",new Payment(1L,"serial001"));
+    }
+    public CommonResult handleException(BlockException blockException){
+        return new CommonResult(444,blockException.getClass().getCanonicalName());
+    }
+
+}
+```
+
+![image-20220420130945447](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204201836207.png)
+
+#### 按照Url地址限流+后续处理
+
+配置资源名为 `/rateLimit/byUrl` 的流控规则，没有配置 `blockHandler`，返回 Sentinel 默认的提示信息。
+
+```java
+@GetMapping("/rateLimit/byUrl")
+@SentinelResource(value = "byUrl")
+public CommonResult byUrl(){
+    return new CommonResult(200,"按url限流测试ok",new Payment(1L,"serial002"));
+}
+```
+
+![image-20220420132042047](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204201836208.png)
+
+#### 上面兜底方案面临的问题
+
+1. 系统默认的，没有体现我们自己的业务要求。
+2. 依照现有条件，我们自定义的处理方法又和业务代码耦合在一块，不直观。
+3. 每个业务方法都添加一个兜底的，代码膨胀加剧。
+4. 全局统一的处理方法没有体现。
+
+#### 客户自定义限流处理逻辑
+
+* 创建`handler.CustomerBlockHandler`
+
+```java
+public class CustomerBlockHandler {
+    public static CommonResult handleException(BlockException blockException){
+        return new CommonResult(444,"按客户自定义,global handlerException --------- 1");
+    }
+
+    public static CommonResult handleException2(BlockException blockException){
+        return new CommonResult(444,"按客户自定义,global handlerException --------- 2");
+    }
+}
+```
+
+* 业务类中，添加方法
+
+```java
+@GetMapping("/rateLimit/customerBlockHandler")
+@SentinelResource(value = "customerBlockHandler",blockHandlerClass = CustomerBlockHandler.class,blockHandler = "handleException2")
+public CommonResult customerBlockHandler(){
+    return new CommonResult(200,"客户自定义",new Payment(1L,"serial003"));
+}
+```
+
+`@SentinelResource(value = "customerBlockHandler",blockHandlerClass = CustomerBlockHandler.class,blockHandler = "handleException2")`中`blockHandlerClass `用于指定自定义的兜底类，`blockHandler `用于指定当前指定类中的方法。
+
+现在测试，限流。
+
+![image-20220420134623803](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204201836209.png)
+
+> 如果是通过url进行降级，那么只会触发默认降级方法。
+
+#### 更多注解属性说明 
+
+[Sentinel更多注解属性](https://github.com/alibaba/Sentinel/wiki/%E6%B3%A8%E8%A7%A3%E6%94%AF%E6%8C%81)
+
+Sentinel 主要有三个核心 API：
+
+- `SphU` 定义资源
+- `Tracer` 定义统计
+- `ContextUtil` 定义了上下文
+
+### 规则持久化
+
+一旦我们重启应用，Sentinel规则将消失，生产环境需要将配置规则进行持久化。
+
+将限流配置规则持久化进Nacos保存，只要刷新8401某个rest地址，sentinel控制台的流控规则就能看到，只要Nacos里面的配置不删除，针对8401上Sentinel上的流控规则持续有效。
+
+* 对`cloudalibaba-sentinel-service8401`进行修改。首先添加相关依赖：
+
+```xml
+<!--SpringCloud ailibaba sentinel-datasource-nacos 做持久化用-->
+<dependency>
+    <groupId>com.alibaba.csp</groupId>
+    <artifactId>sentinel-datasource-nacos</artifactId>
+</dependency>
+```
+
+* 然后对yaml文件进行修改
+
+```yaml
+server:
+  port: 8401
+
+spring:
+  application:
+    name: cloudalibaba-sentinel-service
+  cloud:
+    nacos:
+      discovery:
+        # nacos服务注册中心地址
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        # 配置sentinel dashboard地址
+        dashboard: localhost:9999
+        # 默认8719端口，假如被占用会自动从8719开始依次+1扫描，直至找到未被占用的端口为止。
+        port: 8719
+      filter:
+        enabled: false
+      datasource:
+        ds1: 
+          nacos:
+            server-addr: localhost:8848
+            dataId: cloudalibaba-sentinel-service
+            groupId: DEFAULT_GROUP
+            data-type: json
+            rule-type: flow
+
+          
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+feign:
+  sentinel:
+    enabled: true
+```
+
+之后，在nacos管理界面中添加配置规则。
+
+![image-20220420180713376](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204201836210.png)
+
+```json
+[
+    {
+        "resource":"/byResource",
+        "limitApp":"default",
+        "grade":1,
+        "count":1,
+        "strategy":0,
+        "controlBehavior":0,
+        "clusterMode":false
+    }
+]
+```
+
+json说明：
+
+- resource：资源名称
+
+- limitApp：来源应用
+
+- grade：阈值类型，0表示线程数，1表示QPS
+
+- count：单机阈值
+
+- strategy：流控模式，0表示直接，1表示关联，2表示链路
+
+- controlBehavior：流控效果，0表示快速失败，1表示Warm Up，2表示排队等待
+
+- clusterMode：是否集群。
+
+之后运行8401，刷新并观察sentinel。
+
+![image-20220420183203454](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204201836211.png)
+
+## SpringCloud Alibaba Seata处理分布式事务
+
+### 概述
+
+#### 分布式事务问题
+
+一次业务操作需要跨多个数据源或需要跨多个系统进行远程调用，就会产生分布式事务问题。
+
+#### Seata术语
+
+Seata是一款开源的分布式事务解决方案，致力于在微服务架构下提供高性能和简单易用的分布式事务服务。
+
+#### 一个典型的分布式事务过程
+
+##### 分布式事务处理过程的-ID + 三组件模型
+
+3 组件概念：
+
+- Transaction Coordinator（TC）：事务协调者，维护全局事务的运行状态，负责协调并驱动全局事务的提交或回滚;
+- Transaction Manager（TM）：事务管理器，定义全局事务的范围，开始全局事务、提交或回滚全局事务。
+- Resource Manager（RM）：资源管理器，管理分支事务处理的资源，与TC交谈以注册分支事务和报告分支事务的状态，并驱动分支事务提交或回滚。
+
+##### 处理过程
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204211815620.png)
+
+1. TM 向 TC 申请开启一个全局事务，全局事务创建成功并生成一个全局唯一的 XID
+2. XID 在微服务调用链路的上下文中传播
+3. RM 向 TC 注册分支事务，将其纳入 XID 对应全局事务的管辖
+4. TM 向 TC 发起针对 XD 的全局提交或回滚決议
+5. TC 调度 XID 下管辖的全部分支事务完成提交或回滚请求
+
+#### 怎么用
+
+- 本地 `@Transactional`
+
+- 全局 `@GlobalTransactional`
+
+#### 安装
+
+* 官网地址：http://seata.io/zh-cn/
+* 下载地址：https://github.com/seata/seata/releases
+
+seata建表，一定要先在mysql里建表。sql语句地址：https://github.com/seata/seata/blob/develop/script/server/db/mysql.sql。直接运行即可。因为seata表自动创建好了。
+
+````mysql
+-- -------------------------------- The script used when storeMode is 'db' --------------------------------
+-- the table to store GlobalSession data
+CREATE TABLE IF NOT EXISTS `global_table`
+(
+    `xid`                       VARCHAR(128) NOT NULL,
+    `transaction_id`            BIGINT,
+    `status`                    TINYINT      NOT NULL,
+    `application_id`            VARCHAR(32),
+    `transaction_service_group` VARCHAR(32),
+    `transaction_name`          VARCHAR(128),
+    `timeout`                   INT,
+    `begin_time`                BIGINT,
+    `application_data`          VARCHAR(2000),
+    `gmt_create`                DATETIME,
+    `gmt_modified`              DATETIME,
+    PRIMARY KEY (`xid`),
+    KEY `idx_status_gmt_modified` (`status` , `gmt_modified`),
+    KEY `idx_transaction_id` (`transaction_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+-- the table to store BranchSession data
+CREATE TABLE IF NOT EXISTS `branch_table`
+(
+    `branch_id`         BIGINT       NOT NULL,
+    `xid`               VARCHAR(128) NOT NULL,
+    `transaction_id`    BIGINT,
+    `resource_group_id` VARCHAR(32),
+    `resource_id`       VARCHAR(256),
+    `branch_type`       VARCHAR(8),
+    `status`            TINYINT,
+    `client_id`         VARCHAR(64),
+    `application_data`  VARCHAR(2000),
+    `gmt_create`        DATETIME(6),
+    `gmt_modified`      DATETIME(6),
+    PRIMARY KEY (`branch_id`),
+    KEY `idx_xid` (`xid`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+-- the table to store lock data
+CREATE TABLE IF NOT EXISTS `lock_table`
+(
+    `row_key`        VARCHAR(128) NOT NULL,
+    `xid`            VARCHAR(128),
+    `transaction_id` BIGINT,
+    `branch_id`      BIGINT       NOT NULL,
+    `resource_id`    VARCHAR(256),
+    `table_name`     VARCHAR(32),
+    `pk`             VARCHAR(36),
+    `status`         TINYINT      NOT NULL DEFAULT '0' COMMENT '0:locked ,1:rollbacking',
+    `gmt_create`     DATETIME,
+    `gmt_modified`   DATETIME,
+    PRIMARY KEY (`row_key`),
+    KEY `idx_status` (`status`),
+    KEY `idx_branch_id` (`branch_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `distributed_lock`
+(
+    `lock_key`       CHAR(20) NOT NULL,
+    `lock_value`     VARCHAR(20) NOT NULL,
+    `expire`         BIGINT,
+    primary key (`lock_key`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+INSERT INTO `distributed_lock` (lock_key, lock_value, expire) VALUES ('HandleAllSession', ' ', 0);
+````
+
+ 下载后解压到指定目录并修改conf目录下的``file.conf``配置文件，完整的配置在`file.conf.example`中：对`service`和`store`模块进行了相关修改。
+
+```properties
+mode = "db" # 修改为 db即可
+
+  ## database store property
+  db {
+    datasource = "druid"
+    dbType = "mysql"
+    driverClassName = "com.mysql.cj.jdbc.Driver"
+    url = "jdbc:mysql://localhost:3306/seata?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai"
+    user = "root"
+    password = "123456"
+  }
+```
+
+修改解压后conf下registry.conf配置文件的registry 和config，修改下`nacos`的密码和用户以及类型即可。
+
+```properties
+registry {
+  # file 、nacos 、eureka、redis、zk、consul、etcd3、sofa
+  type = "nacos"
+
+  nacos {
+    application = "seata-server"
+    serverAddr = "127.0.0.1:8848" # nacos地址
+    group = "SEATA_GROUP"
+    namespace = "b84c0fd8-d1d9-477f-a8e6-b4fb50d6bdcf"
+    cluster = "default"
+    username = "nacos"
+    password = "nacos"
+  }
+}
+
+config {
+  # file、nacos 、apollo、zk、consul、etcd3
+  type = "nacos"
+
+  nacos {
+    serverAddr = "127.0.0.1:8848"
+    namespace = "b84c0fd8-d1d9-477f-a8e6-b4fb50d6bdcf"
+    group = "SEATA_GROUP" 
+    username = "nacos"
+    password = "nacos"
+    dataId = "seataServer.properties"
+  }
+}
+
+```
+
+然后在nacos中创建空间，并且修改上面的namespace以及group
+
+![image-20220421171637082](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204211815622.png)
+
+然后运行seata
+
+```sh
+seata-server.bat -m db
+```
+
+之后，下载：https://github.com/seata/seata/tree/1.4.2，
+
+seata使用1.4.2版本，新建的data id文件类型选择properties。若是使用seata1.4.2之前的版本，以下的每个配置项在nacos中就是一个条目，需要使用script/config-center/nacos/下的nacos-config.sh（linux或者windows下装git）或者nacos-config.py（python脚本）执行上传注册。
+
+先修改seata-1.4.2\seata-1.4.2\script\config-center\config.txt。
+
+![在这里插入图片描述](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439971.png)
+
+注意上传的版本必须将所有注释#都直接删除掉，否则上传失败，还有必须将=后边给值，没有值的话给""；
+
+**使用script/config-center/nacos/下的nacos-config.sh（linux或者windows下装git）或者nacos-config.py（python脚本）执行上传注册:**
+
+```sh
+-h nacos地址
+-p 端口
+-t 命名空间不写默认public
+-u 用户名
+-p 密码
+
+sh nacos-config.sh -h 192.168.7.231 -p 8848 -g SEATA_GROUP -t 73164d7c-6ea7-491c-b5a5-0da02d9d2d65 -u nacos -w nacos
+```
+
+**然后我们看我们的配置是否推送上来到nacos：**
+
+![image-20220422123943949](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439973.png)
+
+### 业务数据库准备
+
+#### 业务说明
+
+这里我们会创建三个服务，一个订单服务，一个库存服务，一个账户服务。
+
+当用户下单时，会在订单服务中创建一个订单，然后通过远程调用库存服务来扣减下单商品的库存，再通过远程调用账户服务来扣减用户账户里面的余额，最后在订单服务中修改订单状态为已完成。
+
+该操作跨越三个数据库，有两次远程调用，很明显会有分布式事务问题。
+
+#### 创建数据库
+
+注意数据库中，应该会创建好了，如果没有创建好，自己配置。
+
+* seata_order库下建t_order表
+
+```mysql
+CREATE TABLE t_order(
+    `id` BIGINT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user_id` BIGINT(11) DEFAULT NULL COMMENT '用户id',
+    `product_id` BIGINT(11) DEFAULT NULL COMMENT '产品id',
+    `count` INT(11) DEFAULT NULL COMMENT '数量',
+    `money` DECIMAL(11,0) DEFAULT NULL COMMENT '金额',
+    `status` INT(1) DEFAULT NULL COMMENT '订单状态：0：创建中; 1：已完结'
+) ENGINE=INNODB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+ 
+SELECT * FROM t_order;
+```
+
+* seata_storage库下建t_storage表
+
+```mysql
+CREATE TABLE t_storage(
+    `id` BIGINT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `product_id` BIGINT(11) DEFAULT NULL COMMENT '产品id',
+   `'total` INT(11) DEFAULT NULL COMMENT '总库存',
+    `used` INT(11) DEFAULT NULL COMMENT '已用库存',
+    `residue` INT(11) DEFAULT NULL COMMENT '剩余库存'
+) ENGINE=INNODB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+ 
+INSERT INTO seata_storage.t_storage(`id`,`product_id`,`total`,`used`,`residue`)
+VALUES('1','1','100','0','100');
+ 
+SELECT * FROM t_storage;
+```
+
+* seata_account库下建t_account表
+
+```mysql
+CREATE TABLE t_account(
+    `id` BIGINT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'id',
+    `user_id` BIGINT(11) DEFAULT NULL COMMENT '用户id',
+    `total` DECIMAL(10,0) DEFAULT NULL COMMENT '总额度',
+    `used` DECIMAL(10,0) DEFAULT NULL COMMENT '已用余额',
+    `residue` DECIMAL(10,0) DEFAULT '0' COMMENT '剩余可用额度'
+) ENGINE=INNODB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+ 
+INSERT INTO seata_account.t_account(`id`,`user_id`,`total`,`used`,`residue`) VALUES('1','1','1000','0','1000')
+ 
+SELECT * FROM t_account;
+```
+
+#### 按照上述3库分别建对应的回滚日志表
+
+sql地址：https://github.com/seata/seata/blob/develop/script/client/at/db/mysql.sql
+
+````mysql
+-- for AT mode you must to init this sql for you business database. the seata server not need it.
+CREATE TABLE IF NOT EXISTS `undo_log`
+(
+    `branch_id`     BIGINT       NOT NULL COMMENT 'branch transaction id',
+    `xid`           VARCHAR(128) NOT NULL COMMENT 'global transaction id',
+    `context`       VARCHAR(128) NOT NULL COMMENT 'undo_log context,such as serialization',
+    `rollback_info` LONGBLOB     NOT NULL COMMENT 'rollback info',
+    `log_status`    INT(11)      NOT NULL COMMENT '0:normal status,1:defense status',
+    `log_created`   DATETIME(6)  NOT NULL COMMENT 'create datetime',
+    `log_modified`  DATETIME(6)  NOT NULL COMMENT 'modify datetime',
+    UNIQUE KEY `ux_undo_log` (`xid`, `branch_id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8mb4 COMMENT ='AT transaction mode undo table';
+````
+
+### 业务微服务准备
+
+#### 业务需求
+
+下订单>减库存>扣余额>改（订单）状态。
+
+#### 新建Order-Module
+
+##### 新建module
+
+新建一个seata-order-service2001
+
+##### pom
+
+```xml
+<dependencies>
+    <!--nacos-->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+    </dependency>
+    <!--seata-->
+    <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+        <exclusions>
+            <exclusion>
+                <artifactId>seata-all</artifactId>
+                <groupId>io.seata</groupId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+    <dependency>
+        <groupId>io.seata</groupId>
+        <artifactId>seata-spring-boot-starter</artifactId>
+        <version>1.4.2</version>
+    </dependency>
+    <dependency>
+        <groupId>io.seata</groupId>
+        <artifactId>seata-all</artifactId>
+        <version>1.4.2</version>
+    </dependency>
+    <!--feign-->
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-openfeign</artifactId>
+    </dependency>
+    <!--web-actuator-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <!--mysql-druid-->
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>5.1.37</version>
+    </dependency>
+    <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>druid-spring-boot-starter</artifactId>
+        <version>1.1.10</version>
+    </dependency>
+    <dependency>
+        <groupId>org.mybatis.spring.boot</groupId>
+        <artifactId>mybatis-spring-boot-starter</artifactId>
+        <version>2.0.0</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+</dependencies>
+```
+
+##### yaml
+
+```yaml
+server:
+  port: 2001
+
+spring:
+  application:
+    name: seata-order-service
+  cloud:
+    #nacos配置
+    nacos:
+      discovery:
+        #nacos服务地址
+        server-addr: localhost:8848
+        namespace: "96b901a3-98ee-49c8-8185-7a48de400cc2"
+        group: SEATA_GROUP  #seata分组名称
+
+    alibaba:
+      #事务群组，要和下方vgroup-mapping保持一致（可以每个应用独立取名，也可以使用相同的名字），
+      #要与服务端nacos-config.txt中service.vgroup_mapping中存在,并且要保证多个群组情况下后缀名要保持一致-tx_group
+      seata:
+        tx-service-group: my_test_tx_group
+
+  datasource:  #druid数据源连接池
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/seata_order?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+#seata配置
+seata:
+  application-id: ${spring.application.name}
+  enable-auto-data-source-proxy: true  #是否开启数据源自动代理,默认为true
+  #（1）事务群组（可以每个应用独立取名，也可以使用相同的名字），
+  #要与服务端nacos-config.txt中service.vgroupMapping.my_test_tx_group=default,并且要保证多个群组情况下后缀名要保持一致-tx_group
+  service:
+    vgroup-mapping:
+      my_test_tx_group: default
+  # （2）seata配置中心
+  config:
+    type: nacos
+    nacos:
+      namespace: 96b901a3-98ee-49c8-8185-7a48de400cc2  #nacos命名空间ID
+      serverAddr: 127.0.0.1:8848  #nacos服务的地址
+      group: SEATA_GROUP    #seata分组名称
+      username: "nacos"  #nacos服务登录名称
+      password: "nacos"  #nacos服务登录密码
+  # （3）seata的注册中心
+  registry:  #registry根据seata服务端的registry配置
+    type: nacos
+    nacos:
+      application: seata-server #配置自己的seata服务
+      server-addr: 127.0.0.1:8848  #nacos服务的地址
+      group: SEATA_GROUP  #seata分组名称
+      namespace: 96b901a3-98ee-49c8-8185-7a48de400cc2  #nacos命名空间ID
+      username: "nacos"  #nacos服务登录名称
+      password: "nacos"  #nacos服务登录密码
+
+
+# feign组件超时设置，用于查看seata数据库中的临时数据内容
+feign:
+#  client:
+#    config:
+#      default:
+#        connect-timeout: 10000
+#        read-timeout: 10000
+  hystrix:
+    enabled: false
+
+logging:
+  level:
+    io:
+      seata: info
+
+#mybatis的配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.atguigu.springcloud.domain # 所有Entity别名类所在包
+```
+
+##### domain
+
+###### Order
 
 ```java
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
-    private String username;
-    private int age;
+public class Order
+{
+    private Long id;
+
+    private Long userId;
+
+    private Long productId;
+
+    private Integer count;
+
+    private BigDecimal money;
+
+    private Integer status; //订单状态：0：创建中；1：已完结
 }
 ```
 
-* 编写测试类，先不序列化
+###### CommonResult
 
 ```java
-@Test
-public void test() throws JsonProcessingException {
-    // 真实开发都是使用json来传递对象
-    User user = new User("胡桃",18);
-    String jsonUser = new ObjectMapper().writeValueAsString(user);
-    redisTemplate.opsForValue().set("user", jsonUser);
-    Object userData = redisTemplate.opsForValue().get("user");
-    System.out.println(userData);
-}
-```
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class CommonResult<T>
+{
+    private Integer code;
+    private String  message;
+    private T       data;
 
-![image-20220207103928718](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202071039741.png)
-
-> 有时候会报错，如果序列化就不会报错
-
-虽然在 Java 端可以看到返回了中文，但是在 Redis 中查看是一串乱码，因此需要序列化。
-
-![image-20220207105413428](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202071054271.png)
-
-* 配置`RedisConfig.java`
-
-```java
-@Configuration
-public class RedisConfig {
-    /**
-     *  编写自定义的 redisTemplate
-     *  这是一个比较固定的模板
-     */
-    @Bean
-    @SuppressWarnings("all")
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) throws UnknownHostException {
-        // 为了开发方便，直接使用<String, Object>
-        RedisTemplate<String, Object> template = new RedisTemplate();
-        template.setConnectionFactory(redisConnectionFactory);
-
-        // Json 配置序列化
-        // 使用 jackson 解析任意的对象
-        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
-        // 使用 objectMapper 进行转义
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
-        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
-        // String 的序列化
-        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-
-        // key 采用 String 的序列化方式
-        template.setKeySerializer(stringRedisSerializer);
-        // Hash 的 key 采用 String 的序列化方式
-        template.setHashKeySerializer(stringRedisSerializer);
-        // value 采用 jackson 的序列化方式
-        template.setValueSerializer(jackson2JsonRedisSerializer);
-        // Hash 的 value 采用 jackson 的序列化方式
-        template.setHashValueSerializer(jackson2JsonRedisSerializer);
-        // 把所有的配置 set 进 template
-        template.afterPropertiesSet();
-
-        return template;
+    public CommonResult(Integer code, String message)
+    {
+        this(code,message,null);
     }
 }
 ```
 
-* 单元测试
+##### dao接口及实现
+
+###### OrderDao
 
 ```java
-@SpringBootTest
-class Springboot10RedisApplicationTests {
+@Mapper
+public interface OrderDao
+{
+    //新建订单
+    void create(Order order);
+
+    //修改订单状态，从零改为1
+    void update(@Param("userId") Long userId,@Param("status") Integer status);
+}
+```
+
+###### OrderMapper
+
+resources文件夹下新建mapper文件夹后添加OrderMapper.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.atguigu.springcloud.dao.OrderDao">
+
+    <resultMap id="BaseResultMap" type="com.atguigu.springcloud.domain.Order">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="product_id" property="productId" jdbcType="BIGINT"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="money" property="money" jdbcType="DECIMAL"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <insert id="create">
+        insert into seata_order.t_order (id,user_id,product_id,count,money,status)
+        values (null,#{userId},#{productId},#{count},#{money},0);
+    </insert>
+
+
+    <update id="update">
+        update seata_order.t_order set status = 1
+        where user_id=#{userId} and status = #{status};
+    </update>
+
+</mapper>
+```
+
+##### service接口及实现
+
+###### OrderService
+
+```java
+public interface OrderService {
+    void create(Order order);
+}
+```
+
+###### StorageService
+
+```java
+@FeignClient(value = "seata-storage-service")
+public interface StorageService{
+    @PostMapping(value = "/storage/decrease")
+    CommonResult decrease(@RequestParam("productId") Long productId, @RequestParam("count") Integer count);
+}
+```
+
+###### AccountService
+
+```java
+@FeignClient(value = "seata-account-service")
+public interface AccountService{
+    @PostMapping(value = "/account/decrease")
+    CommonResult decrease(@RequestParam("userId") Long userId, @RequestParam("money") BigDecimal money);
+}
+```
+
+###### OrderServiceImpl
+
+```java
+@Service
+@Slf4j
+public class OrderServiceImpl implements OrderService
+{
+    @Resource
+    private OrderDao orderDao;
+    @Resource
+    private StorageService storageService;
+    @Resource
+    private AccountService accountService;
+
+    /**
+     * 创建订单->调用库存服务扣减库存->调用账户服务扣减账户余额->修改订单状态
+     */
+
+    @Override
+    @GlobalTransactional(name = "fsp-create-order",rollbackFor = Exception.class)
+    public void create(Order order){
+        log.info("----->开始新建订单");
+        //新建订单
+        orderDao.create(order);
+
+        //扣减库存
+        log.info("----->订单微服务开始调用库存，做扣减Count");
+        storageService.decrease(order.getProductId(),order.getCount());
+        log.info("----->订单微服务开始调用库存，做扣减end");
+
+        //扣减账户
+        log.info("----->订单微服务开始调用账户，做扣减Money");
+        accountService.decrease(order.getUserId(),order.getMoney());
+        log.info("----->订单微服务开始调用账户，做扣减end");
+
+
+        //修改订单状态，从零到1代表已经完成
+        log.info("----->修改订单状态开始");
+        orderDao.update(order.getUserId(),0);
+        log.info("----->修改订单状态结束");
+
+        log.info("----->下订单结束了");
+
+    }
+}
+```
+
+##### controller
+
+```java
+@RestController
+public class OrderController {
+    @Resource
+    private OrderService orderService;
+
+    @GetMapping("/order/create")
+    public CommonResult create(Order order)
+    {
+        orderService.create(order);
+        return new CommonResult(200,"订单创建成功");
+    }
+}
+```
+
+##### 主启动
+
+```java
+@SpringBootApplication
+@EnableFeignClients
+@EnableDiscoveryClient
+public class SeataOrderMain2001 {
+    public static void main(String[] args) {
+        SpringApplication.run(SeataOrderMain2001.class,args);
+    }
+}
+```
+
+#### 新建Storage-Module
+
+##### 新建module
+
+新建一个`seata-storage-service2002`
+
+##### pom
+
+与2001一样
+
+##### yaml
+
+与2001类似
+
+##### domain
+
+###### Storage
+
+```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Storage {
+    private Long id;
+    private Long productId; // 产品ID
+    private Integer total; // 总库存
+    private Integer used; // 已用库存
+    private Integer residue; // 剩余库存
+}
+```
+
+###### CommonResult
+
+与2001一样。
+
+##### dao接口及实现
+
+###### StorageDao
+
+```java
+@Mapper
+public interface StorageDao {
+
+    //扣减库存
+    void decrease(@Param("productId") Long productId, @Param("count") Integer count);
+}
+```
+
+###### StorageMapper
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.atguigu.springcloud.dao.StorageDao">
+
+    <resultMap id="BaseResultMap" type="com.atguigu.springcloud.domain.Storage">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="product_id" property="productId" jdbcType="BIGINT"/>
+        <result column="total" property="total" jdbcType="INTEGER"/>
+        <result column="used" property="used" jdbcType="INTEGER"/>
+        <result column="residue" property="residue" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <update id="decrease">
+        UPDATE
+            seata_storage.t_storage
+        SET
+            used = used + #{count},residue = residue - #{count}
+        WHERE
+            product_id = #{productId}
+    </update>
+
+</mapper>
+```
+
+##### service接口及实现
+
+###### StorageService
+
+```java
+public interface StorageService {
+    /**
+     * 扣减库存
+     */
+    void decrease(Long productId, Integer count);
+}
+```
+
+###### StorageServiceImpl
+
+```java
+@Service
+public class StorageServiceImpl implements StorageService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StorageServiceImpl.class);
+
+    @Resource
+    private StorageDao storageDao;
+
+    /**
+     * 扣减库存
+     */
+    @Override
+    public void decrease(Long productId, Integer count) {
+        LOGGER.info("------->storage-service中扣减库存开始");
+        storageDao.decrease(productId,count);
+        LOGGER.info("------->storage-service中扣减库存结束");
+    }
+}
+```
+
+##### controller
+
+```java
+@RestController
+public class StorageController {
 
     @Autowired
-    @Qualifier("redisTemplate") // 如果多个重名的，可以通过Qualifier指定
-    private RedisTemplate redisTemplate;
+    private StorageService storageService;
 
-    @Test
-    public void test() throws JsonProcessingException {
-        // 真实开发都是使用json来传递对象
-        User user = new User("胡桃",18);
-        String jsonUser = new ObjectMapper().writeValueAsString(user);
-        redisTemplate.opsForValue().set("user", jsonUser);
-        Object userData = redisTemplate.opsForValue().get("user");
-        System.out.println(userData);
-
+    /**
+     * 扣减库存
+     */
+    @RequestMapping("/storage/decrease")
+    public CommonResult decrease(Long productId, Integer count) {
+        storageService.decrease(productId, count);
+        return new CommonResult(200,"扣减库存成功！");
     }
 }
 ```
 
-![image-20220207105505452](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202071055595.png)
+#### 新建Account-Module
 
-### 工具类
+##### yaml
 
-[RedisUtil.java](./工具类/RedisUtil.md)
+与2001类似
 
-## 总结
+##### domain-Account
 
-````
-一、三层架构 + MVC
-	架构 ——>解耦
+```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Account {
 
-开发框架
-	Spring
-		IOC AOP
-		IOC：控制反转
-             约泡：
-                泡温泉，泡茶…，泡友
-                （传统方式）附近的人，打招呼。加微信，聊天，天天聊… ——>约泡
-                浴场（容器）：温泉，茶庄，泡友
-                直接进温泉，就有人和你一起了！
-                原来我们都是自己一步步操作，现在交给容器了！我们需要什么就去拿就行了
-		AOP：切面（本质，动态代理）
-		
+    private Long id;
+    private Long userId; // 用户id
+    private BigDecimal total; // 总额度
+    private BigDecimal used; // 已用额度
+    private BigDecimal residue; // 剩余额度
+}
+```
 
-	为了解决什么？不影响业务本来的情况下，实现动态增加功能。
-	大量应用在日志，事务…等方面
+##### dao接口及实现
 
-	Spring是一个轻量级的Java开源框架，容器
-	目的：解决企业开发的复杂性问题
-	Spring是春天，开始觉得是春天，也十分复杂，大量配置文件！
+###### AccountDao
+
+```java
+@Mapper
+public interface AccountDao {
+
+    /**
+     * 扣减账户余额
+     */
+    void decrease(@Param("userId") Long userId, @Param("money") BigDecimal money);
+}
+```
+
+###### AccountMapper
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.atguigu.springcloud.dao.AccountDao">
+
+    <resultMap id="BaseResultMap" type="com.atguigu.springcloud.domain.Account">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="total" property="total" jdbcType="DECIMAL"/>
+        <result column="used" property="used" jdbcType="DECIMAL"/>
+        <result column="residue" property="residue" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <update id="decrease">
+        UPDATE seata_account.t_account
+        SET residue = residue - #{money},used = used + #{money}
+        WHERE user_id = #{userId};
+    </update>
+
+</mapper>
+```
+
+##### service接口及实现
+
+###### AccountService
+
+```java
+public interface AccountService {
+
+    /**
+     * 扣减账户余额
+     * @param userId 用户id
+     * @param money 金额
+     */
+    void decrease(@RequestParam("userId") Long userId, @RequestParam("money") BigDecimal money);
+}
+```
+
+###### AccountServiceImpl
+
+```java
+@Service
+public class AccountServiceImpl implements AccountService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountServiceImpl.class);
+
+
+    @Resource
+    AccountDao accountDao;
+
+    /**
+     * 扣减账户余额
+     */
+    @Override
+    public void decrease(Long userId, BigDecimal money) {
+        LOGGER.info("------->account-service中扣减账户余额开始");
+        accountDao.decrease(userId,money);
+        LOGGER.info("------->account-service中扣减账户余额结束");
+    }
+}
+```
+
+##### controller
+
+```java
+@RestController
+public class AccountController {
+
+    @Resource
+    AccountService accountService;
+
+    /**
+     * 扣减账户余额
+     */
+    @RequestMapping("/account/decrease")
+    public CommonResult decrease(@RequestParam("userId") Long userId, @RequestParam("money") BigDecimal money){
+        accountService.decrease(userId,money);
+        return new CommonResult(200,"扣减账户余额成功！");
+    }
+}
+```
+
+### @GlobalTransaction验证
+
+#### 正常下单
+
+下订单 -> 减库存 -> 扣余额 -> 改（订单）状态。
+
+数据库初始化情况：
+
+![image-20220422115800280](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439974.png)
+
+启动nacos、seata、2001、2002、2003，进行测试访问：正常下单 - http://localhost:2001/order/create?userId=1&productId=1&count=10&money=100
+
+![image-20220422133859604](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439975.png)
+
+#### **超时异常，没加@GlobalTransactional**
+
+模拟AccountServiceImpl添加超时
+
+```java
+@Override
+public void decrease(Long userId, BigDecimal money) {
+
+    try {
+        TimeUnit.SECONDS.sleep(20);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+
+    LOGGER.info("------->account-service中扣减账户余额开始");
+    accountDao.decrease(userId,money);
+    LOGGER.info("------->account-service中扣减账户余额结束");
+}
+```
+
+另外，OpenFeign的调用默认时间是1s以内，所以最后会抛异常。
+
+![image-20220422134958773](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439976.png)
+
+现在查看下数据库情况。
+
+![image-20220422140651508](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439977.png)
+
+**故障情况**
+
+- 当库存和账户金额扣减后，订单状态并没有设置为已经完成，没有从零改为1
+- 而且由于feign的重试机制，账户余额还有可能被多次扣减
+
+#### **超时异常，加了@GlobalTransactional**
+
+用@GlobalTransactional标注OrderServiceImpl的create()方法。
+
+```java
+@Override
+@GlobalTransactional(name = "fsp-create-order",rollbackFor = Exception.class,timeoutMills = 60000)
+//    @Transactional
+public void create(Order order){
+    ....
+}
+```
+
+还是模拟AccountServiceImpl添加超时，下单后数据库数据并没有任何改变，记录都添加不进来，**达到出异常，数据库回滚的效果**。
+
+### Seata原理简介
+
+2019年1月份蚂蚁金服和阿里巴巴共同开源的分布式事务解决方案。
+
+Simple Extensible Autonomous Transaction Architecture，简单可扩展自治事务框架。
+
+2020起始，用1.0以后的版本。Alina Gingertail
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439978.png)
+
+##### 分布式事务的执行流程
+
+- TM开启分布式事务(TM向TC注册全局事务记录) ;
+
+- 按业务场景，编排数据库、服务等事务内资源(RM向TC汇报资源准备状态) ;
+
+- TM结束分布式事务，事务一阶段结束(TM通知TC提交/回滚分布式事务) ;
+
+- TC汇总事务信息，决定分布式事务是提交还是回滚；
+
+- TC通知所有RM提交/回滚资源，事务二阶段结束。
 
 
 
-SpringBoot
-	SpringBoot并不是新东西，就是Spring的升级版！
-	新一代JavaEE的开发标准,开箱即用！	——>拿过来就可以用！
-	它自动帮我们配置了非常多的东西，我们拿来即用！
-	特点：约定大于配置!
-		比如静态资源就要放到static下，不然就不让用【类似maven】
+##### AT模式如何做到对业务的无侵入
 
-随着公司体系越来越大，用户越来越多！
+###### 前提
+
+* 基于支持本地 ACID 事务的关系型数据库。
+
+* Java 应用，通过 JDBC 访问数据库。
+
+###### 整体机制
+
+两阶段提交协议的演变：
+
+* 一阶段：业务数据和回滚日志记录在同一个本地事务中提交，释放本地锁和连接资源。
+* 二阶段：
+  * 提交异步化，非常快速地完成。
+  * 回滚通过一阶段的回滚日志进行反向补偿。
+
+###### 一阶段加载
+
+在一阶段，Seata会拦截“业务SQL”
+
+- 解析SQL语义，找到“业务SQL" 要更新的业务数据，在业务数据被更新前，将其保存成"before image”
 
 
+- 执行“业务SQL" 更新业务数据，在业务数据更新之后,
 
-二、微服务架构 ——>新的架构
-模块化，功能化！
-【这里所有功能都在一块，无论人多不多，我都可以横向扩展，发生假设1问题，就负载均衡一下】
-用户，支付，签到，娱乐…【以前这些模块都写到一个项目里面】
-但是人过于多的时候：一台服务器解决不了！就在增加一台服务器【横向】
 
-假设1：A服务器占用98%资源，B服务器占用10%资源。 ——>负载均衡【解决方法,它里面的算法会将请求分配，让两个服务器变成50%】
+- 其保存成"after image”，最后生成行锁。
 
-【将原来的整体项目，分成模块化，用户就是一个单独的项目，签到也是一个单独的项目，项目与项目之间需要通信】
 
-假设2：用户非常多！而签到非常少	——>解决：给用户多一点服务器，给签到少一点服务器
-微服务架构问题？
+以上操作全部在一个数据库事务内完成, 这样保证了一阶段操作的原子性。
 
-分布式架构会遇到的四个核心问题？
-    1. 这么多服务，客户端应该如何去访问？【一个共同的接口来处理它，类似网关】
-    2. 这么多服务，服务之间如何进行通信？
-    3. 这么多服务，如何治理呢？:如何进行统一的管理【解决：统一的服务管理平台——>Zookeeper（注册中心）】
-    4. 服务挂了怎么办？
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439979.png)
 
-基于以上问题，有一些解决方案：
-SpringCloud，是一套生态，就是来解决以上分布式架构的4个问题
-想使用SpringCloud，必须要掌握SpringBoot【因为SpringCloud是基于SpringBoot的】
+###### 二阶段提交
 
-1. Spring Cloud NetFlix，出来了一套解决方案！一站式解决方案，我们都可以直接在这里拿【淘汰】
-   问题1的解决：Api网关，zuul组件
-    问题2的解决：Feign ——> 基于HttpClient ——> Http的通信方式,同步并阻塞
-    问题3的解决：服务注册与发现，Eureka组件
-    问题4的解决：熔断机制，Hystrix
-    ****2018年年底，NetFlix宣布无限期停止维护，生态不在维护，产生脱节。
+二阶段如果顺利提交的话，因为"业务SQL"在一阶段已经提交至数据库，所以Seata框架只需将一阶段保存的快照数据和行锁删掉，完成数据清理即可。
 
-2. Apache Dubbo zookeeper，第二套解决系统
-   问题1的解决：API没有！	——>要么找第三方组件，要不自己实现
-   问题2的解决：Dubbo是一个高性能的基于Java实现的 RPC通信框架！【写一个Java类，调用一下】
-   问题3的解决：服务注册与发现，zooKeeper[动物园管理者]——>比如（Hadoop，Hive）
-   问题4的解决：熔断机制没有！	——>借助了Hystrix
-   ****不完善，Dubbo3.0
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439980.png)
 
-3. SpringCloud Alibaba，一站式解决方案！
+###### 二阶段回滚
 
-   三、设想：提出一个方案——>服务网格
-   服务网格：下一代微服务标准，Service Mesh
-   代表解决方案：istio
+二阶段如果是回滚的话，Seata 就需要回滚一阶段已经执行的 “业务SQL"，还原业务数据。
 
-万变不离其宗，一通百通！
+回滚方式便是用"before image"还原业务数据；但在还原前要首先要校验脏写，对比“数据库当前业务数据”和"after image"。
 
-1. API网关问题，服务路由
-2. HTTP或者RPC框架，异步调用
-3. 服务注册与发现，高可用
-4. 熔断机制，服务降级
+如果两份数据完全一致就说明没有脏写， 可以还原业务数据，如果不一致就说明有脏写, 出现脏写就需要转人工处理。
 
-为什么要解决这些问题？——>网络不可靠
-````
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439981.png)
 
+补充：
+
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204221439982.png)

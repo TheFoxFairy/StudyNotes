@@ -4,7 +4,7 @@
 
 ### 基本概念
 
-![image-20210708172411945](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051921509.png)
+![image-20210708172411945](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051921509.png)
 
 **MyBatis**：
 
@@ -61,7 +61,7 @@
 
 ## 第一个mybatis程序
 
-![image-20210709173901517](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051923717.png)
+![image-20210709173901517](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051923717.png)
 
 * 配置主工程文件
 * 配置子工程文件
@@ -97,21 +97,21 @@ insert into user (id,name,pwd) values
 
 * 连接数据库
 
-![image-20210708214153435](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051923727.png)
+![image-20210708214153435](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051923727.png)
 
 ### 创建Maven工程
 
-![image-20210411160851015](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051923661.png)
+![image-20210411160851015](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051923661.png)
 
-![image-20210411160946287](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051923007.png)
+![image-20210411160946287](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051923007.png)
 
 ### 删除src目录
 
-![image-20210708202029464](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051924689.png)
+![image-20210708202029464](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051924689.png)
 
 ### 导入maven依赖
 
-![image-20210708203657961](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051923589.png)
+![image-20210708203657961](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051923589.png)
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -158,13 +158,13 @@ insert into user (id,name,pwd) values
 
 * 创建模块
 
-![image-20210708204519158](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051924671.png)
+![image-20210708204519158](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051924671.png)
 
-![image-20210708204616607](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051924849.png)
+![image-20210708204616607](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051924849.png)
 
 * 配置mybatis的核心文件
 
-![image-20210708210126885](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948178.png)
+![image-20210708210126885](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948178.png)
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -192,7 +192,7 @@ insert into user (id,name,pwd) values
 
 * 编写mybatis的工具类
 
-![image-20210708220740588](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948179.png)
+![image-20210708220740588](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948179.png)
 
 ```java
 package com.easy.utils;
@@ -239,11 +239,11 @@ public class MybatisUtils {
 
 创建User类
 
-![image-20210708221009633](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948180.png)
+![image-20210708221009633](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948180.png)
 
 快速生成setter和getter
 
-![image-20210709002530212](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948181.png)
+![image-20210709002530212](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948181.png)
 
 ```java
 package com.easy.pojo;
@@ -294,7 +294,7 @@ public class User {
 
 * Dao接口
 
-![image-20210709002610375](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948182.png)
+![image-20210709002610375](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948182.png)
 
 ```java
 package com.easy.dao;
@@ -310,7 +310,7 @@ public interface UserDao {
 
 * 接口实现类
 
-![image-20210709002710484](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948183.png)
+![image-20210709002710484](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948183.png)
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -331,11 +331,11 @@ public interface UserDao {
 
 \*\*清除`target`目录：\*\*每次测试后，会生成相应的`target`目录，在每次测试前，都需要清除
 
-![image-20210709014034106](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948184.png)
+![image-20210709014034106](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948184.png)
 
 根据`com.easy.dao`建立同样的目录，便于规范
 
-![image-20210709002800720](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948185.png)
+![image-20210709002800720](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948185.png)
 
 编写测试方法
 
@@ -373,7 +373,7 @@ public class UserDaoTest {
 
 然后点击运行
 
-![image-20210709013901082](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948186.png)
+![image-20210709013901082](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948186.png)
 
 可能会遇到的问题：
 
@@ -383,7 +383,7 @@ public class UserDaoTest {
 * 返回类型不对
 * Maven导出资源问题
 
-![image-20210709172625025](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948187.png)
+![image-20210709172625025](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948187.png)
 
 因此，改写代码：
 
@@ -412,13 +412,13 @@ public class UserDaoTest {
     }
 ```
 
-![image-20210709172714845](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948188.png)
+![image-20210709172714845](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948188.png)
 
 ### 配置错误
 
 #### 不支持发行版本 xx
 
-![image-20210708230639362](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948189.png)
+![image-20210708230639362](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948189.png)
 
 会发现出现如下错误：
 
@@ -430,15 +430,15 @@ Error:java: 错误: 不支持发行版本 14
 
 1. File -> Setting 中，**将java编译器中的版本号与java jdk版本填写一致**
 
-![image-20210708230801016](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948190.png)
+![image-20210708230801016](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948190.png)
 
 1. File -> Project Structure，将如下位置，同上操作
 
-![image-20210708230930006](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948191.png)
+![image-20210708230930006](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948191.png)
 
 1. File -> Project Structure，同上，注意这里是两个文件夹，都要修改
 
-![image-20210708231014342](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948192.png)
+![image-20210708231014342](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948192.png)
 
 #### BindingException错误
 
@@ -482,7 +482,7 @@ Type interface com.kuang.dao.UserDao is not knowh to theMapperRegistry.
 
 运行，发现出现`java.lang.ExceptionInInitializerError`错误，是由于`mybatis-config.xml`中Mapper的注册地址错误，是因为maven由于它的约定大于配置，我们之后可以能遇到我们写的配置文件，无法被导出或者生效的问题，解决方法如下：
 
-![image-20210709173726583](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948193.png)
+![image-20210709173726583](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948193.png)
 
 在主工程的配置文件下，进行配置`build`
 
@@ -527,11 +527,11 @@ Type interface com.kuang.dao.UserDao is not knowh to theMapperRegistry.
 
 #### 程序包不存在
 
-![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948194.png)
+![img](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948194.png)
 
 解决方法如下：
 
-![image-20210709010651852](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948195.png)
+![image-20210709010651852](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948195.png)
 
 #### Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.12.4
 
@@ -558,7 +558,7 @@ Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.12.4
 
 在使用`mapper.xml`文件改写sql语句时，不会出现自动提示，解决如下：
 
-![image-20210710000944262](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948197.png)
+![image-20210710000944262](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948197.png)
 
 ```
 http://mybatis.org/dtd/mybatis-3-config.dtd
@@ -567,13 +567,13 @@ http://mybatis.org/dtd/mybatis-3-mapper.dtd
 
 添加如上语句即可。
 
-![image-20210710001050364](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948198.png)
+![image-20210710001050364](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948198.png)
 
 选择对应的数据库，即可。
 
 ### namespace
 
-![image-20210709174636273](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948199.png)
+![image-20210709174636273](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948199.png)
 
 namespace中的包名和Dao/Mapper接口中的包名要一致。
 
@@ -603,7 +603,7 @@ namespace中的包名和Dao/Mapper接口中的包名要一致。
 
 **dao层**
 
-![image-20210709175043720](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948200.png)
+![image-20210709175043720](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948200.png)
 
 ```java
 public interface UserDao {
@@ -613,7 +613,7 @@ public interface UserDao {
 
 **Mapper.xml**
 
-![image-20210709175301759](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948201.png)
+![image-20210709175301759](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948201.png)
 
 ```xml
     <!-- id=绑定一个对应的实体类方法 -->
@@ -626,7 +626,7 @@ public interface UserDao {
 
 **测试类**
 
-![image-20210709234820051](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948202.png)
+![image-20210709234820051](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948202.png)
 
 ```java
 package com.easy.dao;
@@ -879,7 +879,7 @@ public class UserDaoTest {
 }
 ```
 
-![image-20210710004747062](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948203.png)
+![image-20210710004747062](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948203.png)
 
 ### 自定义参数
 
@@ -1031,7 +1031,7 @@ select * from mybatis.user where name like like concat('%',#{name},'%')
 
 ### 创建项目
 
-![image-20210711002343354](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948204.png)
+![image-20210711002343354](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948204.png)
 
 ### 环境配置
 
@@ -1207,7 +1207,7 @@ username = root
 password = 123456
 ```
 
-![image-20210809125526735](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948205.png)
+![image-20210809125526735](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948205.png)
 
 #### 类型别名（typeAliases）
 
@@ -1216,7 +1216,7 @@ password = 123456
 
 例如：
 
-![image-20210809125840485](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948206.png)
+![image-20210809125840485](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948206.png)
 
 ```
 <configuration>
@@ -1229,7 +1229,7 @@ password = 123456
 </configuration>
 ```
 
-![image-20210711163827384](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948207.png)
+![image-20210711163827384](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948207.png)
 
 设置完别名后，需要对相应的文件中的位置使用别名。
 
@@ -1324,7 +1324,7 @@ public class User {
 
 #### 映射器（Mappers）
 
-![image-20210809125937789](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948208.png)
+![image-20210809125937789](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948208.png)
 
 MapperRegistry:注册绑定我们的Mapper文件;
 
@@ -1366,7 +1366,7 @@ MapperRegistry:注册绑定我们的Mapper文件;
 
 #### 生命周期与作用域
 
-![image-20210711172856278](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948209.png)
+![image-20210711172856278](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948209.png)
 
 不同作用域和生命周期类别是至关重要的，因为错误的使用会导致非常严重的**并发问题**。
 
@@ -1388,7 +1388,7 @@ MapperRegistry:注册绑定我们的Mapper文件;
 * sqlSession 的实例不是线程安全的，因此是不能被共享的，所以它的最佳的作用域是请求或方法作用域。
 * 用完之后需要赶紧关闭，否则资源被占用
 
-![image-20210711173745239](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948210.png)
+![image-20210711173745239](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948210.png)
 
 这里面的每一个Mapper，就代表一个具体的业务!
 
@@ -1398,11 +1398,11 @@ MapperRegistry:注册绑定我们的Mapper文件;
 
 数据库中的字段
 
-![image-20210712183430323](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948211.png)
+![image-20210712183430323](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948211.png)
 
 新建一个项目，拷贝之前的，情况测试实体类字段不一致的
 
-![image-20210713001011318](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948212.png)
+![image-20210713001011318](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948212.png)
 
 ```
 public class User {
@@ -1420,7 +1420,7 @@ public class User {
 
 运行测试后，发现字段为`null`
 
-![image-20210713001247396](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948213.png)
+![image-20210713001247396](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948213.png)
 
 解决方法：
 
@@ -1489,7 +1489,7 @@ id 		username 		password
 </settings>
 ```
 
-![image-20210713094241802](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948214.png)
+![image-20210713094241802](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948214.png)
 
 ### log4j
 
@@ -1502,7 +1502,7 @@ id 		username 		password
 
 #### 使用
 
-![image-20210809130057051](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948215.png)
+![image-20210809130057051](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948215.png)
 
 1. **导入log4j的包**
 
@@ -1749,7 +1749,7 @@ public void getUserByRowBounds(){
 
 #### PageHelper
 
-![image-20210809133611851](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948216.png)
+![image-20210809133611851](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948216.png)
 
 插件地址：https://pagehelper.github.io/
 
@@ -1798,7 +1798,7 @@ public interface UserMapper {
 
 但是在处理复杂的语句上，就有点力不从心了。
 
-![在这里插入图片描述](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948217.png)
+![在这里插入图片描述](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948217.png)
 
 ### CRUD
 
@@ -1871,7 +1871,7 @@ int deleteUser(@Param("uid") int id);
 </dependency>
 ```
 
-![image-20210907174010532](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948218.png)
+![image-20210907174010532](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948218.png)
 
 > @Data：无参构造，get、set、tostring、hashcode、equals
 
@@ -2205,7 +2205,7 @@ create table blog (
 
 * 导包
 
-![image-20210914153940539](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948219.png)
+![image-20210914153940539](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948219.png)
 
 * 编写配置文件
 
@@ -2563,9 +2563,9 @@ public class MyTest {
 select * from user where 1=1 and (id=1 or id=2 or id=3)
 ```
 
-![image-20210915132713501](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948220.png)
+![image-20210915132713501](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948220.png)
 
-![image-20210915142227477](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948221.png)
+![image-20210915142227477](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948221.png)
 
 **BlogMapper.java**
 
@@ -2634,13 +2634,13 @@ public void getUserByID(){
 }
 ```
 
-![image-20210915211827986](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948222.png)
+![image-20210915211827986](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948222.png)
 
 缓存失效的情况：
 
 1. 增删改操作，可能会改变原来的数据，所以必定刷新缓存
 
-![image-20210916212855327](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948223.png)
+![image-20210916212855327](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948223.png)
 
 1. 查询不同的东西
 2. 查询不同的Mapper.xml
@@ -2732,7 +2732,7 @@ public void test(){
 }
 ```
 
-![image-20210917150353749](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948224.png)
+![image-20210917150353749](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948224.png)
 
 缓存无法使用，需要在一级缓存关闭时，才能使用。
 
@@ -2753,7 +2753,7 @@ public void test(){
     }
 ```
 
-![image-20210917150854006](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201051948225.png)
+![image-20210917150854006](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201051948225.png)
 
 如果出现`java.io.NotSerializableException: com.easy.pojo.User`错误，需要将实体类进行序列化：
 

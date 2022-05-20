@@ -45,7 +45,7 @@ JRE: java runtime environment, java运行时环境，针对java用户
 
 JVM: java virtual machine，java虚拟机 用来解释执行字节码文件(class文件)的。
 
-![image-20220216202440092](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202162258773.png)
+![image-20220216202440092](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202162258773.png)
 
 ### **JDK**
 
@@ -70,7 +70,7 @@ JVM 即为 Java 虚拟机，提供了字节码文件(`.class`)的运行环境支
 
 ## JVM的体系结构
 
-![image-20220305124752709](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509355.png)
+![image-20220305124752709](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204241509355.png)
 
 > 程序计数器、方法栈、虚拟机栈一定没有垃圾回收。所谓JVM调优基本上都是调堆，方法区是特殊的堆区。
 
@@ -78,7 +78,7 @@ JVM 即为 Java 虚拟机，提供了字节码文件(`.class`)的运行环境支
 
 ### 类加载流程
 
-![image-20220216204905893](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202162258775.png)
+![image-20220216204905893](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202162258775.png)
 
 当程序主动使用某个类时，如果该类还未被加载到内存中，则系统会通过如下三个步骤来对该类进行初始化：
 
@@ -121,7 +121,7 @@ JVM 即为 Java 虚拟机，提供了字节码文件(`.class`)的运行环境支
 - 类加载器都是以单例形式存在的
 - Class的加载分为显示加载（自定义加载器，继承父类加载器）和隐式加载（默认使用类加载的流程）
 
-<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202161921274.png" alt="image-20220214173133939" style="zoom: 67%;" />
+<img src="https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161921274.png" alt="image-20220214173133939" style="zoom: 67%;" />
 
 **类加载的作用**：**将class文件字节码内容加载到内存中**，并将这些静态数据转换成方法区的运行时数据结构，然后在堆中生成一个代表这个类的java.lang（Class对象）作为方法区中类数据的访问入口。
 
@@ -129,7 +129,7 @@ JVM 即为 Java 虚拟机，提供了字节码文件(`.class`)的运行环境支
 
 JVM规范定义了如下类型的类的加载器。
 
-![image-20220214173836204](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202162258777.png)
+![image-20220214173836204](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202162258777.png)
 
 - **引导类加载器（Bootstrap Classloader），又称为根类加载器**：
   - 它负责加载 Java 的核心库（``JAVA_HOME/jre/lib/rt.jar`` 等或 `sun.boot.class.path `路径下的内容）或java程序运行指定的``-Xbootclasspath`目录下jar包。
@@ -149,11 +149,11 @@ JVM规范定义了如下类型的类的加载器。
 
 ### 双亲委派机制
 
-![image-20220216214354529](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202162258778.png)
+![image-20220216214354529](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202162258778.png)
 
 **加载机制**：如果自己定义和`jdk`同名的类，运行时虚拟机会在系统的类加载器中寻找，再去扩展类加载器中寻找，再去根加载器中寻找，如果存在同名的类，会使用根加载器中的类，而不使用自己定义的类。
 
-![image-20220216214754859](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202162258779.png)
+![image-20220216214754859](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202162258779.png)
 
 **作用：1. 避免类的重复加载；2. 保护程序安全，防止核心的JAVA语言环境遭受破坏。**
 
@@ -178,11 +178,11 @@ JVM规范定义了如下类型的类的加载器。
 
 ### **简单图示**
 
-![image-20220216220023602](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202162258780.png)
+![image-20220216220023602](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202162258780.png)
 
 ### **详细图示**
 
-![image-20220216221856134](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202162258781.png)
+![image-20220216221856134](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202162258781.png)
 
 ### 方法区
 
@@ -228,7 +228,7 @@ JVM规范定义了如下类型的类的加载器。
 
 #### 什么是虚拟栈（Java虚拟机）
 
-![image-20220217203811375](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509357.png)
+![image-20220217203811375](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204241509357.png)
 
 ##### **虚拟机栈**
 
@@ -309,17 +309,17 @@ Java 虚拟机使用局部变量在方法调用时传递参数。在类方法调
 
 #### 代码的执行
 
-![image-20220216220549004](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202162258782.png)
+![image-20220216220549004](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202162258782.png)
 
 #### 整体流程
 
-![image-20220217215120446](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509358.png)
+![image-20220217215120446](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204241509358.png)
 
 ## 垃圾回收与垃圾回收器
 
 ### 堆的分代模型
 
-![image-20220217214104471](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204241509359.png)
+![image-20220217214104471](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204241509359.png)
 
 **新生代**：刚new出来的那些对象
 

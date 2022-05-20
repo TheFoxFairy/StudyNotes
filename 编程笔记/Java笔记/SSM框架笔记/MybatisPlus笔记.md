@@ -16,7 +16,7 @@ MyBatis Plus，简化 MyBatis ！
 
 * 官方：https://baomidou.com/
 
-![image-20220114192304418](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201172137128.png)
+![image-20220114192304418](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201172137128.png)
 
 ## 特性
 
@@ -74,11 +74,11 @@ insert into user(id,name,age,email) values
 
 2. 编写项目，初始化项目！使用SpringBoot初始化！
 
-![image-20220117202508799](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201172137130.png)
+![image-20220117202508799](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201172137130.png)
 
-![image-20220117202604139](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201172137131.png)
+![image-20220117202604139](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201172137131.png)
 
-![image-20220117210257734](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201172137132.png)
+![image-20220117210257734](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201172137132.png)
 
 3. 导入依赖
 
@@ -113,7 +113,7 @@ spring.datasource.url=jdbc:mysql://localhost:3306/mybatis_plus?useUnicode=true&c
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 ```
 
-![image-20220117211906278](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201172137133.png)
+![image-20220117211906278](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201172137133.png)
 
 6. 传统方式pojo、dao（链接mybatis，配置mapper.xml）、service、controller
 
@@ -193,7 +193,7 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
    }
    ```
 
-![image-20220209000050375](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212863.png)
+![image-20220209000050375](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204142212863.png)
 
 ## 配置日志
 
@@ -204,7 +204,7 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 mybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 ```
 
-![image-20220209000309323](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212865.png)
+![image-20220209000309323](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204142212865.png)
 
 ## CRUD操作
 
@@ -224,7 +224,7 @@ public void testInsert(){
 }
 ```
 
-![image-20220209000807330](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212866.png)
+![image-20220209000807330](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204142212866.png)
 
 > 数据库插入的id的默认值为：全局的唯一id
 
@@ -253,11 +253,11 @@ public class User {
 alter table user modify id bigint(20) auto_increment;
 ```
 
-![image-20220209002258304](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212867.png)
+![image-20220209002258304](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204142212867.png)
 
 * 测试
 
-![image-20220209002415444](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212868.png)
+![image-20220209002415444](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204142212868.png)
 
 * `IdType`其他类型字段
 
@@ -294,7 +294,7 @@ public void testUpdate(){
 }
 ```
 
-![image-20220209003034209](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212869.png)
+![image-20220209003034209](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204142212869.png)
 
 * `update(Object,Wrapper)`根据指定Wrapper参数进行更新Object
 
@@ -319,7 +319,7 @@ public void testUpdate(){
 }
 ```
 
-![image-20220209004439728](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212870.png)
+![image-20220209004439728](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204142212870.png)
 
 ### 自动填充
 
@@ -336,7 +336,7 @@ alter table user add create_time datetime DEFAULT CURRENT_TIMESTAMP;
 alter table user add update_time datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 ```
 
-![image-20220209005015060](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212871.png)
+![image-20220209005015060](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204142212871.png)
 
 * 再次测试插入方法，我们需要先把实体类同步！
 
@@ -349,7 +349,7 @@ public class User{
 
 * 再次更新查看结果
 
-![image-20220209005200817](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212872.png)
+![image-20220209005200817](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204142212872.png)
 
 #### 方式二：代码级别
 
@@ -363,7 +363,7 @@ alter table user add create_time datetime;
 alter table user add update_time datetime;
 ```
 
-![image-20220209010508716](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212873.png)
+![image-20220209010508716](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204142212873.png)
 
 * 实体类字段属性上需要增加注解
 
@@ -408,7 +408,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
 
 * 测试更新、观察时间即可！
 
-![image-20220209010532704](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212874.png)
+![image-20220209010532704](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204142212874.png)
 
 ### 乐观锁
 
@@ -444,7 +444,7 @@ where id = 2 and version = 1
 alter table user add version int default 1;
 ```
 
-![image-20220209010941335](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212875.png)
+![image-20220209010941335](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204142212875.png)
 
 2. 实体类加对应的字段
 
@@ -510,7 +510,7 @@ public void testOptimisticLocker2(){
 }
 ```
 
-![image-20220209012440209](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212876.png)
+![image-20220209012440209](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204142212876.png)
 
 ### 查询操作
 
@@ -664,7 +664,7 @@ public void testDel(){
 alter table user add deleted int default 0;
 ```
 
-![image-20220209014952154](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212877.png)
+![image-20220209014952154](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204142212877.png)
 
 * 实体类中增加相应属性
 
@@ -694,7 +694,7 @@ mybatis-plus.global-config.db-config.logic-not-delete-value=0
 
 * 测试下删除
 
-![image-20220209015842535](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212878.png)
+![image-20220209015842535](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204142212878.png)
 
 发现，现在没有实行删除了，而是进行了更新操作。
 
@@ -754,7 +754,7 @@ outagedetectioninterval=2
 
 * 运行查询测试
 
-![image-20220209021443611](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202204142212879.png)
+![image-20220209021443611](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202204142212879.png)
 
 ## 条件构造器
 

@@ -12,7 +12,7 @@
 
 #### 功能
 
-![](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202060119401.png)
+![](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202060119401.png)
 
 - Authentication：身份认证/登录，验证用户是不是拥有相应的身份；
 
@@ -36,7 +36,7 @@
 
 #### 从外部看
 
-![](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202060130682.png)
+![](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202060130682.png)
 
 应用代码直接交互的对象是Subject，也就是说Shiro的对外API核心就是Subject；其每个API的含义：
 
@@ -57,7 +57,7 @@
 
 外部架构
 
-![](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202060131369.png)
+![](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202060131369.png)
 
 - **Subject**：主体，可以看到主体可以是任何可以与应用交互的“用户”；
 - **SecurityManager**：相当于SpringMVC中的DispatcherServlet或者Struts2中的FilterDispatcher；是Shiro的心脏；所有具体的交互都通过SecurityManager进行控制；它管理着所有Subject、且负责进行认证和授权、及会话、缓存的管理。
@@ -71,7 +71,7 @@
 
 ####  认证流程
 
-![](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202060132088.png)
+![](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202060132088.png)
 
 **用户** 提交 **身份信息、凭证信息** 封装成 **令牌** 交由 **安全管理器** 认证
 
@@ -81,7 +81,7 @@
 
 * 在父工程中新建一个 Maven 模块`hello-shiro`
 
-![image-20220206013909463](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202060139932.png)
+![image-20220206013909463](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202060139932.png)
 
 * 复制快速入门案例 POM.xml 文件中的依赖 （版本号自选）
 
@@ -134,7 +134,7 @@ securityManager.setRealm(iniRealm);
 
 * 运行 `Quickstart.java`，得到结果
 
-![image-20220206020420241](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202060204903.png)
+![image-20220206020420241](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202060204903.png)
 
 ### 分析案例
 
@@ -307,7 +307,7 @@ public class Quickstart {
 
 * 在`resources`或者`src/main/resources/META-INF`文件夹下创建一个名为`shiro.ini`的文件.并且添加我们的用户验证信息.如下图所示
 
-  ![image-20220206030730667](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202060524518.png)
+  ![image-20220206030730667](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202060524518.png)
 
 不然会出现`Description: No bean of type ‘org.apache.shiro.realm.Realm‘ found.`错误。
 
@@ -540,7 +540,7 @@ bean.setLoginUrl("/toLogin");
 
 * 测试，点击 add链接，不会跳到 add页面，而是跳到登录页，拦截成功
 
-![image-20220206052423160](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202060524619.png)
+![image-20220206052423160](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202060524619.png)
 
 #### 用户认证
 
@@ -569,7 +569,7 @@ public String login(String username,String password,Model model){
 }
 ```
 
-![image-20220206053826694](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202060538921.png)
+![image-20220206053826694](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202060538921.png)
 
 * 下面去自定义的 `UserRealm` 中的 `AuthenticationInfo` 方法中去获取用户信息
 
@@ -839,7 +839,7 @@ public class User {
 
 对数据库进行修改，添加一个字段
 
-![image-20220206085837366](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202202060858342.png)
+![image-20220206085837366](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202060858342.png)
 
 在`public ShiroFilterFactoryBean getShiroFilterFactoryBean`中，添加授权样例
 

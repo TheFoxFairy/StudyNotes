@@ -24,7 +24,7 @@ public class Main {
 }
 ```
 
-![image-20210327214422353](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201121632815.png)
+![image-20210327214422353](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201121632815.png)
 
 注意`next()`与`nextLine()`的区别：
 
@@ -65,7 +65,7 @@ public class Main {
 }
 ```
 
-![image-20210327214709150](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201121632816.png)
+![image-20210327214709150](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201121632816.png)
 
 * 通过使用`BufferedReader br = new BufferedReader(new InputStreamReader(System.in))`进行输入输出
 
@@ -84,7 +84,7 @@ public class Main {
 }
 ```
 
-![image-20210327215406765](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201121632817.png)
+![image-20210327215406765](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201121632817.png)
 
 其他类型输出：
 
@@ -107,7 +107,7 @@ public class Main {
 
 通过使用`类型.parse类型(String s)`将字符串转换为相应的数据类型。
 
-![image-20210327215714421](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201121632818.png)
+![image-20210327215714421](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201121632818.png)
 
 ## 运算符
 
@@ -158,7 +158,7 @@ public class Main {
 }
 ```
 
-![image-20210327221123340](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201121632819.png)
+![image-20210327221123340](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201121632819.png)
 
 * `do...while`循环
 
@@ -173,7 +173,7 @@ public class Main {
 }
 ```
 
-![image-20210327221159599](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201121632820.png)
+![image-20210327221159599](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201121632820.png)
 
 `while`与`do..while`的区别是在于：`do...while`必须要先运行一次才进行判断，而`while`需要进行判断。
 
@@ -190,7 +190,7 @@ public class Main {
 }
 ```
 
-![image-20210327221328740](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201121632821.png)
+![image-20210327221328740](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201121632821.png)
 
 ## 条件语句
 
@@ -284,7 +284,7 @@ public class Main {
 }
 ```
 
-![image-20210327222438454](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201121632822.png)
+![image-20210327222438454](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201121632822.png)
 
 **Character类方法**：
 
@@ -311,7 +311,7 @@ public class Main {
 }
 ```
 
-![image-20210327222612620](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201121632823.png)
+![image-20210327222612620](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201121632823.png)
 
 下面是 String 类支持的方法，更多详细，参看 [Java String API](https://www.runoob.com/manual/jdk1.6/java/lang/String.html) 文档:
 
@@ -386,7 +386,7 @@ public class Main {
 }
 ```
 
-![image-20210327223109370](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201121632824.png)
+![image-20210327223109370](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201121632824.png)
 
 ## 正则表达式
 
@@ -412,7 +412,7 @@ public class Main {
 }
 ```
 
-![image-20210327223725352](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201121632825.png)
+![image-20210327223725352](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201121632825.png)
 
 ## 面向对象
 

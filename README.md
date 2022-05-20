@@ -4,7 +4,7 @@
 
 **冲啊冲啊！！！学不死往死里学！！！**
 
-<img src="https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg/202201090108807.jpg" width=25% align=right hspace="5" vspace="5"/>
+<img src="https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202201090108807.jpg" width=25% align=right hspace="5" vspace="5"/>
 
 ## 当前学习内容板块
 

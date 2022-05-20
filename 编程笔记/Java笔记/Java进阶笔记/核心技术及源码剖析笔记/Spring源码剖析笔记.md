@@ -355,13 +355,13 @@ public class MyBeanPostProcessor implements BeanPostProcessor {
 
 * lombok插件
 
-![image-20220508132713779](../../../../../../../../Pictures/assets/Spring源码剖析笔记/image-20220508132713779.png)
+![image-20220508132713779](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202205182032095.png)
 
 ### 配置注解处理器
 
 在如下设置界面单击Build, Execution, Deployment→Compiler→Annotation Processors，然后在右侧勾选Enable annotation processing复选项即可。
 
-![image-20220508132835201](../../../../../../../../Pictures/assets/Spring源码剖析笔记/image-20220508132835201.png)
+![image-20220508132835201](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202205182032096.png)
 
 ## 用300行代码概览Spring
 
@@ -383,7 +383,7 @@ public class MyBeanPostProcessor implements BeanPostProcessor {
 
 现在先看下Mini版的Spring实现的基本思路：
 
-![image-20220508135708998](../../../../../../../../Pictures/assets/Spring源码剖析笔记/image-20220508135708998.png)
+![image-20220508135708998](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202205182032097.png)
 
 #### 自定义配置
 
@@ -855,7 +855,7 @@ private void doDispatch(HttpServletRequest request,HttpServletResponse response)
 
 启动tomcat，进行测试：http://localhost:8080/demo/query?name=1
 
-![image-20220508194726643](../../../../../../../../Pictures/assets/Spring源码剖析笔记/image-20220508194726643.png)
+![image-20220508194726643](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202205182032098.png)
 
 ## 手写SpringV2.0版本
 
@@ -871,9 +871,9 @@ private void doDispatch(HttpServletRequest request,HttpServletResponse response)
 * Bean实例，反射实例化Object：原生的Bean、代理的Bean
 * BeanWrapper包装器模式：缓存到了IOC容器，缓存（持有了Bean的引用）
 
-![image-20220509135430564](../../../../../../../../Pictures/assets/Spring源码剖析笔记/image-20220509135430564.png)
+![image-20220509135430564](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202205182032099.png)
 
-![image-20220509190216363](../../../../../../../../Pictures/assets/Spring源码剖析笔记/image-20220509190216363.png)
+![image-20220509190216363](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202205182032100.png)
 
 #### 代码详解
 
@@ -1422,7 +1422,7 @@ public class MyApplicationContext implements MyBeanFactory {
 
 #### 什么是循环依赖
 
-![image-20220510161950943](../../../../../../../../Pictures/assets/Spring源码剖析笔记/image-20220510161950943.png)
+![image-20220510161950943](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202205182032101.png)
 
 上图中，这种依赖关系形成了一个闭环，这种依赖关系就称之为循环依赖。
 
@@ -1484,11 +1484,11 @@ public class BeanCImpl implements BeanC {
 
 在运行调试一下之前的代码，在MyApplicationContext初始化后打上断点，来跟踪一下IOC容器里面的情况，如下图：
 
-![image-20220510163611567](../../../../../../../../Pictures/assets/Spring源码剖析笔记/image-20220510163611567.png)
+![image-20220510163611567](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202205182032102.png)
 
 启动项目，我们发现只要是有循环依赖关系的属性并没有自动赋值，而没有循环依赖关系的属性均有自动赋值，如下图所示：
 
-![image-20220510163916731](../../../../../../../../Pictures/assets/Spring源码剖析笔记/image-20220510163916731.png)
+![image-20220510163916731](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202205182032103.png)
 
 这种情况是怎么造成的呢?我们分析原因之后发现，因为，IOC容器对Bean的初始化是根据BeanDefinition循环迭代，有一定的顺序。这样，在执行依赖注入时，需要自动赋值的属性对应的对象有可能还没初始化，没有初始化也就没有对应的实例可以注入。于是，就出现我们看到的情况。
 
@@ -1508,7 +1508,7 @@ public class BeanCImpl implements BeanC {
 
 - 三级缓存：代理的缓存。
 
-![img](../../../../../../../../Pictures/assets/Spring源码剖析笔记/64380cd7912397dd78d1dbc79c26e5bed2a287f3.jpeg)
+![img](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202205182032104.jpeg)
 
 ##### 不支持循环依赖的方式
 
@@ -1655,7 +1655,7 @@ private Object instantiateBean(String beanName, MyBeanDefinition beanDefinition)
 
 然后进行debug调试，发现一直相互依赖。
 
-![image-20220510190341959](../../../../../../../../Pictures/assets/Spring源码剖析笔记/image-20220510190341959.png)
+![image-20220510190341959](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202205182032105.png)
 
 用一级缓存可以解决，但是为什么有二级/三级缓存，是为了代码的健壮性。
 
@@ -1745,7 +1745,7 @@ templateRoot=layouts
 
 #### Spring MVC核心组件执行流程
 
-![image-20220511173305660](../../../../../../../../Pictures/assets/Spring源码剖析笔记/image-20220511173305660.png)
+![image-20220511173305660](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202205182032106.png)
 
 ####  代码详解
 
