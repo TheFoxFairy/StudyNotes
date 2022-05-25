@@ -108,6 +108,8 @@
     * [Fashion Mnist](实战项目/算法项目/Fashion%20mnist.md)
     * [风格迁移](实战项目/算法项目/风格迁移.md)
 - 杂记记录
+  - 作业
+    * [1.各设计模式总结对比](杂记记录/作业/1.各设计模式总结对比.md)
   * [CentOS修改yum源为阿里源](杂记记录/CentOS修改yum源为阿里源.md)
   * [centos安装宝塔](杂记记录/centos安装宝塔.md)
   * [centos配置](杂记记录/centos配置.md)
@@ -145,6 +147,13 @@
       * [04-多线程详解](编程笔记/Java笔记/JavaSE笔记/04-多线程详解.md)
       * [05-JUC并发编程](编程笔记/Java笔记/JavaSE笔记/05-JUC并发编程.md)
       * [06-JVM原理](编程笔记/Java笔记/JavaSE笔记/06-JVM原理.md)
+      * [06-JVM原理(旧版)](编程笔记/Java笔记/JavaSE笔记/06-JVM原理(旧版).md)
+    - Java进阶笔记
+      - 核心技术及源码剖析笔记
+        * [Mybatis源码剖析笔记](编程笔记/Java笔记/Java进阶笔记/核心技术及源码剖析笔记/Mybatis源码剖析笔记.md)
+        * [Netty核心技术及源码剖析笔记](编程笔记/Java笔记/Java进阶笔记/核心技术及源码剖析笔记/Netty核心技术及源码剖析笔记.md)
+        * [SpringBoot源码剖析笔记](编程笔记/Java笔记/Java进阶笔记/核心技术及源码剖析笔记/SpringBoot源码剖析笔记.md)
+        * [Spring源码剖析笔记](编程笔记/Java笔记/Java进阶笔记/核心技术及源码剖析笔记/Spring源码剖析笔记.md)
     - SSM框架笔记
       * [FluentMybatis笔记](编程笔记/Java笔记/SSM框架笔记/FluentMybatis笔记.md)
       * [MybatisPlus笔记](编程笔记/Java笔记/SSM框架笔记/MybatisPlus笔记.md)
@@ -185,8 +194,6 @@
       * [ShardingSphere笔记](编程笔记/Java笔记/服务网格笔记/ShardingSphere笔记.md)
       * [TiDB笔记](编程笔记/Java笔记/服务网格笔记/TiDB笔记.md)
       * [Zabbix笔记](编程笔记/Java笔记/服务网格笔记/Zabbix笔记.md)
-    - 核心技术及源码剖析笔记
-      * [Netty核心技术及源码剖析笔记](编程笔记/Java笔记/核心技术及源码剖析笔记/Netty核心技术及源码剖析笔记.md)
     - [面试题笔记](编程笔记/Java笔记/面试题笔记/面试题笔记.md)
   - Linux运维笔记
     * [Caddy笔记](编程笔记/Linux运维笔记/Caddy笔记.md)

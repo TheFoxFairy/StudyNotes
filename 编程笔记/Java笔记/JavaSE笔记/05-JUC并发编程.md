@@ -1420,9 +1420,6 @@ public ThreadPoolExecutor(int corePoolSize, // 核心线程池大小
 ```java
 public class Demo2 {
     public static void main(String[] args) {
-
-
-
         ExecutorService threadPool = new ThreadPoolExecutor(
                 2,
                 5,
