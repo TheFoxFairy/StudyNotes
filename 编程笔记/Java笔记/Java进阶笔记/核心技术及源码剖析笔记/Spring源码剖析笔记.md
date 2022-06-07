@@ -1649,8 +1649,6 @@ private Object instantiateBean(String beanName, MyBeanDefinition beanDefinition)
 }
 ```
 
-
-
 #####  测试访问
 
 然后进行debug调试，发现一直相互依赖。
@@ -1761,7 +1759,61 @@ templateRoot=layouts
 
 - view.render()
 
-### AOP实现与总结
+## 手写SpringV3.0版本
+
+### AOP设计与实现
+
+![image-20220526162943993](../../../../assets/Spring%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E7%AC%94%E8%AE%B0/image-20220526162943993.png)
+
+#### 环境配置
+
+##### application.properties
+
+在application.properties中增加如下自定义配置：
+
+````properties
+# 多切面配置可以在key前面加前缀
+# 例如：aspect.logAspect
+
+# 切面表达式
+pointCut=public .* com.study.myspring.demo.service..*Service..*(.*)
+# 切面类
+aspectClass=com.study.myspring.demo.aspect.LogAspect
+# 切面前置通知
+aspectBefore=before
+# 切面后置通知
+aspectAfter=after
+# 切面异常通知
+aspectAfterThrow=afterThrowing
+# 切面异常类型
+aspectAfterThrowingName=java.lang.Exception
+````
+
+##### Spring AOP的原生配置
+
+下面是Spring AOP的原生配置，为了方便操作，用properties文件来替代xml，以简化操作：
+
+```xml
+<bean id="xmlAspect" class="com.study.myspring.demo.aspect.XmlAspect"/>
+
+<!--AOP配置-->
+<aop:config>
+    <!--声明一个切面，并注入切面Bean，相等于@Aspect-->
+    <aop:aspect ref="xmlAspect">
+        <!--配置一个切入点，相等于@Poincut-->
+        <aop:pointcut id="simplePointcut" expression="execution(* com.study.myspring.demo.service..*(..))"/>
+        <!--配置通知，相当于@Before、@After、@AfterReturn，@Around、@AfterThrowing-->
+        <aop:before method="before" pointcut-ref="simplePointcut"/>
+        <aop:after method="after" pointcut-ref="simplePointcut"/>
+        <aop:after-returning method="afterReturn" pointcut-ref="simplePointcut"/>
+        <aop:after-throwing method="afterThrow" pointcut-ref="simplePointcut" throwing="ex"/>
+    </aop:aspect>
+</aop:config>
+```
+
+#### 完成AOP定层设计
+
+
 
 ## 手绘Spring IOC运行时序图
 

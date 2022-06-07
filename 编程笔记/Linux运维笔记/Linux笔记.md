@@ -332,7 +332,7 @@ vi /etc/resolv.conf
 * 重启网卡重新加载配置文件
 
 ```sh
-service network restart 
+service network restart
 ```
 
 * 用`ip addr`命令查看一下更改是否生效
@@ -470,9 +470,9 @@ hostname hutao
 
 ### Linux相关资源
 
-```
+```shell
 https://pan.baidu.com/s/174VpfzRcFVi6AjU5CwVTcg 
-提取码：imnj 
+提取码：imnj
 ```
 
 ### 命令学习法
@@ -592,13 +592,13 @@ history -c
 
 ### 概念
 
-##### 文件系统
+#### 文件系统
 
 操作系统如何管理文件，内部定义了一些规则或者定义。
 
 在Linux中所有的东西都是以文件的方式进行操作，而且文件的访问不和Window的一样。window依靠的是通过盘符进行访问；而Linux维护着一个树状结构的文件模型，它只有一个根节点 ,其名字叫做 ``/``，而一个节点上可以有多个子节点。
 
-##### 查找文件的方式
+#### 查找文件的方式
 
 * 相对路径：以当前路径为基准点，查找其他资源，比如
 
@@ -614,7 +614,7 @@ vi /etc/sysconfig/network-scripts/ifcfg-ens33
 
 **日常使用中，只要找到路径即可，但是如果是一些配置文件，尽量写绝对路径**
 
-##### 可以随意的挂载磁盘
+#### 可以随意的挂载磁盘
 
 为了防止内容不够，自行进行扩容。linux通过`mount`进行将扩容的硬盘进行挂载。
 
@@ -635,17 +635,17 @@ disk3 1P
 
 ![image-20220216111002612](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122389.png)
 
-`/bin`：bin是Binary的缩写, 这个目录存放着最经常使用的命令。
+`/bin`：bin是Binary的缩写, 这个目录存放着最**经常使用的命令**。
 
-`/boot`：这里存放的是启动Linux时使用的一些核心文件，包括一些连接文件以及镜像文件。
+`/boot`：这里存放的是启动Linux时使用的一些**核心文件**，包括一些连接文件以及镜像文件。
 
-``/dev``：dev是Device(设备)的缩写, 该目录下存放的是Linux的外部设备，在Linux中访问设备的方式和访问文件的方式是相同的。
+``/dev``：dev是Device(设备)的缩写, 该目录下存放的是Linux的**外部设备**，在Linux中访问设备的方式和访问文件的方式是相同的。
 
-``/etc``：这个目录用来存放所有的系统管理所需要的配置文件和子目录。
+``/etc``：这个目录用来存放所有的系统管理所需要的**配置**文件和子目录。
 
 ``/home``：用户的主目录，在Linux中，每个用户都有一个自己的目录，一般该目录名是以用户的账号命名的。
 
-``/lib``：这个目录里存放着系统最基本的动态连接共享库，其作用类似于Windows里的DLL文件。几乎所有的应用程序都需要用到这些共享库。
+``/lib``：这个目录里存放着系统最基本的**动态连接共享库**，其作用类似于Windows里的DLL文件。几乎所有的应用程序都需要用到这些共享库。
 
 ``/lost+found``：这个目录一般情况下是空的，当系统非法关机后，这里就存放了一些文件。
 
@@ -812,7 +812,7 @@ stat xxx
 7. `Modify`：修改文件内容时间
 8. `Change`：修改文件元数据信息时间
 
-![image-20220217145939312](../../../../../../Pictures/assets/Linux笔记/image-20220217145939312.png)
+![image-20220217145939312](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654491.png)
 
 - `ln`：创建文件的链接（快捷方式）
 
@@ -829,6 +829,8 @@ wo hen kai xin
 ```sh
 ln -s 1.log test.log
 ```
+
+> 软连接创建的文件指向当前文件，当前文件指向物理地址
 
 **硬链接**：硬链接和原始文件使用文件系统中的同一个文件（如果你害怕一个文件被别人误删，你可以使用硬链接保护这个文件）（直接指向物理地址）
 
@@ -911,7 +913,7 @@ find /etc -name profile* # 在/etc目录下查找profile开头的文件
 
 ### VI和Vim编辑器
 
-![img](../../../../../../Pictures/assets/Linux笔记/vi-vim-cheat-sheet-sch1.gif)
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654493.gif)
 
 vi与vim的区别就是记事本和notepad编辑器的感觉。
 
@@ -954,7 +956,7 @@ vi +/if profile
 
 #### 三种模式
 
-![img](../../../../../../Pictures/assets/Linux笔记/centos7_vi-mode.gif)
+![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654494.gif)
 
 ##### 一般模式可用的光标移动、复制粘贴、搜索替换等
 
@@ -1150,7 +1152,7 @@ df -h
 * 查看指定文件目录大小
 
 ```sh
-du -h --max-depth=1 /etc
+df -h --max-depth=1 /etc
 ```
 
 ### 文件压缩
@@ -1320,15 +1322,15 @@ sudo apt-get install firewalld
 * `firewall-cmd`常用命令
 
 ```sh
-firewa11-cmd --state 								#查看防火墙状态，是否是running
-firewa11-cmd --re1oad 								#重新较入配置，比如添加规则之后，需要执行此命令
-firewa11-cmd --get-zones 							#列出支持的zone
-firewa11-cmd --get-services							#列出支持的服务，在列表中的服务是放行的
-firewa11-cmd --query-serwice ftp					#查看ftp服务是否支持，返回yes或者no
-firewa17-cmd --add-service=ftp						#临时开放ftp服务
-firewa11-cmd --add-service=ftp --permanent  		#永久开放ftp服务
-firewa11-cmd --remove-service=ftp --permanent		#永久移除ftp服务
-firewa11-cmd --add-port=so/tcp --permanent			#永久添加80端口
+firewall-cmd --state 								#查看防火墙状态，是否是running
+firewall-cmd --re1oad 								#重新较入配置，比如添加规则之后，需要执行此命令
+firewall-cmd --get-zones 							#列出支持的zone
+firewall-cmd --get-services							#列出支持的服务，在列表中的服务是放行的
+firewall-cmd --query-service ftp					#查看ftp服务是否支持，返回yes或者no
+firewall-cmd --add-service=ftp						#临时开放ftp服务
+firewall-cmd --add-service=ftp --permanent  		#永久开放ftp服务
+firewall-cmd --remove-service=ftp --permanent		#永久移除ftp服务
+firewall-cmd --add-port=so/tcp --permanent			#永久添加80端口
 ```
 
 * 开启一个端口的正确操作
@@ -1349,11 +1351,11 @@ firewall-cmd --zone=public --remove-port=80/tcp --permanent
 
 ### 加密算法（了解）
 
-![image-20200708162630894](../../../../../../Pictures/assets/Linux笔记/1460000041302477)
+![image-20200708162630894](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654495)
 
 #### 不可逆加密算法
 
-![对称加密、非对称加密、摘要（Hash算法）、数字签名、数字证书](../../../../../../Pictures/assets/Linux笔记/1460000041302478)
+![对称加密、非对称加密、摘要（Hash算法）、数字签名、数字证书](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654496)
 
 - 可以通过数据计算加密后的结果，但是通过结果无法计算出加密数据
 - 应用场景
@@ -1363,7 +1365,7 @@ firewall-cmd --zone=public --remove-port=80/tcp --permanent
 
 #### 对称加密算法
 
-![对称加密、非对称加密、摘要（Hash算法）、数字签名、数字证书](../../../../../../Pictures/assets/Linux笔记/1460000041302479)
+![对称加密、非对称加密、摘要（Hash算法）、数字签名、数字证书](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654497)
 
 - 对称加密算法：代表性算法叫做 DES、3DES、Blowfish、IDEA、RC4、RC5、RC6和AES
   - 特点：加密和解密使用相同的秘钥
@@ -1375,7 +1377,7 @@ firewall-cmd --zone=public --remove-port=80/tcp --permanent
 
 #### 非对称加密算法
 
-![对称加密、非对称加密、摘要（Hash算法）、数字签名、数字证书](../../../../../../Pictures/assets/Linux笔记/1460000041302480)
+![对称加密、非对称加密、摘要（Hash算法）、数字签名、数字证书](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654498)
 
 - 非对称加密算法需要一对密钥(两个密钥)：代表性算法叫做 RSA、ECC、Diffie-Hellman、El Gamal、DSA(数字签名用)
   - 公开密钥(publickey)和私有密钥(privatekey)(简称公钥，私钥)。
@@ -1414,7 +1416,7 @@ ssh 192.168.183.103
 
 * 免校验：在`192.168.183.102`中修改``/etc/ssh/ssh_config``文件的配置，以后则不会再出现此问题
 
-![image-20220219234050420](../../../../../../Pictures/assets/Linux笔记/image-20220219234050420.png)
+![image-20220219234050420](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654499.png)
 
 ```properties
 #######################在文件末尾添加内容如下###################
@@ -1445,6 +1447,8 @@ clock -w # 这个命令强制把系统时间写入CMOS
 yum install -y ntpdate
 ntpdate cn.ntp.org.cn
 hwclock --systohc # 最后执行如下命令将系统时间同步到硬件，防止系统重启后时间被还原。
+
+# hwclock -s
 ```
 
 * 查看日历
@@ -1568,7 +1572,7 @@ usermod -G yuesan hutao
 
 ### 权限
 
-![image-20220221204501062](../../../../../../Pictures/assets/Linux笔记/image-20220221204501062.png)
+![image-20220221204501062](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654500.png)
 
 * 查看文件的权限
 
@@ -1576,9 +1580,9 @@ usermod -G yuesan hutao
 drwxr-xr-x  5 hutao hutao    238 Feb 19 01:24 mod_fcgid-2.3.9
 ```
 
-![image-20220221204606218](../../../../../../Pictures/assets/Linux笔记/image-20220221204606218.png)
+![image-20220221204606218](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654501.png)
 
-* 三组权限，每组3个字母`d rwx r-x r-x`：第一组代表所属用户的权限，第二组代表所属组的权限，第三组代表其他人的权限
+* 三组权限，每组3个字母`d rwx r-x r-x`：第一组代表所属**用户**的权限，第二组代表所属**组**的权限，第三组代表**其他人**的权限。第一个字母`d`，前面讲过了，表示是文件夹。
 
 ```sh
 r:读取权限
@@ -1622,9 +1626,11 @@ x:执行权限
   chmod o+w file
   chmod ug+rw file
   chmod ugo-rw file
+  
+  chmod 777 file
   ```
 
-![image-20220221214143597](../../../../../../Pictures/assets/Linux笔记/image-20220221214143597.png)
+![image-20220221214143597](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654502.png)
 
 ## 管道与重定向
 
@@ -1716,7 +1722,7 @@ ping www.baidu.com >> baidu &
 jobs -l
 ```
 
-* `nohup`可以防止后台进程被挂起
+* `nohup`将后台进程挂起，防止被关闭
 
 `ping www.baidu.com >> baidu 2>&1`：将数据输出到指定文件baidu，通过1和2的方式，2方式是接收错误信息，1方式是标准信息输出。
 
@@ -1880,7 +1886,7 @@ chown mysql.mysql /var/run/mysqld/
 
 测试`cp /etc/passwd ./`，查看`cat passwd`
 
-![image-20220227134707565](../../../../../../Pictures/assets/Linux笔记/image-20220227134707565.png)
+![image-20220227134707565](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654503.png)
 
 * `cut`：用指定规则来切分文本
 
@@ -1926,19 +1932,19 @@ sed 是Stream Editor（字符流编辑器）的缩写，简称流编辑器。Sed
 
 | option[选项] | 解释说明（带*的为重点）                                      |
 | ------------ | ------------------------------------------------------------ |
-| -n           | 取消默认的sed软件的输出，常与sed命令的p连用。*               |
+| -n           | 取消默认的sed软件的输出，常与sed命令的p连用。                |
 | -e           | 一行命令语句可以执行多条sed命令                              |
 | -f           | 选项后面可以接sed脚本的文件名                                |
-| -r           | 使用扩展正则表达式，默认情况sed只识别基本正则表达式*         |
-| -i           | 直接修改文件内容，而不是输出到终端，如果不使用-i选项sed软件只是修改在内存中的数据，并不会影响磁盘上的文件* |
+| -r           | 使用扩展正则表达式，默认情况sed只识别基本正则表达式          |
+| -i           | 直接修改文件内容，而不是输出到终端，如果不使用-i选项sed软件只是修改在内存中的数据，并不会影响磁盘上的文件 |
 
 | sed -commands[sed命令] | 解释说明（带*的为重点）                                      |
 | ---------------------- | ------------------------------------------------------------ |
-| a                      | `追加，在指定行后添加一行或多行文本*`                        |
+| a                      | 追加，在指定行后添加一行或多行文本                           |
 | c                      | 取代指定的行                                                 |
-| d                      | `删除指定的行*`                                              |
+| d                      | 删除指定的行                                                 |
 | D                      | 删除模式空间的部分内容，直到遇到换行符\n结束操作，与多行模式相关 |
-| i                      | `插入，在指定行前添加一行或多行文本*`                        |
+| i                      | 插入，在指定行前添加一行或多行文本                           |
 | h                      | 把模式空间的内容复制到保持空间                               |
 | H                      | 把模式空间的内容追加到保持空间                               |
 | g                      | 把保持空间的内容复制到模式空间                               |
@@ -2015,24 +2021,183 @@ sed -i '2d' passwd
 
 其中`":"`表示匹配规则，和前面一样，`NR`表示行号，`/etc/passwd`是文件，
 
-![image-20201028150548926](../../../../../../Pictures/assets/Linux笔记/1460000041302488)
+![image-20201028150548926](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654504)
+
+
 
 ## Shell编程
 
-### 名词解释
+### 安装IDE
 
-### 执行Shell的方式
+#### 开发工具：sulime text3
 
-### Shell语法
+对于shell脚本使用vim在linux开发可能效率比较底下，而且大多都是windows开发，当然能够在windows下运行更好。
 
-## Linux启动流程
+* 安装插件ShellScriptImproved，用于语法提示以及关键字高亮
 
-#### 系统启动流程
+ 选择菜单preferences->package control
 
-#### 系统服务
+![image-20220605133658343](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654505.png)
 
-#### 开机自动服务
+输入 并选择install package
 
-#### 定时任务
+![image-20220605133750558](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654506.png)
 
-#### 虚拟机初始化脚本
+输入shell 并选择ShellScriptImproved
+
+![image-20220605133833049](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654507.png)
+
+建立一个脚本文件
+
+![image-20220605134022781](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654508.png)
+
+ 脚本运行一般要到linux环境下才能运行，这里可以借助工具cmder进行运行测试
+
+ 1）下载地址
+
+ https://github.com/cmderdev/cmder/releases/latest
+
+ 2）解压到自己的工作目录
+
+ 3）执行cmder.exe，打开cmder
+
+ 4）进入脚本目录，输入bash进入bash解释器
+
+ 5）执行脚本./hello.sh,执行结果如下：
+
+![image-20220605140239820](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654509.png)
+
+### Shell编程概述
+
+#### 名词解释
+
+- `Kernel`：Linux内核主要是为了和硬件打交道
+- Shell
+  - Shell 是一个用 C 语言编写的程序，它是用户使用 Linux 的桥梁。Shell 既是一种命令语言，又是一种程序设计语言。
+  - Shell 是指一种应用程序，这个应用程序提供了一个界面，用户通过这个界面访问操作系统内核的服务。
+- Shell环境
+  - 只要有一个能编写代码的文本编辑器和一个能解释执行的脚本解释器就可以了。
+  - Bourne Shell（/usr/bin/sh或/bin/sh）
+  - Bourne Again Shell（/bin/bash）--默认
+  - C Shell（/usr/bin/csh）
+- **``#!``** 声明：告诉系统其后路径所指定的程序即是解释此脚本文件的 Shell 程序
+
+#### 执行Shell的方式
+
+- ``./shxxx.sh``
+  - 执行的必须是一个可执行文件
+  - chmod u+x shxxx.sh
+- ``sh shxxx.sh``
+  - 执行的文件可以是一个普通文件
+- ``source shxxx.sh``
+  - 直接在当前进程执行脚本
+  - 当我们执行bash的时候开启一个子进程，当脚本中出现ping的时候又开启了一个子进程
+- 区别：
+  - 第一种和第二种会新开一个bash，不同bash种的变量无法共享
+  - 第三种是在同一个shell里面执行的
+- export：可以将当前进程的变量传递给子进程去使用
+  - 将来配置profile的时候，所有的变量前必须加export
+
+### Shell基础入门
+
+#### Shell变量
+
+##### 定义
+
+定义变量时，变量名不加美元符号（$），如：
+
+- 命名只能使用英文字母，数字和下划线，首个字符不能以数字开头。
+- 中间不能有空格，可以使用下划线 **_**。
+- 不能使用标点符号。
+- 不能使用bash里的关键字（可用help命令查看保留关键字）。
+
+##### 变量类型
+
+运行shell时，会同时存在三种变量：
+
+- **1) 局部变量** 局部变量在脚本或命令中定义，仅在当前shell实例中有效，其他shell启动的程序不能访问局部变量。
+- **2) 环境变量** 所有的程序，包括shell启动的程序，都能访问环境变量，有些程序需要环境变量来保证其正常运行。必要的时候shell脚本也可以定义环境变量。
+- **3) shell变量** shell变量是由shell程序设置的特殊变量。shell变量中有一部分是环境变量，有一部分是局部变量，这些变量保证了shell的正常运行
+
+###### 使用变量
+
+使用一个定义过的变量，只要在变量名前面加美元符号即可，如：
+
+```shell
+# 变量的声明
+name=hutao
+
+# 变量的调用
+echo $name
+echo ${name}
+```
+
+变量名外面的花括号是可选的，加不加都行，加花括号是为了帮助解释器识别变量的边界，比如下面这种情况：
+
+```shell
+for skill in Ada Coffe Action Java; do
+    echo "I am good at ${skill}Script"
+done
+```
+
+![image-20220606192228357](../../../assets/Linux%E7%AC%94%E8%AE%B0/image-20220606192228357.png)
+
+###### 只读变量
+
+使用 readonly 命令可以将变量定义为只读变量，只读变量的值不能被改变。
+
+```sh
+name=hutao
+readonly name
+name=yaodao
+```
+
+运行脚本，结果如下：
+
+```verilog
+test.sh: line 5: name: readonly variable
+```
+
+###### 删除变量
+
+使用 unset 命令可以删除变量。
+
+变量被删除后不能再次使用。unset 命令不能删除只读变量。
+
+```sh
+name=hutao
+unset name
+echo $name
+```
+
+以上实例执行将没有任何输出。
+
+#### Shell字符串
+
+##### 概述
+
+字符串是shell编程中最常用最有用的数据类型（除了数字和字符串，也没啥其它类型好用了），字符串可以用单引号，也可以用双引号，也可以不用引号。
+
+
+
+#### Shell数组
+
+#### Shell的注释
+
+#### Shell参数传递
+
+### Shell高级进阶
+
+#### Shell运算符
+
+#### echo打印数据
+
+#### test命令
+
+#### Shell流程控制
+
+### 系统任务设置
+
+### 虚拟机初始化脚本
+
+### 虚拟机相互免密钥
