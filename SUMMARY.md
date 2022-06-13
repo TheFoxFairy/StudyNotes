@@ -154,10 +154,10 @@
       * [03-注射与反解](编程笔记/Java笔记/JavaSE笔记/03-注射与反解.md)
       * [04-多线程详解](编程笔记/Java笔记/JavaSE笔记/04-多线程详解.md)
       * [05-JUC并发编程](编程笔记/Java笔记/JavaSE笔记/05-JUC并发编程.md)
+      * [05-JUC并发编程与源码分析](编程笔记/Java笔记/JavaSE笔记/05-JUC并发编程与源码分析.md)
       * [05-JUC进阶编程](编程笔记/Java笔记/JavaSE笔记/05-JUC进阶编程.md)
       * [06-JVM原理](编程笔记/Java笔记/JavaSE笔记/06-JVM原理.md)
       * [07-JVM原理（进阶版）](编程笔记/Java笔记/JavaSE笔记/07-JVM原理（进阶版）.md)
-      * [08-JVM面试篇](编程笔记/Java笔记/JavaSE笔记/08-JVM面试篇.md)
     - Java进阶笔记
       - 核心技术及源码剖析笔记
         * [Mybatis源码剖析笔记](编程笔记/Java笔记/Java进阶笔记/核心技术及源码剖析笔记/Mybatis源码剖析笔记.md)

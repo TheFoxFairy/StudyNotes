@@ -10,8 +10,6 @@
 
 <img src="https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/202202161122349.png" alt="image-20220215065945520"  />
 
-
-
 ### 计算机硬件组成
 
 **输入设备**：输入设备用来将人们熟悉的信息形式转换为机器能够识别的信息形式
@@ -812,7 +810,7 @@ stat xxx
 7. `Modify`：修改文件内容时间
 8. `Change`：修改文件元数据信息时间
 
-![image-20220217145939312](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654491.png)
+![image-20220217145939312](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654491.png)
 
 - `ln`：创建文件的链接（快捷方式）
 
@@ -913,7 +911,7 @@ find /etc -name profile* # 在/etc目录下查找profile开头的文件
 
 ### VI和Vim编辑器
 
-![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654493.gif)
+![img](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654493.gif)
 
 vi与vim的区别就是记事本和notepad编辑器的感觉。
 
@@ -956,7 +954,7 @@ vi +/if profile
 
 #### 三种模式
 
-![img](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654494.gif)
+![img](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654494.gif)
 
 ##### 一般模式可用的光标移动、复制粘贴、搜索替换等
 
@@ -1351,11 +1349,11 @@ firewall-cmd --zone=public --remove-port=80/tcp --permanent
 
 ### 加密算法（了解）
 
-![image-20200708162630894](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654495)
+![image-20200708162630894](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654495)
 
 #### 不可逆加密算法
 
-![对称加密、非对称加密、摘要（Hash算法）、数字签名、数字证书](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654496)
+![对称加密、非对称加密、摘要（Hash算法）、数字签名、数字证书](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654496)
 
 - 可以通过数据计算加密后的结果，但是通过结果无法计算出加密数据
 - 应用场景
@@ -1365,7 +1363,7 @@ firewall-cmd --zone=public --remove-port=80/tcp --permanent
 
 #### 对称加密算法
 
-![对称加密、非对称加密、摘要（Hash算法）、数字签名、数字证书](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654497)
+![对称加密、非对称加密、摘要（Hash算法）、数字签名、数字证书](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654497)
 
 - 对称加密算法：代表性算法叫做 DES、3DES、Blowfish、IDEA、RC4、RC5、RC6和AES
   - 特点：加密和解密使用相同的秘钥
@@ -1377,7 +1375,7 @@ firewall-cmd --zone=public --remove-port=80/tcp --permanent
 
 #### 非对称加密算法
 
-![对称加密、非对称加密、摘要（Hash算法）、数字签名、数字证书](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654498)
+![对称加密、非对称加密、摘要（Hash算法）、数字签名、数字证书](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654498)
 
 - 非对称加密算法需要一对密钥(两个密钥)：代表性算法叫做 RSA、ECC、Diffie-Hellman、El Gamal、DSA(数字签名用)
   - 公开密钥(publickey)和私有密钥(privatekey)(简称公钥，私钥)。
@@ -1416,7 +1414,7 @@ ssh 192.168.183.103
 
 * 免校验：在`192.168.183.102`中修改``/etc/ssh/ssh_config``文件的配置，以后则不会再出现此问题
 
-![image-20220219234050420](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654499.png)
+![image-20220219234050420](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654499.png)
 
 ```properties
 #######################在文件末尾添加内容如下###################
@@ -1572,7 +1570,7 @@ usermod -G yuesan hutao
 
 ### 权限
 
-![image-20220221204501062](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654500.png)
+![image-20220221204501062](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654500.png)
 
 * 查看文件的权限
 
@@ -1580,7 +1578,7 @@ usermod -G yuesan hutao
 drwxr-xr-x  5 hutao hutao    238 Feb 19 01:24 mod_fcgid-2.3.9
 ```
 
-![image-20220221204606218](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654501.png)
+![image-20220221204606218](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654501.png)
 
 * 三组权限，每组3个字母`d rwx r-x r-x`：第一组代表所属**用户**的权限，第二组代表所属**组**的权限，第三组代表**其他人**的权限。第一个字母`d`，前面讲过了，表示是文件夹。
 
@@ -1630,7 +1628,7 @@ x:执行权限
   chmod 777 file
   ```
 
-![image-20220221214143597](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654502.png)
+![image-20220221214143597](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654502.png)
 
 ## 管道与重定向
 
@@ -1886,7 +1884,7 @@ chown mysql.mysql /var/run/mysqld/
 
 测试`cp /etc/passwd ./`，查看`cat passwd`
 
-![image-20220227134707565](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654503.png)
+![image-20220227134707565](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654503.png)
 
 * `cut`：用指定规则来切分文本
 
@@ -2021,7 +2019,7 @@ sed -i '2d' passwd
 
 其中`":"`表示匹配规则，和前面一样，`NR`表示行号，`/etc/passwd`是文件，
 
-![image-20201028150548926](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654504)
+![image-20201028150548926](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654504)
 
 
 
@@ -2037,19 +2035,19 @@ sed -i '2d' passwd
 
  选择菜单preferences->package control
 
-![image-20220605133658343](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654505.png)
+![image-20220605133658343](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654505.png)
 
 输入 并选择install package
 
-![image-20220605133750558](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654506.png)
+![image-20220605133750558](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654506.png)
 
 输入shell 并选择ShellScriptImproved
 
-![image-20220605133833049](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654507.png)
+![image-20220605133833049](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654507.png)
 
 建立一个脚本文件
 
-![image-20220605134022781](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654508.png)
+![image-20220605134022781](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654508.png)
 
  脚本运行一般要到linux环境下才能运行，这里可以借助工具cmder进行运行测试
 
@@ -2065,7 +2063,7 @@ sed -i '2d' passwd
 
  5）执行脚本./hello.sh,执行结果如下：
 
-![image-20220605140239820](https://cdn.jsdelivr.net/gh/TheFoxFairy/ImgStg@main/img202206061654509.png)
+![image-20220605140239820](https://raw.githubusercontent.com/TheFoxFairy/ImgStg/main/img202206061654509.png)
 
 ### Shell编程概述
 
@@ -2178,26 +2176,1021 @@ echo $name
 
 字符串是shell编程中最常用最有用的数据类型（除了数字和字符串，也没啥其它类型好用了），字符串可以用单引号，也可以用双引号，也可以不用引号。
 
+##### 单引号
 
+```shell
+str='hello world!'
+```
+
+单引号字符串的限制：
+
+- 单引号里的任何字符都会原样输出，单引号字符串中的变量是无效的；
+- 单引号字串中不能出现单独一个的单引号（对单引号使用转义符后也不行），但可成对出现，作为字符串拼接使用。
+
+##### 双引号
+
+```shell
+name="hutao"
+str="hello,${name}"
+echo $str
+```
+
+- 双引号里可以有变量
+- 双引号里可以出现转义字符
+
+##### 获取字符串长度
+
+```shell
+string="abcd"
+echo ${#string[0]} # 4
+```
+
+##### 截取字符串
+
+```shell
+string="hello,world"
+echo ${string:1:4} # ello
+```
+
+##### 查找字符串
+
+查找字符 **i** 或 **o** 的位置(哪个字母先出现就计算哪个)
+
+```shell
+string="hello,wolrd"
+echo `expr index "$string" io` # 5
+```
+
+**注意：** 以上脚本中 **`** 是反引号，而不是单引号 **'**，不要看错了哦。
 
 #### Shell数组
 
+##### 概述
+
+bash支持一维数组（不支持多维数组），并且没有限定数组的大小。
+
+数组元素的下标由 0 开始编号。获取数组中的元素要利用下标，下标可以是整数或算术表达式，其值应大于或等于 0。
+
+##### 定义数组
+
+在 Shell 中，用括号来表示数组，数组元素用"空格"符号分割开。定义数组的一般形式为：
+
+```shell
+数组名=(值1 值2 ... 值n)
+```
+
+例如：
+
+```shell
+array_name=(value0 value1 value2 value3)
+```
+
+还可以单独定义数组的各个分量：
+
+```shell
+array_name[0]=value0
+array_name[1]=value1
+array_name[n]=valuen
+```
+
+##### 读取数组
+
+读取数组元素值的一般格式是：
+
+```shell
+${数组名[下标]}
+```
+
+例如：
+
+```shell
+valuen=${array_name[0]}
+```
+
+使用 ``@`` 或者 ``*`` 符号可以获取数组中的所有元素，例如：
+
+```shell
+echo ${array_name[@]}
+echo ${array_name[*]}
+```
+
+##### 获取数组的长度
+
+获取数组长度的方法与获取字符串长度的方法相同，例如：
+
+```shell
+# 取得数组元素的个数
+length=${#array_name[@]}
+
+# 获取数组单个元素的长度
+lengthn=${#array_name[n]}
+```
+
 #### Shell的注释
 
-#### Shell参数传递
+##### 单行注释
+
+以 ``# ``开头的行就是注释，会被解释器忽略。
+
+通过每一行加一个 ``#`` 号设置多行注释，像这样：
+
+```shell
+#--------------------------------------------
+# 这是一个注释
+#--------------------------------------------
+##### 用户配置区 开始 #####
+#
+#
+# 这里可以添加脚本描述信息
+#
+#
+##### 用户配置区 结束  #####
+```
+
+##### 多行注释
+
+多行注释还可以使用以下格式：
+
+```shell
+:<<EOF
+注释内容...
+注释内容...
+注释内容...
+EOF
+```
+
+例如：
+
+```shell
+:<<EOF
+注释内容...
+注释内容...
+注释内容...
+EOF
+#--------------------------------------------
+:<<!
+> !
+```
+
+#### Shell参数传递 
+
+执行Shell脚本时，向脚本传递参数，脚本内获取参数的格式为：``$n``。n代表一个数字。
+
+| 参数处理 | 说明                                                         |
+| :------- | :----------------------------------------------------------- |
+| `$#`     | 传递到脚本的参数个数                                         |
+| `$*`     | 以一个单字符串显示所有向脚本传递的参数。 如``"$*"``用``「"」``括起来的情况、以``"$1 $2 … $n"``的形式输出所有参数。 |
+| `$$`     | 脚本运行的当前进程ID号                                       |
+| `$!`     | 后台运行的最后一个进程的ID号                                 |
+| `$@`     | 与``$*``相同，但是使用时加引号，并在引号中返回每个参数。 如``"$@"``用``「"」``括起来的情况、以``"$1" "$2" … "$n" ``的形式输出所有参数。 |
+| `$-`     | 显示Shell使用的当前选项，与[set命令](https://www.runoob.com/linux/linux-comm-set.html)功能相同。 |
+| `$?`     | 显示最后命令的退出状态。0表示没有错误，其他任何值表明有错误。 |
+
+实例：
+
+```shell
+#!/bin/bash
+
+echo "Shell 传递参数实例！";
+echo "第一个参数为：$1";
+
+echo "参数个数为：$#";
+echo "传递的参数作为一个字符串显示：$*";
+```
+
+执行脚本，输出结果如下所示：
+
+```shell
+[root@centos7 ~]# chmod +x test.sh
+[root@centos7 ~]# ./test.sh 1 2 3
+Shell 传递参数实例！
+第一个参数为：1
+参数个数为：3
+传递的参数作为一个字符串显示：1 2 3
+```
+
+`$*` 与 `$@` 区别：
+
+- 相同点：都是引用所有参数。
+- 不同点：只有在双引号中体现出来。假设在脚本运行时写了三个参数 1、2、3，，则 **" * " 等价于 "1 2 3"（传递了一个参数），而 "@" 等价于 "1" "2" "3"（传递了三个参数）。**
 
 ### Shell高级进阶
 
 #### Shell运算符
 
+##### 概述
+
+- 原生bash不支持简单的数学运算，但是可以通过其他命令来实现，例如 awk 和 expr，expr 最常用。
+  - expr 是一款表达式计算工具，使用它能完成表达式的求值操作。
+
+- 表达式和运算符之间要有空格，例如 2+2 是不对的，必须写成 2 + 2，这与我们熟悉的大多数编程语言不一样。
+- 完整的表达式要被 **` `** 包含，注意这个字符不是常用的单引号，在 Esc 键下边。
+
+##### 算术运算符
+
+下表列出了常用的算术运算符，假定变量 a 为 10，变量 b 为 20：
+
+| 运算符 | 说明                                          | 举例                          |
+| :----- | :-------------------------------------------- | :---------------------------- |
+| +      | 加法                                          | `expr $a + $b` 结果为 30。    |
+| -      | 减法                                          | `expr $a - $b` 结果为 -10。   |
+| *      | 乘法                                          | `expr $a \* $b` 结果为  200。 |
+| /      | 除法                                          | `expr $b / $a` 结果为 2。     |
+| %      | 取余                                          | `expr $b % $a` 结果为 0。     |
+| =      | 赋值                                          | `a=$b` 把变量 b 的值赋给 a。  |
+| ==     | 相等。用于比较两个数字，相同则返回 true。     | `[ $a == $b ] `返回 false。   |
+| !=     | 不相等。用于比较两个数字，不相同则返回 true。 | `[ $a != $b ] `返回 true。    |
+
+**注意：**条件表达式要放在方括号之间，并且要有空格，例如: **``[$a==$b]``** 是错误的，必须写成 **``[ $a == $b ]``**。
+
+```shell
+a=10
+b=10
+val=`expr $a + $b`
+echo $val
+```
+
+##### 关系运算符
+
+关系运算符只支持数字，不支持字符串，除非字符串的值是数字。
+
+下表列出了常用的关系运算符，假定变量 a 为 10，变量 b 为 20：
+
+| 运算符 | 说明                                                  | 举例                         |
+| :----- | :---------------------------------------------------- | :--------------------------- |
+| -eq    | 检测两个数是否相等，相等返回 true。                   | `[ $a -eq $b ]` 返回 false。 |
+| -ne    | 检测两个数是否不相等，不相等返回 true。               | `[ $a -ne $b ]` 返回 true。  |
+| -gt    | 检测左边的数是否大于右边的，如果是，则返回 true。     | `[ $a -gt $b ]` 返回 false。 |
+| -lt    | 检测左边的数是否小于右边的，如果是，则返回 true。     | `[ $a -lt $b ]` 返回 true。  |
+| -ge    | 检测左边的数是否大于等于右边的，如果是，则返回 true。 | `[ $a -ge $b ]` 返回 false。 |
+| -le    | 检测左边的数是否小于等于右边的，如果是，则返回 true。 | `[ $a -le $b ] `返回 true。  |
+
+```shell
+a=10
+b=20
+
+if [ $a -eq $b ]
+then
+   echo "$a -eq $b : a 等于 b"
+else
+   echo "$a -eq $b: a 不等于 b"
+fi
+```
+
+##### 布尔运算符
+
+下表列出了常用的布尔运算符，假定变量 a 为 10，变量 b 为 20：
+
+| 运算符 | 说明                                                | 举例                                       |
+| :----- | :-------------------------------------------------- | :----------------------------------------- |
+| !      | 非运算，表达式为 true 则返回 false，否则返回 true。 | `[ !false ]` 返回 true。                   |
+| -o     | 或运算，有一个表达式为 true 则返回 true。           | `[ $a -lt 20 -o $b -gt 100 ]` 返回 true。  |
+| -a     | 与运算，两个表达式都为 true 才返回 true。           | `[ $a -lt 20 -a $b -gt 100 ] `返回 false。 |
+
+```shell
+a=10
+b=20
+
+if [ $a != $b ]
+then
+   echo "$a != $b : a 不等于 b"
+else
+   echo "$a == $b: a 等于 b"
+fi
+if [ $a -lt 100 -a $b -gt 15 ]
+then
+   echo "$a 小于 100 且 $b 大于 15 : 返回 true"
+else
+   echo "$a 小于 100 且 $b 大于 15 : 返回 false"
+fi
+if [ $a -lt 100 -o $b -gt 100 ]
+then
+   echo "$a 小于 100 或 $b 大于 100 : 返回 true"
+else
+   echo "$a 小于 100 或 $b 大于 100 : 返回 false"
+fi
+if [ $a -lt 5 -o $b -gt 100 ]
+then
+   echo "$a 小于 5 或 $b 大于 100 : 返回 true"
+else
+   echo "$a 小于 5 或 $b 大于 100 : 返回 false"
+fi
+```
+
+##### 逻辑运算符
+
+以下介绍 Shell 的逻辑运算符，假定变量 a 为 10，变量 b 为 20:
+
+| 运算符 | 说明       | 举例                                        |
+| :----- | :--------- | :------------------------------------------ |
+| &&     | 逻辑的 AND | `[[ $a -lt 100 && $b -gt 100 ]] `返回 false |
+| \|\|   | 逻辑的 OR  | `[[ $a -lt 100 || $b -gt 100 ]] `返回 true  |
+
+```shell
+a=10
+b=20
+
+if [[ $a -lt 100 && $b -gt 100 ]]
+then
+   echo "返回 true"
+else
+   echo "返回 false"
+fi
+
+if [[ $a -lt 100 || $b -gt 100 ]]
+then
+   echo "返回 true"
+else
+   echo "返回 false"
+fi
+```
+
+##### 字符串运算符
+
+下表列出了常用的字符串运算符，假定变量 a 为 "abc"，变量 b 为 "efg"：
+
+| 运算符 | 说明                                         | 举例                       |
+| :----- | :------------------------------------------- | :------------------------- |
+| =      | 检测两个字符串是否相等，相等返回 true。      | `[ $a = $b ]` 返回 false。 |
+| !=     | 检测两个字符串是否不相等，不相等返回 true。  | `[ $a != $b ]` 返回 true。 |
+| -z     | 检测字符串长度是否为0，为0返回 true。        | `[ -z $a ]` 返回 false。   |
+| -n     | 检测字符串长度是否不为 0，不为 0 返回 true。 | `[ -n "$a" ]` 返回 true。  |
+| $      | 检测字符串是否不为空，不为空返回 true。      | `[ $a ]` 返回 true。       |
+
+##### 文件测试运算符
+
+文件测试运算符用于检测 Unix 文件的各种属性。
+
+属性检测描述如下：
+
+| 操作符  | 说明                                                         | 举例                        |
+| :------ | :----------------------------------------------------------- | :-------------------------- |
+| -b file | 检测文件是否是块设备文件，如果是，则返回 true。              | `[ -b $file ]` 返回 false。 |
+| -c file | 检测文件是否是字符设备文件，如果是，则返回 true。            | `[ -c $file ]` 返回 false。 |
+| -d file | 检测文件是否是目录，如果是，则返回 true。                    | `[ -d $file ]` 返回 false。 |
+| -f file | 检测文件是否是普通文件（既不是目录，也不是设备文件），如果是，则返回 true。 | `[ -f $file ]` 返回 true。  |
+| -g file | 检测文件是否设置了 SGID 位，如果是，则返回 true。            | `[ -g $file ]` 返回 false。 |
+| -k file | 检测文件是否设置了粘着位(Sticky Bit)，如果是，则返回 true。  | `[ -k $file ]` 返回 false。 |
+| -p file | 检测文件是否是有名管道，如果是，则返回 true。                | `[ -p $file ]` 返回 false。 |
+| -u file | 检测文件是否设置了 SUID 位，如果是，则返回 true。            | `[ -u $file ]` 返回 false。 |
+| -r file | 检测文件是否可读，如果是，则返回 true。                      | `[ -r $file ]` 返回 true。  |
+| -w file | 检测文件是否可写，如果是，则返回 true。                      | `[ -w $file ]` 返回 true。  |
+| -x file | 检测文件是否可执行，如果是，则返回 true。                    | `[ -x $file ]` 返回 true。  |
+| -s file | 检测文件是否为空（文件大小是否大于0），不为空返回 true。     | `[ -s $file ]` 返回 true。  |
+| -e file | 检测文件（包括目录）是否存在，如果是，则返回 true。          | `[ -e $file ]` 返回 true。  |
+
+其他检查符：
+
+- **-S**: 判断某文件是否 socket。
+- **-L**: 检测文件是否存在并且是一个符号链接。
+
 #### echo打印数据
+
+Shell 的 echo 指令用于字符串的输出。
+
+```shell
+# 显示普通字符串
+echo "hutao"
+
+# 显示转义字符串
+echo "\"It is hutao\""
+
+# 显示变量
+name=hutao
+echo "${name}"
+
+# 显示换行
+echo -e "OK! \n"
+echo "hutao"
+
+# 显示不换号
+echo -e "OK! \c"
+echo "hutao"
+
+# 显示结果定向至文件
+echo "hutao" > 1.log
+
+# 原样输出字符串
+echo '$name\"'
+
+# 显示命令执行结果
+echo `date`
+```
+
+#### printf命令
+
+##### 输出
+
+```shell
+printf "%-10s %-8s %-4s\n" 姓名 性别 体重kg  
+printf "%-10s %-8s %-4.2f\n" 郭靖 男 66.1234
+printf "%-10s %-8s %-4.2f\n" 杨过 男 48.6543
+printf "%-10s %-8s %-4.2f\n" 郭芙 女 47.9876
+```
+
+- **%s %c %d %f** 都是格式替代符，**％s** 输出一个字符串，**％d** 整型输出，**％c** 输出一个字符，**％f** 输出实数，以小数形式输出。
+- **%-10s** 指一个宽度为 10 个字符（**-** 表示左对齐，没有则表示右对齐），任何字符都会被显示在 10 个字符宽的字符内，如果不足则自动以空格填充，超过也会将内容全部显示出来。
+- **%-4.2f** 指格式化为小数，其中 **.2** 指保留2位小数。
+
+##### 转义序列
+
+| 序列    | 说明                                                         |
+| :------ | :----------------------------------------------------------- |
+| `\a`    | 警告字符，通常为ASCII的BEL字符                               |
+| `\b`    | 后退                                                         |
+| `\c`    | 抑制（不显示）输出结果中任何结尾的换行字符（只在%b格式指示符控制下的参数字符串中有效），而且，任何留在参数里的字符、任何接下来的参数以及任何留在格式字符串中的字符，都被忽略 |
+| `\f`    | 换页（formfeed）                                             |
+| `\n`    | 换行                                                         |
+| `\r`    | 回车（Carriage return）                                      |
+| `\t`    | 水平制表符                                                   |
+| `\v`    | 垂直制表符                                                   |
+| `\\`    | 一个字面上的反斜杠字符                                       |
+| `\ddd`  | 表示1到3位数八进制值的字符。仅在格式字符串中有效             |
+| `\0ddd` | 表示1到3位的八进制值字符                                     |
 
 #### test命令
 
+Shell中的 test 命令用于检查某个条件是否成立，它可以进行数值、字符和文件三个方面的测试。
+
+- **数值测试**
+
+| 参数 | 说明           |
+| :--- | :------------- |
+| -eq  | 等于则为真     |
+| -ne  | 不等于则为真   |
+| -gt  | 大于则为真     |
+| -ge  | 大于等于则为真 |
+| -lt  | 小于则为真     |
+| -le  | 小于等于则为真 |
+
+- **字符串测试**
+
+| 参数      | 说明                     |
+| :-------- | :----------------------- |
+| =         | 等于则为真               |
+| !=        | 不相等则为真             |
+| -z 字符串 | 字符串的长度为零则为真   |
+| -n 字符串 | 字符串的长度不为零则为真 |
+
+* **文件测试**
+
+| 参数      | 说明                                 |
+| :-------- | :----------------------------------- |
+| -e 文件名 | 如果文件存在则为真                   |
+| -r 文件名 | 如果文件存在且可读则为真             |
+| -w 文件名 | 如果文件存在且可写则为真             |
+| -x 文件名 | 如果文件存在且可执行则为真           |
+| -s 文件名 | 如果文件存在且至少有一个字符则为真   |
+| -d 文件名 | 如果文件存在且为目录则为真           |
+| -f 文件名 | 如果文件存在且为普通文件则为真       |
+| -c 文件名 | 如果文件存在且为字符型特殊文件则为真 |
+| -b 文件名 | 如果文件存在且为块特殊文件则为真     |
+
 #### Shell流程控制
 
-### 系统任务设置
+##### if else/if elif else
 
-### 虚拟机初始化脚本
+```shell
+a=10
+b=20
+if test $[a] -eq $[b]
+then
+        echo "a 等于 b"
+elif [ $a -gt $b ]
+then
+        echo "a 大于 b"
+else
+        echo "a 小于 b"
+fi
+```
 
-### 虚拟机相互免密钥
+##### case
+
+**case ... esac** 为多选择语句，可以用 case 语句匹配一个值与一个模式，如果匹配成功，执行相匹配的命令。
+
+```shell
+echo '输入 1 到 3 之间的数字:'
+echo '你输入的数字为:'
+read num
+case $num in
+        1) echo "选择了方案1"
+        ;;
+        2) echo "选择了方案2"
+        ;;
+        3) echo "选择了方案3"
+           echo "该方案包含了方案1"
+        ;;
+        *) echo "你没有输入1到3之间的数字"
+        ;;
+esac
+```
+
+##### for
+
+- 当变量值在列表里，for 循环即执行一次所有命令，使用变量名获取列表中的当前取值。
+- 命令可为任何有效的 shell 命令和语句。in 列表可以包含替换、字符串和文件名。
+- in列表是可选的，如果不用它，for循环使用命令行的位置参数。
+
+```shell
+for loop in 1 2 3 4 5
+do
+    echo "The value is: $loop"
+done
+```
+
+##### while
+
+while 循环用于不断执行一系列命令，也用于从输入文件中读取数据。
+
+```shell
+i=1
+while(( $i<=5 ))
+do
+    echo $i
+    let "i++"
+done
+```
+
+其中，let 命令是 BASH 中用于计算的工具，用于执行一个或多个表达式，变量计算中不需要加上 $ 来表示变量。如果表达式中包含了空格或其他特殊字符，则必须引起来。
+
+```shell
+自加操作：let no++
+
+自减操作：let no--
+
+简写形式 let no+=10，let no-=20，分别等同于 let no=no+10，let no=no-20。
+```
+
+while循环可用于读取键盘信息。下面的例子中，输入信息被设置为变量FILM，按``<Ctrl-D>``结束循环。
+
+```shell
+echo '按下 <CTRL-D> 退出'
+echo -n '输入你最喜欢的网站名: '
+while read FILM
+do
+    echo "是的！$FILM 是一个好网站"
+done
+```
+
+##### until
+
+- condition 一般为条件表达式，如果返回值为 false，则继续执行循环体内的语句，否则跳出循环。
+- 一般 while 循环优于 until 循环，但在某些时候—也只是极少数情况下，until 循环更加有用。
+
+```shell
+a=0
+
+until [ ! $a -lt 10 ]
+do
+   echo $a
+   a=`expr $a + 1`
+done
+```
+
+##### 跳出循环
+
+###### break
+
+break命令允许跳出所有循环（终止执行后面的所有循环）。
+
+```shell
+#!/bin/bash
+while :
+do
+    echo -n "输入 1 到 5 之间的数字:"
+    read aNum
+    case $aNum in
+        1|2|3|4|5) echo "你输入的数字为 $aNum!"
+        ;;
+        *) echo "你输入的数字不是 1 到 5 之间的! 游戏结束"
+            break
+        ;;
+    esac
+done
+```
+
+###### continue
+
+continue命令与break命令类似，只有一点差别，它不会跳出所有循环，仅仅跳出当前循环。
+
+```shell
+while :
+do
+    echo -n "输入 1 到 5 之间的数字: "
+    read aNum
+    case $aNum in
+        1|2|3|4|5) echo "你输入的数字为 $aNum!"
+        ;;
+        *) echo "你输入的数字不是 1 到 5 之间的!"
+            continue
+            echo "游戏结束"
+        ;;
+    esac
+done
+```
+
+#### 函数
+
+##### 初识shell函数
+
+- linux shell 可以用户定义函数，然后在shell脚本中可以随便调用。
+- 可以带function fun() 定义，也可以直接fun() 定义,不带任何参数。
+- 参数返回，可以显示加：return 返回，如果不加，将以最后一条命令运行结果，作为返回值。 return后跟数值n(0-255
+
+```shell
+# 第一个函数
+demoFun(){
+    echo "这是我的第一个 shell 函数!"
+}
+echo "-----函数开始执行-----"
+demoFun
+echo "-----函数执行完毕-----"
+
+# 带有return语句的函数
+funWithReturn(){
+    echo "这个函数会对输入的两个数字进行相加运算..."
+    echo "输入第一个数字: "
+    read aNum
+    echo "输入第二个数字: "
+    read anotherNum
+    echo "两个数字分别为 $aNum 和 $anotherNum !"
+    return $(($aNum+$anotherNum))
+}
+funWithReturn
+echo "输入的两个数字之和为 $? !"
+```
+
+函数返回值在调用该函数后通过 `$?` 来获得。
+
+注意：所有函数在使用前必须定义。这意味着必须将函数放在脚本开始部分，直至shell解释器首次发现它时，才可以使用。调用函数仅使用其函数名即可。
+
+##### 函数参数
+
+在Shell中，调用函数时可以向其传递参数。在函数体内部，通过`` $n`` 的形式来获取参数的值，例如，``$1``表示第一个参数，``$2``表示第二个参数...
+
+```shell
+funWithParam(){
+    echo "第一个参数为 $1 !"
+    echo "第二个参数为 $2 !"
+    echo "第十个参数为 $10 !"
+    echo "第十个参数为 ${10} !"
+    echo "第十一个参数为 ${11} !"
+    echo "参数总数有 $# 个!"
+    echo "作为一个字符串输出所有参数 $* !"
+}
+funWithParam 1 2 3 4 5 6 7 8 9 34 73
+```
+
+##### 特殊字符
+
+特殊字符用来处理参数
+
+| 参数处理 | 说明                                                         |
+| :------- | :----------------------------------------------------------- |
+| $#       | 传递到脚本或函数的参数个数                                   |
+| $*       | 以一个单字符串显示所有向脚本传递的参数                       |
+| $$       | 脚本运行的当前进程ID号                                       |
+| $!       | 后台运行的最后一个进程的ID号                                 |
+| $@       | 与$*相同，但是使用时加引号，并在引号中返回每个参数。         |
+| $-       | 显示Shell使用的当前选项，与set命令功能相同。                 |
+| $?       | 显示最后命令的退出状态。0表示没有错误，其他任何值表明有错误。 |
+
+## 系统任务设置
+
+### 系统启动流程
+
+- 启动计算机的硬件(BIOS)
+  - 读取时间
+  - 选择对应的启动模式(USB HDD EFI）
+- 如果是Linux系统，回去找/boot目录.引导这个系统启动
+- 计算机系统开始启动,读取初始化配置文件
+  - `vim /etc/inittab`
+  - 启动时控制着计算机的运行级别 `runlevel`
+  - `id:3:initdefault`：默认``runlevel``为3
+  - 以``runlevel=3``开始启动对应的服务和组件
+
+| 0    | halt (关机)                                                  |
+| ---- | ------------------------------------------------------------ |
+| 1    | Single user mode(单用户模式)                                 |
+| 2    | Multiuser, without NFS(多用户模式，但是无网络状态) FS-->FileSystem |
+| 3    | Full multiuser mode(多用户完整版模式)                        |
+| 4    | unused (保留模式)                                            |
+| 5    | X11(用户界面模式)                                            |
+| 6    | reboot(重启模式)                                             |
+
+- 开始默认引导公共的组件或者服务
+  - `vim /etc/rc.d/rc.sysinit`
+- 开始加载对应runlevel的服务
+  - `vi /etc/rc3.d/`
+    - K:关机时需要关闭的服务
+    - S:启动时需要开启的服务
+    - 数字代表了开启或者关闭的顺序
+    - 所有的文件都是软链接，链接的地址为`` /etc/init.d``
+- 当启动完毕，所有的服务也被加载完成
+
+### 系统服务
+
+- 我们可以使用chkconfig命令查看当前虚拟机的服务
+- 通过查看可以得知不同的级别对应到每一个服务确定本次开机自动启动
+- 开机结束后，我们需要使用service（Centos6）Systemctl(Centos7)命令控制服务的开启或者关闭
+
+### 开启自启动服务
+
+![img](../../../assets/Linux%E7%AC%94%E8%AE%B0/bg2013081705.png)
+
+- rc.local
+
+  - 首先创建脚本存放的文件夹
+
+    - `mkdir -p /usr/local/scripts`
+
+  - 在文件夹中创建脚本文件
+
+    - `vim hello.sh`
+
+    ```shell
+    yum info ntp && ntpdate cn.ntp.org.cn
+    ```
+
+    - 给予执行权限`chmod a+x hello.sh `
+
+  - 去``/etc/rc.d/rc.local``文件中添加脚本的绝对路径
+
+    - 给予``rc.local``执行权限`chmod +x rc.local`
+
+- chkconfig
+
+  - 创建开机自启动脚本文件
+  - `vim initdate.sh`
+
+  ```shell
+  #!/bin/bash
+  #chkconfig: 2345 88 99
+  #description: 设置开机自启的脚本
+  
+  # 开机自启动同步时间
+  yum info ntp && ntpdate cn.ntp.org.cn
+  ```
+
+  * 给其设置执行权限`chmod u+x initdate.sh`
+  * 将脚本拷贝到 ``/etc/init.d``目录下`cp initdate.sh /etc/init.d/`
+  * 添加到服务`chkconfig --add /etc/init.d/initdate.sh`
+  * 重启服务器`reboot`
+
+### 定时服务
+
+- 在系统服务中心，``crond``负责周期任务
+
+  - `systemctl status crond.service`
+
+- 添加任务，编辑当前用户的任务列表
+
+  - `crontab -e`
+
+- 编辑任务
+
+  - 星 星 星 星 星 command
+    分 时 日 月 周 命令
+    第1列表示分钟1～59 每分钟用*或者* /1表示
+    第2列表示小时1～23（0表示0点）
+    第3列表示日期1～31
+    第4列表示月份1～12
+    第5列标识号星期0～6（0表示星期天）
+    第6列要运行的命令
+
+    ``*``：表示任意时间都，实际上就是“每”的意思。可以代表00-23小时或者00-12每月或者00-59分
+    ``-``：表示区间，是一个范围，``00 17-19 * * * cmd``，就是每天17,18,19点的整点执行命令
+    ``,``：是分割时段，``30 3,19,21 * * * cmd``，就是每天凌晨3和晚上19,21点的半点时刻执行命令
+    ``/n``：表示分割，可以看成除法，``*/5 * * * * cmd``，每隔五分钟执行一次
+
+```shell
+30 21 * * * /usr/local/etc/rc.d/lighttpd restart
+上面的例子表示每晚的21:30重启apache。
+
+45 4 1,10,22 * * /usr/local/etc/rc.d/lighttpd restart
+上面的例子表示每月1、10、22日的4 : 45重启apache。
+
+10 1 * * 6,0 /usr/local/etc/rc.d/lighttpd restart
+上面的例子表示每周六、周日的1 : 10重启apache。
+
+0,30 18-23 * * * /usr/local/etc/rc.d/lighttpd restart
+上面的例子表示在每天18 : 00至23 : 00之间每隔30分钟重启apache。
+
+0 23 * * 6 /usr/local/etc/rc.d/lighttpd restart
+上面的例子表示每星期六的11 : 00 pm重启apache。
+
+* */2 * * * /usr/local/etc/rc.d/lighttpd restart
+每两小时重启apache
+
+* 23-7/1 * * * /usr/local/etc/rc.d/lighttpd restart
+晚上11点到早上7点之间，每隔一小时重启apache
+
+0 11 4 * mon-wed /usr/local/etc/rc.d/lighttpd restart
+每月的4号与每周一到周三的11点重启apache
+
+0 4 1 jan * /usr/local/etc/rc.d/lighttpd restart
+```
+
+- 重启crontab，使配置生效
+  - `systemctl restart crond.service`
+- 通过`crontab -l`
+  - 查看当前的定时任务
+- 查看任务的历史
+  - `vim /var/spool/mail/root`
+- 清除任务
+  - `crontab -r`
+
+实例：
+
+创建`/usr/local/scripts/created.sh`
+
+```shell
+#! /bin/bash
+
+dname=`date "+%Y%m%d%H%M%S"`
+
+mkdir -p ~/$dname
+```
+
+编辑任务列表`crontab -e`，每一分钟就执行一次脚本
+
+```shell
+*/1 * * * * sh /usr/local/scripts/created.sh
+```
+
+ 重启``crontab``，使得配置生效
+
+```shell
+sysetemctl restart crond.service
+```
+
+## 虚拟机初始化脚本
+
+为了方便部署环境，可以编写脚本，从而自动化部署环境
+
+```shell
+#!/bin/bash
+## -bash: ./shxxx.sh: /bin/bash^M: bad interpreter: No such file or directory
+## vim或者vi的命令模式下，输入命令  set fileformat=unix 即可解决换行问题
+echo -e "\e[1;31m【----------------------------------------在opt和var创建xxx文件夹】\e[0m"
+sleep 5
+mkdir -p /opt/xxx
+mkdir -p /var/xxx
+mkdir -p /usr/local/script
+echo -e "\e[1;31m【----------------------------------------禁用防火墙】\e[0m"
+sleep 5
+systemctl stop firewalld
+systemctl disable firewalld
+systemctl status firewalld
+
+echo -e "\e[1;32m【----------------------------------------修改selinux】\e[0m"
+sleep 5
+sed -i '/^SELINUX=/c SELINUX=disabled' /etc/selinux/config
+
+echo -e "\e[1;32m【----------------------------------------安装wget】\e[0m"
+sleep 5
+yum install wget -y
+
+echo -e "\e[1;33m【----------------------------------------修改yum源】\e[0m"
+sleep 5
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/rep...
+yum clean all
+yum makecache
+
+echo -e "\e[1;33m【----------------------------------------安装常用软件】\e[0m"
+yum install man man-pages ntp vim lrzsz zip unzip telnet perl net-tools -y
+
+echo -e "\e[1;34m【----------------------------------------同步系统时间】\e[0m"
+yum info ntp && ntpdate cn.ntp.org.cn
+
+echo -e "\e[1;34m【----------------------------------------DNS域名配置】\e[0m"
+sleep 5
+echo "192.168.58.100 basenode" >> /etc/hosts
+echo "192.168.58.161 bd1601" >> /etc/hosts
+echo "192.168.58.162 bd1602" >> /etc/hosts
+echo "192.168.58.163 bd1603" >> /etc/hosts
+echo -e "\e[1;34m【----------------------------------------安装JDK】\e[0m"
+sleep 5
+rpm -ivh jdk-8u231-linux-x64.rpm
+echo 'export JAVA_HOME=/usr/java/jdk1.8.0_231-amd64' >> /etc/profile
+echo 'export PATH=$JAVA_HOME/bin:$PATH' >> /etc/profile
+source /etc/profile
+echo -e "\e[1;35m【----------------------------------------安装Tomcat】\e[0m"
+sleep 5
+tar -zxf apache-tomcat-8.5.47.tar.gz
+mv apache-tomcat-8.5.47 /opt/xxx/
+echo -e "\e[1;35m【----------------------------------------安装Mysql】\e[0m"
+sleep 5
+rpm -e --nodeps rpm -qa | grep mariadb
+
+tar -xvf mysql-5.7.28-1.el7.x86_64.rpm-bundle.tar
+rpm -ivh mysql-community-common-5.7.28-1.el7.x86_64.rpm
+rpm -ivh mysql-community-libs-5.7.28-1.el7.x86_64.rpm
+rpm -ivh mysql-community-client-5.7.28-1.el7.x86_64.rpm
+rpm -ivh mysql-community-server-5.7.28-1.el7.x86_64.rpm
+
+systemctl start mysqld
+systemctl enable mysqld
+
+temppasswd=grep "A temporary password" /var/log/mysqld.log | awk '{ print $NF}'
+
+mysql -uroot -p$temppasswd --connect-expired-password << EOF
+set global validate_password_policy=low;
+set global validate_password_length=6;
+alter user root@localhost identified by '123456';
+
+use mysql;
+update user set host='%' where user = 'root';
+commit;
+quit
+EOF
+
+systemctl restart mysqld
+
+echo -e "\e[1;35m【----------------------------------------安装Nginx】\e[0m"
+sleep 5
+echo -e "\e[1;36m【----------------------------------------设置开机启动项】\e[0m"
+sleep 5
+touch /usr/local/script/auto_ntpdate.sh
+echo '#!/bin/bash' >> /usr/local/script/auto_ntpdate.sh
+echo 'yum info ntp && ntpdate cn.ntp.org.cn' >> /usr/local/script/auto_ntpdate.sh
+chmod u+x /usr/local/script/auto_ntpdate.sh
+
+echo '/usr/local/script/auto_ntpdate.sh' >> /etc/rc.local
+chmod u+x /etc/rc.local
+
+echo -e "\e[1;36m【----------------------------------------删除文件】\e[0m"
+sleep 5
+rm -rf apache-tomcat-8.5.47.tar.gz
+rm -rf jdk-8u231-linux-x64.rpm
+rm -rf mysql*
+rm -rf *.sh
+
+echo -e "\e[1;36m【----------------------------------------关闭计算器，拍快照】\e[0m"
+sleep 5
+shutdown -h now
+```
+
+## 虚拟机相互免密钥
+
+### 准备环境
+
+首先创建三台虚拟机分别为node01、node02、node03。分别修改主机名以及ip地址。
+
+* 修改主机名
+
+```shell
+vi /etc/hostname
+```
+
+* 修改ip地址：分别为192.168.183.104、192.168.183.105、192.168.183.106
+
+```shell
+vi /etc/sysconfig/netwrok-scripts/ifcfg-ens33
+```
+
+![image-20220608223447374](../../../assets/Linux%E7%AC%94%E8%AE%B0/image-20220608223447374.png)
+
+* 测试网络是否正常
+
+```shell
+ping www.baidu.com
+```
+
+### 三台主机分别生成秘钥
+
+```shell
+ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
+```
+
+![image-20220608225029632](../../../assets/Linux%E7%AC%94%E8%AE%B0/image-20220608225029632.png)
+
+### host验证
+
+``vim /etc/ssh/ssh_config`` 在最后添加
+
+```shell
+StrictHostKeyChecking no
+UserKnownHostsFile /dev/null
+```
+
+> 按大写G，直接跳到最后一行。
+
+### 将秘钥分别拷贝给自己和别人
+
+```shell
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.183.104
+
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.183.105
+
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.183.106
+```
+
+![image-20220608225803167](../../../assets/Linux%E7%AC%94%E8%AE%B0/image-20220608225803167.png)
+
+### 关闭主机拍摄快照
+
+```shell
+power off
+```

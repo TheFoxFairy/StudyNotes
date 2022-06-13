@@ -1770,6 +1770,17 @@ voidPointer++
 
 ##### 面试题2
 
+- Java 类加载过程?（苏宁）
+- 描述一下 JVM 加载 Class 文件的原理机制?（国美）
+- JVM底层怎么加载class文件的？（蚂蚁金服）
+- 类加载过程 （蚂蚁金服）
+- Java 类加载过程? （百度）
+- 描述一下 JVM 加载 Class 文件的原理机制? （蚂蚁金服）
+- Java类加载过程  （美团）
+- 描述一下JVM加载class文件的原理机制  （美团）
+- 什么是类的加载？ （京东）
+- 讲一下JVM加载一个类的过程 （京东）
+
 #### 过程一：Loding（装载）阶段
 
 ##### 概述
@@ -1836,11 +1847,807 @@ Object[] arr
 
 #### 过程二：Linking(链接)阶段
 
+##### 链接阶段之Verification(验证)
+
+当类加载到系统后，就开始链接操作，验证是链接操作的第一步。
+
+**它的目的是保证加载的字节码是合法、合理并符合规范的。**
+
+验证的步骤比较复杂，实际要验证的项目也很繁多，大体上Java虚拟机需要做以下检査，如图所示。
+
+![image-20220609101920156](../../../../assets/07-JVM%E5%8E%9F%E7%90%86%EF%BC%88%E8%BF%9B%E9%98%B6%E7%89%88%EF%BC%89/image-20220609101920156.png)
+
+整体说明：
+
+验证的内容则涵盖了类数据信息的格式验证、语义检查、字节码验证，以及符号引用验证等。
+
+- 其中**格式验证会和装载阶段一起执行**。验证通过之后，类加载器才会成功将类的二进制数据信息加载到方法区中。
+- **格式验证之外的验证操作将会在方法区中进行。**
+
+##### 链接阶段之Preparation(准备)
+
+简言之，**为类的静态变量分配内存，并将其初始化为默认值。**
+
+在这个阶段，虚拟机就会为这个类分配相应的内存空间，并设置默认初始值。Java虚拟机为各类型变量默认的初始值如表所示。
+
+![image-20220609102448604](../../../../assets/07-JVM%E5%8E%9F%E7%90%86%EF%BC%88%E8%BF%9B%E9%98%B6%E7%89%88%EF%BC%89/image-20220609102448604.png)
+
+注意：Java并不支持boolean类型，对于boolean类型，内部实现是int,由于int的默认值是0,故对应的，boolean的默认值就是false。
+
+##### 链接阶段之Resolution(解析)
+
+简言之，**将类、接口、字段和方法的符号引用转为直接引用。**
+
+符号引用就是一些字面量的引用，和虚拟机的内部数据结构和和内存布局无关。比较容易理解的就是在Class类文件中，通过常量池进行了大量的符号引用。但是在程序实际运行时，只有符号引用是不够的，比如当如下println()方法被调用时，系统需要明确知道该方法的位置。
+
+举例：输出操作System.out.println()对应的字节码：
+```shell
+invokevirtual #24 <java/io/PrintStream.println>
+```
+
+![image-20220609102556827](../../../../assets/07-JVM%E5%8E%9F%E7%90%86%EF%BC%88%E8%BF%9B%E9%98%B6%E7%89%88%EF%BC%89/image-20220609102556827.png)
+
+以方法为例，Java虚拟机为每个类都准备了一张方法表，将其所有的方法都列在表中，当需要调用一个类的方法的时候，只要知道这个方法在方法表中的偏移量就可以直接调用该方法。**通过解析操作，符号引用就可以转变为目标方法在类中方法表中的位置，从而使得方法被成功调用。**
+
+**所谓解析就是将符号引用转为直接引用，也就是得到类、字段、方法在内存中的指针或者偏移量。因此，可以说，如果直接引用存在，那么可以肯定系统中存在该类、方法或者字段。但只存在符号引用，不能确定系统中一定存在该结构。**
+
+不过Java虚拟机规范并没有明确要求解析阶段一定要按照顺序执行。在HotSpot VM中，加载、验证、准备和初始化会按照顺序有条不紊地执行，但链接阶段中的解析操作往往会伴随着JVM在执行完初始化之后再执行。
+
 #### 过程三：Initialization(初始化)阶段
+
+##### 概述
+
+**初始化阶段，简言之，为类的静态变量赋予正确的初始值。(显式初始化)**
+
+类的初始化是类装载的最后一个阶段。如果前面的步骤都没有问题，那么表示类可以顺利装载到系统中。此时，类才会开始执行Java字节码。（即：**到了初始化阶段，才真正开始执行类中定义的 Java 程序代码。**）
+
+**初始化阶段的重要工作是执行类的初始化方法：``<clinit>()``方法。**
+
+- 该方法仅能由Java编译器生成并由JVM调用，程序开发者无法自定义一个同名的方法，更无法直接在Java程序中调用该方法，虽然该方法也是由字节码指令所组成。
+
+- 它是由类静态成员的赋值语句以及static语句块合并产生的。
+
+##### 子类加载前先加载父类？
+
+在加载一个类之前，虚拟机总是会试图加载该类的父类，因此父类的``<clinit>``总是在子类``<clinit>``之前被调用。也就是说，父类的static块优先级高于子类。 
+
+口诀：由父及子，静态先行。
+
+##### 哪些类不会生成``<clinit>``方法？
+
+Java编译器并不会为所有的类都产生``<clinit>()``初始化方法。哪些类在编译为字节码后，字节码文件中将不会包含``<clinit>()``方法？
+
+- 一个类中并没有声明任何的类变量，也没有静态代码块时
+- 一个类中声明类变量，但是没有明确使用类变量的初始化语句以及静态代码块来执行初始化操作时
+- 一个类中包含static final修饰的基本数据类型的字段，这些类字段初始化语句采用编译时常量表达式
+
+##### 代码举例：static与final的搭配问题
+
+```java
+/**
+ * 哪些场景下，java编译器就不会生成<clinit>()方法
+ */
+public class InitializationTest1 {
+    //场景1：对于非静态的字段，不管是否进行了显式赋值，都不会生成<clinit>()方法
+    public int num = 1;
+    //场景2：静态的字段，没有显式的赋值，不会生成<clinit>()方法
+    public static int num1;
+    //场景3：比如对于声明为static final的基本数据类型的字段，不管是否进行了显式赋值，都不会生成<clinit>()方法
+    public static final int num2 = 1;
+}
+
+
+
+/**
+ *
+ * 一、说明：使用static + final修饰的字段的显式赋值的操作，到底是在哪个阶段进行的赋值？
+ * 情况1：在链接阶段的准备环节赋值
+ * 情况2：在初始化阶段<clinit>()中赋值
+ *
+ * 二、结论：
+ * 1. 在链接阶段的准备环节赋值的情况：
+ * 1）对于基本数据类型的字段来说，如果使用static final修饰，则显式赋值(直接赋值常量，而非调用方法）通常是在链接阶段的准备环节进行
+ * 2）对于String来说，如果使用字面量的方式赋值，使用static final修饰的话，则显式赋值通常是在链接阶段的准备环节进行
+ *
+ * 2. 在初始化阶段<clinit>()中赋值的情况：
+ * 排除上述的在准备环节赋值的情况之外的情况。
+ *
+ *
+ *  总结：
+ *  使用static + final 修饰的成员变量，称为：全局常量。
+ *  什么时候在链接阶段的准备环节：给此全局常量附的值是字面量或常量。不涉及到方法或构造器的调用。
+ *  除此之外，都是在初始化环节赋值的。
+ *
+ */
+public class InitializationTest2 {
+//    public static int a = 1;   //在初始化阶段赋值
+//    public static final int INT_CONSTANT = 10;   //在链接阶段的准备环节赋值
+//
+//    public static Integer INTEGER_CONSTANT1 = Integer.valueOf(100); //在初始化阶段赋值
+//    public static final Integer INTEGER_CONSTANT2 = Integer.valueOf(1000); //在初始化阶段赋值
+//
+    public static final String s0 = "helloworld0";   //在链接阶段的准备环节赋值
+    public static final String s1 = new String("helloworld1"); //在初始化阶段赋值
+//
+    public static String s2 = "helloworld2";  //在初始化阶段赋值
+//
+    public static final int NUM1 = new Random().nextInt(10);  //在初始化阶段赋值
+
+    static int a = 9;//在初始化阶段赋值
+    static final int b = a; //在初始化阶段赋值
+
+}
+
+```
+
+##### `<clinit>()`的调用会死锁吗？
+
+对于``<clinit>()``方法的调用，也就是类的初始化，虚拟机会在内部确保其多线程环境中的安全性。
+
+**虚拟机会保证一个类的``<clinit>()``方法在多线程环境中被正确地加锁、同步**，如果多个线程同时去初始化一个类，那么只会有一个线程去执行这个类的``<clinit>()``方法，其他线程都需要阻塞等待，直到活动线程执行``<clinit>()``方法完毕。
+
+**正是因为函数``<clinit>()``带锁线程安全的**，因此，如果在一个类的``<clinit>()``方法中有耗时很长的操作，就可能造成多个线程阻塞，引发死锁。并且这种死锁是很难发现的，因为看起来它们并没有可用的锁信息。
+
+如果之前的线程成功加载了类，则等在队列中的线程就没有机会再执行``<clinit>()``方法了。那么，当需要使用这个类时，虚拟机会直接返回给它已经准备好的信息。
+
+```java
+class StaticA {
+    static {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
+        try {
+            Class.forName("com.atguigu.java.StaticB");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("StaticA init OK");
+    }
+}
+
+class StaticB {
+    static {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
+        try {
+            Class.forName("com.atguigu.java.StaticA");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("StaticB init OK");
+    }
+}
+
+public class StaticDeadLockMain extends Thread {
+    private char flag;
+
+    public StaticDeadLockMain(char flag) {
+        this.flag = flag;
+        this.setName("Thread" + flag);
+    }
+
+    @Override
+    public void run() {
+        try {
+            Class.forName("com.atguigu.java.Static" + flag);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println(getName() + " over");
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        StaticDeadLockMain loadA = new StaticDeadLockMain('A');
+        loadA.start();
+        StaticDeadLockMain loadB = new StaticDeadLockMain('B');
+        loadB.start();
+    }
+}
+```
+
+##### 类的初始化情况：主动使用vs被动使用
+
+###### 主动使用的情况
+
+**Class只有在必须要首次使用的时候才会被装载，Java虚拟机不会无条件地装载Class类型。Java虚拟机规定，一个类或接口在初次使用前，必须要进行初始化。这里指的“使用”，是指主动使用。**
+
+主动使用只有下列几种情况：（即：如果出现如下的情况，则会对类进行初始化操作。而初始化操作之前的加载、验证、准备已经完成。）
+
+1. 当创建一个类的实例时，比如使用new关键字，或者通过反射、克隆、反序列化。
+2. 当调用类的静态方法时，即当使用了字节码invokestatic指令。
+3. 当使用类、接口的静态字段时(final修饰特殊考虑)，比如，使用getstatic或者putstatic指令。
+4. 当使用java.lang.reflect包中的方法反射类的方法时。比如：Class.forName("com.atguigu.java.Test")
+5. 当初始化子类时，如果发现其父类还没有进行过初始化，则需要先触发其父类的初始化。
+6. **如果一个接口定义了default方法，那么直接实现或者间接实现该接口的类的初始化，该接口要在其之前被初始化。**
+7. 当虚拟机启动时，用户需要指定一个要执行的主类（包含main()方法的那个类），虚拟机会先初始化这个主类。
+8. 当初次调用 MethodHandle 实例时，初始化该 MethodHandle 指向的方法所在的类。（涉及解析REF_getStatic、REF_putStatic、REF_invokeStatic方法句柄对应的类）
+
+###### 被动使用的情况
+
+除了以上的情况属于主动使用，其他的情况均属于被动使用。被动使用不会引起类的初始化。
+
+也就是说：并不是在代码中出现的类，就一定会被加载或者初始化。如果不符合主动使用的条件，类就不会初始化。
+
+1. 当访问一个静态字段时，只有真正声明这个字段的类才会被初始化。
+  - 当通过子类引用父类的静态变量，不会导致子类初始化
+
+2. 通过数组定义类引用，不会触发此类的初始化
+3. 引用常量不会触发此类或接口的初始化。因为常量在链接阶段就已经被显式赋值了。
+4. 调用ClassLoader类的loadClass()方法加载一个类，并不是对类的主动使用，不会导致类的初始化。
+
+> 被动的使用，意味着不需要执行初始化环节，意味着没有``<clinit>()``的调用。
+
+###### 打印加载过程
+
+如果针对代码，设置参数``-XX:+TraceClassLoading``，可以追踪类的加载信息并打印出来。
+
+###### 面试题
+
+- 类加载的时机 （百度）
+- Class的forName("Java.lang.String")和Class的getClassLoader()的loadClass("Java.lang.String")有什么区别？  （百度）
+- 哪些情况会触发类的加载？ （京东）
+
+类的加载 = 装载+链接（①②③）+初始化
+
+#### 面试题
+
+##### 面试题1
+
+```java
+class Root{
+    static{
+        System.out.println("Root的静态初始化块");
+    }
+    {
+        System.out.println("Root的普通初始化块");
+    }
+    public Root(){
+        System.out.println("Root的无参数的构造器");
+    }
+}
+class Mid extends Root{
+    static{
+        System.out.println("Mid的静态初始化块");
+    }
+    {
+        System.out.println("Mid的普通初始化块");
+    }
+    public Mid(){
+        System.out.println("Mid的无参数的构造器");
+    }
+    public Mid(String msg){
+        //通过this调用同一类中重载的构造器
+        this();
+        System.out.println("Mid的带参数构造器，其参数值："
+                           + msg);
+    }
+}
+class Leaf extends Mid{
+    static{
+        System.out.println("Leaf的静态初始化块");
+    }
+    {
+        System.out.println("Leaf的普通初始化块");
+    }
+    public Leaf(){
+        //通过super调用父类中有一个字符串参数的构造器
+        super("尚硅谷");
+        System.out.println("Leaf的构造器");
+    }
+}
+public class LeafTest{
+    public static void main(String[] args){
+        new Leaf(); 
+        System.out.println();
+        new Leaf();
+    }
+}
+```
+
+##### 面试题2
+
+```java
+public class Test {
+    static int x, y, z;
+
+    static {
+        int x = 5;
+        x--;
+    }
+
+    static {
+        x--;
+    }
+
+    public static void main(String[] args) {
+        System.out.println("x=" + x);
+        z--;
+        method();
+        System.out.println("result:" + (z + y + ++z));
+    }
+
+    public static void method() {
+        y = z++ + ++z;
+    }
+}
+```
+
+##### 面试题3
+
+```java
+public class Test03 {
+    public static void main(String[] args) {
+        Father f = new Son();
+        System.out.println(f.x);
+    }
+}
+class Father{
+    int x = 10;
+    public Father(){
+        this.print();
+        x = 20;
+    }
+    public void print(){
+        System.out.println("Father.x = " + x);
+    }
+}
+class Son extends Father{
+    int x = 30;
+    public Son(){
+        this.print();
+        x = 40;
+    }
+    public void print(){
+        System.out.println("Son.x = " + x);
+    }
+}
+```
+
+##### 面试题4
+
+```java
+// 这个题含金量很高
+public class T {
+    public static int k = 0;
+    public static T t1 = new T("t1");
+    public static T t2 = new T("t2");
+    public static int i = print("i");
+    public static int n = 99;
+
+    public int j = print("j");
+
+    {
+        print("构造块");
+    }
+
+    static {
+        print("静态块");
+    }
+
+    public T(String str) {
+        System.out.println((++k) + ":" + str + "  i=" + i + "  n=" + n);
+        ++n;
+        ++i;
+    }
+
+    public static int print(String str) {
+        System.out.println((++k) + ":" + str + "  i=" + i + "  n=" + n);
+        ++n;
+        return ++i;
+    }
+
+    public static void main(String[] args) {
+
+    }
+}
+```
 
 #### 过程四：类的Using(使用)
 
+任何一个类型在使用之前都必须经历过完整的加载、链接和初始化3个类加载步骤。一旦一个类型成功经历过这3个步骤之后，便“万事俱备，只欠东风”，就等着开发者使用了。
+
+开发人员可以在程序中访问和调用它的静态类成员信息（比如：静态字段、静态方法），或者使用new关键字为其创建对象实例。
+
 #### 过程五：类的Unloading(卸载)
+
+##### 类、类的加载器、类的实例之间的引用关系
+
+在类加载器的内部实现中，用一个Java集合来存放所加载类的引用。另一方面，一个Class对象总是会引用它的类加载器，调用Class对象的getClassLoader()方法，就能获得它的类加载器。由此可见，代表某个类的Class实例与其类的加载器之间为双向关联关系。
+
+一个类的实例总是引用代表这个类的Class对象。在Object类中定义了getClass()方法，这个方法返回代表对象所属类的Class对象的引用。此外，所有的Java类都有一个静态属性class，它引用代表这个类的Class对象。
+
+![image-20220609143239897](../../../../assets/07-JVM%E5%8E%9F%E7%90%86%EF%BC%88%E8%BF%9B%E9%98%B6%E7%89%88%EF%BC%89/image-20220609143239897.png)
+
+##### 何种情况类会被卸载？
+
+**一个类何时结束生命周期，取决于代表它的Class对象何时结束生命周期。**
+
+当Sample类被加载、链接和初始化后，它的生命周期就开始了。当代表Sample类的Class对象不再被引用，即不可触及时，Class对象就会结束生命周期，Sample类在方法区内的数据也会被卸载，从而结束Sample类的生命周期。
+
+举例：
+
+![image-20220609143718843](../../../../assets/07-JVM%E5%8E%9F%E7%90%86%EF%BC%88%E8%BF%9B%E9%98%B6%E7%89%88%EF%BC%89/image-20220609143718843.png)
+
+loader1变量和obj变量间接引用代表Sample类的Class对象，而objClass变量则直接引用它。
+
+如果程序运行过程中，将上图左侧三个引用变量都置为null，此时Sample对象结束生命周期，MyClassLoader对象结束生命周期，代表Sample类的Class对象也结束生命周期，Sample类在方法区内的二进制数据**被卸载**。
+
+当再次有需要时，会检查Sample类的Class对象是否存在，**如果存在会直接使用，不再重新加载**；如果不存在Sample类会被重新加载，在Java虚拟机的堆区会生成一个新的代表Sample类的Class实例(可以通过哈希码查看是否是同一个实例)。
+
+##### 类卸载在实际生产中的情况如何？
+
+(1) 启动类加载器加载的类型在整个运行期间是不可能被卸载的(jvm和jls规范)
+
+(2) 被系统类加载器和扩展类加载器加载的类型在运行期间不太可能被卸载，因为系统类加载器实例或者扩展类的实例基本上在整个运行期间总能直接或者间接的访问的到，其达到unreachable的可能性极小。
+
+(3) 被开发者自定义的类加载器实例加载的类型只有在很简单的上下文环境中才能被卸载，而且一般还要借助于强制调用虚拟机的垃圾收集功能才可以做到。可以预想，稍微复杂点的应用场景中(比如：很多时候用户在开发自定义类加载器实例的时候采用缓存的策略以提高系统性能)，被加载的类型在运行期间也是几乎不太可能被卸载的(至少卸载的时间是不确定的)。
+
+综合以上三点，一个已经加载的类型被卸载的几率很小至少被卸载的时间是不确定的。同时我们可以看的出来，开发者在开发代码时候，不应该对虚拟机的类型卸载做任何假设的前提下，来实现系统中的特定功能。
+
+##### 扩展：方法区的垃圾回收
+
+方法区的垃圾收集主要回收两部分内容：**常量池中废弃的常量和不再使用的类型。**
+
+HotSpot虚拟机对常量池的回收策略是很明确的，只要常量池中的常量没有被任何地方引用，就可以被回收。
+
+判定一个常量是否“废弃”还是相对简单，而要判定一个类型是否属于“不再被使用的类”的条件就比较苛刻了。需要同时满足下面三个条件： 
+
+- **该类所有的实例都已经被回收。也就是Java堆中不存在该类及其任何派生子类的实例。** 
+- **加载该类的类加载器已经被回收。这个条件除非是经过精心设计的可替换类加载器的场景，如OSGi、JSP的重加载等，否则通常是很难达成的。** 
+- **该类对应的java.lang.Class对象没有在任何地方被引用，无法在任何地方通过反射访问该类的方法。**
+
+Java虚拟机被允许对满足上述三个条件的无用类进行回收，这里说的仅仅是“被允许”，而并不是和对象一样，没有引用了就必然会回收。
+
+### 类的加载器
+
+#### 面试题
+
+#### 作用
+
+类加载器是 JVM 执行类加载机制的前提。
+
+ClassLoader的作用：
+
+ClassLoader是Java的核心组件，所有的Class都是由ClassLoader进行加载的，ClassLoader负责通过各种方式将Class信息的二进制数据流读入JVM内部，转换为一个与目标类对应的java.lang.Class对象实例。然后交给Java虚拟机进行链接、初始化等操作。
+
+**因此，ClassLoader在整个装载阶段，只能影响到类的加载**，而无法通过ClassLoader去改变类的链接和初始化行为。至于它是否可以运行，则由Execution Engine决定。
+
+![image-20220609145126761](../../../../assets/07-JVM%E5%8E%9F%E7%90%86%EF%BC%88%E8%BF%9B%E9%98%B6%E7%89%88%EF%BC%89/image-20220609145126761.png)
+
+#### 类加载的显示加载与隐式加载
+
+class文件的显式加载与隐式加载的方式是指JVM加载class文件到内存的方式。
+
+**显式加载**：指的是在代码中通过调用ClassLoader加载class对象，如直接使用Class.forName(name)或this.getClass().getClassLoader().loadClass()加载class对象。
+
+**隐式加载**：则是不直接在代码中调用ClassLoader的方法加载class对象，而是通过虚拟机自动加载到内存中，如在加载某个类的class文件时，该类的class文件中引用了另外一个类的对象，此时额外引用的类将通过JVM自动加载到内存中。
+
+在日常开发以上两种方式一般会混合使用。
+
+#### 类加载机制的必要性
+
+一般情况下，Java开发人员并不需要在程序中显式地使用类加载器，但是了解类加载器的加载机制却显得至关重要。从以下几个方面说：
+
+- 避免在开发中遇到 java.lang.ClassNotFoundException异常或java.lang.NoClassDefFoundError异常时，手足无措。只有了解类加载器的加载机制才能够在出现异常的时候快速地根据错误异常日志定位问题和解决问题
+
+- 需要支持类的动态加载或需要对编译后的字节码文件进行**加解密操作**时，就需要与类加载器打交道了。
+
+- 开发人员可以在程序中编写**自定义类加载器**来重新定义类的加载规则，以便实现一些自定义的处理逻辑。
+
+#### 加载的类是唯一的吗？
+
+##### 何为类的唯一性？
+
+对于任意一个类，**都需要由加载它的类加载器和这个类本身一同确认其在Java虚拟机中的唯一性。**每一个类加载器，都拥有一个独立的类名称空间：**比较两个类是否相等，只有在这两个类是由同一个类加载器加载的前提下才有意义。**否则，即使这两个类源自同一个Class文件，被同一个虚拟机加载，只要加载他们的类加载器不同，那这两个类就必定不相等。
+
+##### 命名空间
+
+- 每个类加载器都有自己的命名空间，命名空间由该加载器及所有的父加载器所加载的类组成
+- 在同一命名空间中，不会出现类的完整名字（包括类的包名）相同的两个类
+- 在不同的命名空间中，有可能会出现类的完整名字（包括类的包名）相同的两个类
+
+在大型应用中，我们往往借助这一特性，来运行同一个类的不同版本。
+
+#### 类加载机制的基本特征
+
+通常类加载机制有三个基本特征：
+
+- **双亲委派模型**：但不是所有类加载都遵守这个模型，有的时候，启动类加载器所加载的类型，是可能要加载用户代码的，比如JDK内部的ServiceProvider/ServiceLoader机制，用户可以在标准API框架上，提供自己的实现，JDK也需要提供些默认的参考实现。例如，Java 中JNDI、JDBC、文件系统、Cipher等很多方面，都是利用的这种机制，这种情况就不会用双亲委派模型去加载，而是利用所谓的上下文加载器。
+- **可见性：子类加载器可以访问父加载器加载的类型**，但是反过来是不允许的。不然，因为缺少必要的隔离，我们就没有办法利用类加载器去实现容器的逻辑。
+- **单一性：**由于父加载器的类型对于子加载器是可见的，所以父加载器中加载过的类型，就不会在子加载器中重复加载。但是注意，**类加载器“邻居”间，同一类型仍然可以被加载多次**，因为互相并不可见。
+
+### 类的加载器分类与测试
+
+#### 类加载器的分类说明
+
+JVM支持两种类型的类加载器，分别为引导类加载器（Bootstrap ClassLoader）和自定义类加载器（User-Defined ClassLoader）。
+
+从概念上来讲，自定义类加载器一般指的是程序中由开发人员自定义的一类类加载器，但是Java虚拟机规范却没有这么定义，**而是将所有派生于抽象类ClassLoader的类加载器都划分为自定义类加载器。**
+
+无论类加载器的类型如何划分，在程序中我们最常见的类加载器结构主要是如下情况：
+
+![image-20220609153808144](../../../../assets/07-JVM%E5%8E%9F%E7%90%86%EF%BC%88%E8%BF%9B%E9%98%B6%E7%89%88%EF%BC%89/image-20220609153808144.png)
+
+#### 子父类加载器的关系
+
+- 除了顶层的启动类加载器外，其余的类加载器都应当有自己的“父类”加载器。 
+- 不同类加载器看似是继承（Inheritance）关系，实际上是包含关系。在下层加载器中，包含着上层加载器的引用。
+
+#### 具体类的加载器介绍
+
+##### 引导类加载器
+
+**启动类加载器（引导类加载器，Bootstrap ClassLoader）**
+
+- 这个类加载使用C/C++语言实现的，嵌套在JVM内部。
+- 它用来加载Java的核心库（JAVA_HOME/jre/lib/rt.jar或sun.boot.class.path路径下的内容）。用于提供JVM自身需要的类。
+- 并不继承自java.lang.ClassLoader，没有父加载器。
+- 出于安全考虑，Bootstrap启动类加载器只加载包名为java、javax、sun等开头的类
+- 加载扩展类和应用程序类加载器，并指定为他们的父类加载器。
+
+![image-20220609154334208](../../../../assets/07-JVM%E5%8E%9F%E7%90%86%EF%BC%88%E8%BF%9B%E9%98%B6%E7%89%88%EF%BC%89/image-20220609154334208.png)
+
+![image-20220609154352398](../../../../assets/07-JVM%E5%8E%9F%E7%90%86%EF%BC%88%E8%BF%9B%E9%98%B6%E7%89%88%EF%BC%89/image-20220609154352398.png)
+
+使用``-XX:+TraceClassLoading``参数得到。
+
+##### 扩展类加载器
+
+**扩展类加载器（Extension ClassLoader）**
+
+- Java语言编写，由sun.misc.Launcher$ExtClassLoader实现。
+- 继承于ClassLoader类
+- 父类加载器为启动类加载器
+- 从java.ext.dirs系统属性所指定的目录中加载类库，或从JDK的安装目录的jre/lib/ext子目录下加载类库。如果用户创建的JAR放在此目录下，也会自动由扩展类加载器加载。
+
+![image-20220609154501388](../../../../assets/07-JVM%E5%8E%9F%E7%90%86%EF%BC%88%E8%BF%9B%E9%98%B6%E7%89%88%EF%BC%89/image-20220609154501388.png)
+
+##### 系统类加载器
+
+**应用程序类加载器（系统类加载器，AppClassLoader）**
+
+- java语言编写，由sun.misc.Launcher$AppClassLoader实现
+  继承于ClassLoader类
+- 父类加载器为扩展类加载器
+- 它负责加载环境变量classpath或系统属性 java.class.path 指定路径下的类库 
+- **应用程序中的类加载器默认是系统类加载器。**
+- 它是用户自定义类加载器的默认父加载器
+- 通过ClassLoader的getSystemClassLoader()方法可以获取到该类加载器
+
+#### 用户自定义类加载器
+
+- 在Java的日常应用程序开发中，类的加载几乎是由上述3种类加载器相互配合执行的。在必要时，我们还可以自定义类加载器，来定制类的加载方式。
+- 体现Java语言强大生命力和巨大魅力的关键因素之一便是,Java开发者可以自定义类加载器来实现类库的动态加载，加载源可以是本地的JAR包，也可以是网络上的远程资源。
+- **通过类加载器可以实现非常绝妙的插件机制**，这方面的实际应用案例举不胜举。例如，著名的OSGI组件框架，再如Eclipse的插件机制。类加载器为应用程序提供了一种动态增加新功能的机制，这种机制无须重新打包发布应用程序就能实现。
+- 同时，**自定义加载器能够实现应用隔离**，例如 Tomcat，Spring等中间件和组件框架都在内部实现了自定义的加载器，并通过自定义加载器隔离不同的组件模块。这种机制比C/C++程序要好太多，想不修改C/C++程序就能为其新增功能，几乎是不可能的，仅仅一个兼容性便能阻挡住所有美好的设想。
+- 所有用户自定义类加载器通常需要**继承于抽象类java.lang.ClassLoader。**
+
+#### 测试不同的类加载器
+
+每个Class对象都会包含一个定义它的ClassLoader的一个引用。
+
+获取ClassLoader的途径
+
+```
+获得当前类的ClassLoader
+clazz.getClassLoader()
+
+获得当前线程上下文的ClassLoader
+Thread.currentThread().getContextClassLoader()
+ 
+获得系统的ClassLoader
+ClassLoader.getSystemClassLoader()
+```
+
+说明：站在程序的角度看，引导类加载器与另外两种类加载器（系统类加载器和扩展类加载器）并不是同一个层次意义上的加载器，引导类加载器是使用C++语言编写而成的，而另外两种类加载器则是使用Java语言编写而成的。由于引导类加载器压根儿就不是一个Java类，因此在Java程序中只能打印出空值。
+
+### ClassLoader源码剖析
+
+#### 面试题
+
+- 深入分析ClassLoader（蚂蚁金服）
+
+#### ClassLoader与现有类加载的关系
+
+
+
+#### ClassLoader的主要方法
+
+#### SecureClassLoader与URLClassLoader
+
+#### ExtClassLoader与AppClassLoader
+
+#### Class.forName与ClassLoader.loadClass()对比
+
+### 自定义类的加载器
+
+#### 为什么要自定义类的加载器
+
+#### 应用场景有哪些？
+
+#### 两种实现方式
+
+- 重写loadClass()方法
+
+- 重写findClass()方法
+
+````java
+public class UserDefineClassLoader extends ClassLoader {
+
+    private String rootPath;
+
+    public UserDefineClassLoader(String rootPath) {
+        this.rootPath = rootPath;
+    }
+
+    @Override
+    protected Class<?> findClass(String name) throws ClassNotFoundException {
+
+        //转换为以文件路径表示的文件
+        String filePath = classToFilePath(name);
+
+        //获取指定路径的class文件对应的二进制流数据
+        byte[] data = getBytesFromPath(filePath);
+
+        //自定义ClassLoader 内部调用defineClass()
+        return defineClass(name,data,0,data.length);
+
+    }
+
+    private byte[] getBytesFromPath(String filePath) {
+
+        FileInputStream fis = null;
+        ByteArrayOutputStream baos = null;
+        try {
+            fis = new FileInputStream(filePath);
+
+            baos = new ByteArrayOutputStream();
+
+            byte[] buffer = new byte[1024];
+            int len;
+
+            while ((len = fis.read(buffer)) != -1) {
+                baos.write(buffer, 0, len);
+            }
+
+            return baos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (baos != null)
+                    baos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (fis != null)
+                    fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+
+    }
+
+    private String classToFilePath(String name) {
+
+        return rootPath + "\\" + name.replace(".", "\\") + ".class";
+
+    }
+
+    public static void main(String[] args) {  //加载com.atguigu.java3.User
+
+        try {
+            UserDefineClassLoader loader1 = new UserDefineClassLoader("D:\\code\\workspace_teach\\JVMdachang210416\\chapter02_classload\\src");
+            Class userClass1 = loader1.findClass("com.atguigu.java3.User");
+            System.out.println(userClass1);
+
+            UserDefineClassLoader loader2 = new UserDefineClassLoader("D:\\code\\workspace_teach\\JVMdachang210416\\chapter02_classload\\src");
+            Class userClass2 = loader2.findClass("com.atguigu.java3.User");
+
+            System.out.println(userClass1 == userClass2);//实现了加载的类的隔离
+
+
+            System.out.println(userClass1.getClassLoader());
+            System.out.println(userClass1.getClassLoader().getParent());
+
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+        }
+    }
+}
+````
+
+##### 对比
+
+这两种方法本质上差不多，毕竟loadClass()也会调用findClass()，但是从逻辑上讲我们最好不要直接修改loadClass()的内部逻辑。建议的做法是只在findClass()里重写自定义类的加载方法，根据参数指定类的名字，返回对应的Class对象的引用。
+
+##### 面试题
+
+手写一个类加载器Demo （百度）
+
+#### 双亲委派机制
+
+##### 面试题
+
+- 双亲委派好处有哪些？（亚信）
+- 类加载器双亲委派模型机制？（苏宁）
+- 双亲委派机制 （蚂蚁金服）
+- 双亲委派机制及使用原因 （蚂蚁金服）
+- 类加载器的双亲委派模型是什么？ （蚂蚁金服）
+- 双亲委派模型介绍一下  （小米）
+- 讲一下双亲委派模型，以及其优点  （滴滴）
+- 类加载器的双亲委派模型是什么？ （京东）
+
+##### 定义与本质
+
+##### 如何证明？源码分析
+
+##### 优势与劣势
+
+###### 双亲委派机制优势
+
+- **避免类的重复加载，确保一个类的全局唯一性**
+
+**Java类随着它的类加载器一起具备了一种带有优先级的层次关系，通过这种层级关系可以避免类的重复加载**，当父亲已经加载了该类时，就没有必要子ClassLoader再加载一次。
+
+- **保护程序安全，防止核心API被随意篡改**
+
+###### 双亲委托模式的弊端
+
+检查类是否加载的委托过程是单向的，这个方式虽然从结构上说比较清晰，使各个ClassLoader的职责非常明确，但是同时会带来一个问题，即顶层的ClassLoader无法访问底层的ClassLoader所加载的类。
+
+通常情况下，启动类加载器中的类为系统核心类，包括一些重要的系统接口，而在应用类加载器中，为应用类。按照这种模式，**应用类访问系统类自然是没有问题，但是系统类访问应用类就会出现问题。**比如在系统类中提供了一个接口，该接口需要在应用类中得以实现，该接口还绑定一个工厂方法，用于创建该接口的实例，而接口和工厂方法都在启动类加载器中。这时，就会出现该工厂方法无法创建由应用类加载器加载的应用实例的问题。
+
+###### 结论
+
+**由于Java虚拟机规范并没有明确要求类加载器的加载机制一定要使用双亲委派模型，只是建议采用这种方式而已。**
+
+**比如在Tomcat中，类加载器所采用的加载机制就和传统的双亲委派模型有一定区别，当缺省的类加载器接收到一个类的加载任务时，首先会由它自行加载，当它加载失败时，才会将类的加载任务委派给它的超类加载器去执行，这同时也是Servlet规范推荐的一种做法。**
+
+##### 破坏双亲委派机制及举例
+
+这里，我们使用了“被破坏”这个词来形容上述不符合双亲委派模型原则的行为，但这里“被破坏”并不一定是**带有贬义的。只要有明确的目的和充分的理由，突破旧有原则无疑是一种创新。**
+
+正如：破坏双亲委派机制3的OSGi中的类加载器的设计不符合传统的双亲委派的类加载器架构，且业界对其为了实现热部署而带来的额外的高复杂度还存在不少争议，但对这方面有了解的技术人员基本还是能达成一个共识，认为**OSGi中对类加载器的运用是值得学习的，完全弄懂了OSGi的实现，就算是掌握了类加载器的精粹**。
+
+###### 面试题
+
+- 双亲委派机制可以打破吗？为什么 （京东）
+- 可以打破双亲委派么，怎么打破。（拼多多）
+
+###### 破坏双亲委派机制1-重写loadClass()方法
+
+###### 破坏双亲委派机制2-线程上下文类加载器
+
+###### 破坏双亲委派机制3-代码热替换
+
+###### 热替换的实现
+
+##### 面试题
+
+###### 源码分析
+
+###### 5个子问题
+
+#### 沙箱安全机制
+
+##### JDK1.0 时期
+
+##### JDK1.1 时期
+
+##### JDK1.2 时期
+
+##### JDK1.6 时期
+
+### JDK中类加载结构的新变化
 
 ## 运行时内存篇
 
