@@ -158,6 +158,7 @@
       * [05-JUC进阶编程](编程笔记/Java笔记/JavaSE笔记/05-JUC进阶编程.md)
       * [06-JVM原理](编程笔记/Java笔记/JavaSE笔记/06-JVM原理.md)
       * [07-JVM原理（进阶版）](编程笔记/Java笔记/JavaSE笔记/07-JVM原理（进阶版）.md)
+      * [08-Netty笔记](编程笔记/Java笔记/JavaSE笔记/08-Netty笔记.md)
     - Java进阶笔记
       - 核心技术及源码剖析笔记
         * [Mybatis源码剖析笔记](编程笔记/Java笔记/Java进阶笔记/核心技术及源码剖析笔记/Mybatis源码剖析笔记.md)
@@ -173,7 +174,6 @@
     - 常用中间件
       * [ElasticSearch笔记](编程笔记/Java笔记/常用中间件/ElasticSearch笔记.md)
       * [kafka笔记](编程笔记/Java笔记/常用中间件/kafka笔记.md)
-      * [Netty笔记](编程笔记/Java笔记/常用中间件/Netty笔记.md)
       * [RabbitMQ笔记](编程笔记/Java笔记/常用中间件/RabbitMQ笔记.md)
       * [RocketMQ笔记](编程笔记/Java笔记/常用中间件/RocketMQ笔记.md)
       * [ShardingJDBC笔记](编程笔记/Java笔记/常用中间件/ShardingJDBC笔记.md)
@@ -292,10 +292,7 @@
   - 数据库笔记
     * [mysql笔记](编程笔记/数据库笔记/mysql笔记.md)
     * [redis笔记](编程笔记/数据库笔记/redis笔记.md)
-- 计算机书籍笔记
-  * [计算机操作系统笔记](计算机书籍笔记/计算机操作系统笔记.md)
-  * [计算机组成原理笔记](计算机书籍笔记/计算机组成原理笔记.md)
-  * [计算机网络笔记](计算机书籍笔记/计算机网络笔记.md)
+  * [计算机基础知识笔记](编程笔记/计算机基础知识笔记.md)
 - 软考笔记
   - 软件设计师笔记
     * [01-前提准备](软考笔记/软件设计师笔记/01-前提准备.md)

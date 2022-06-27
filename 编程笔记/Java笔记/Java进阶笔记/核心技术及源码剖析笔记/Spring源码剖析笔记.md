@@ -122,8 +122,6 @@ public class MyTypeFilter implements TypeFilter {
 }
 ```
 
-
-
 ##### Import快速给容器导入Bean的方式
 
 ```java
@@ -155,7 +153,7 @@ public class MyImportSelector implements ImportSelector {
 public class MyImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar {
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
-        // 包里面如果声明了Company和Member这两个类，我才把User对象注册到IOC容器中
+        // 包里面如果声明了Company和Member这两个类，才把User对象注册到IOC容器中
         boolean company = registry.containsBeanDefinition("project.entity.Company");
         boolean member = registry.containsBeanDefinition("project.entity.Member");
 
@@ -844,12 +842,11 @@ private void doDispatch(HttpServletRequest request,HttpServletResponse response)
     String beanName = toLowerFirstCase(method.getDeclaringClass().getSimpleName());
 
     // 3. 组成动态实际参数列表，传给反射调用
-
     method.invoke(ioc.get(beanName),paramValues);
 }
 ```
 
-其中，Annotation[][] annos = method.getParameterAnnotations()；得到的结果是一个二维数组，因为参数前可以添加多个注解,,一个参数上不可以添加相同的注解,同一个注解可以加在不同的参数上。
+其中，Annotation[][] annos = method.getParameterAnnotations()；得到的结果是一个二维数组，因为参数前可以添加多个注解，一个参数上不可以添加相同的注解,同一个注解可以加在不同的参数上。
 
 ### 运行测试
 
@@ -991,7 +988,6 @@ public class MyDispatcherServlet extends HttpServlet {
         String beanName = toLowerFirstCase(method.getDeclaringClass().getSimpleName());
 
         // 3. 组成动态实际参数列表，传给反射调用
-
         method.invoke(applicationContext.getBean(beanName),paramValues);
     }
 
@@ -1813,9 +1809,384 @@ aspectAfterThrowingName=java.lang.Exception
 
 #### 完成AOP定层设计
 
+##### MyAopProxy代理顶层接口定义
+
+```java
+public interface MyAopProxy {
+
+    Object getProxy();
+
+    Object getProxy(ClassLoader classLoader);
+
+}
+```
+
+##### MyCglibAopProxy/MyJdkDynamicAopProxy
+
+```java
+public class MyJdkDynamicAopProxy implements MyAopProxy, InvocationHandler {
+
+//    private MyAdvisedSupport config;
+    private MyAdvisedSupport advised;
+
+    public MyJdkDynamicAopProxy(MyAdvisedSupport config) {
+        this.advised = config;
+    }
+
+    @Override
+    public Object getProxy() {
+        return getProxy(this.getClass().getClassLoader());
+    }
+
+    @Override
+    public Object getProxy(ClassLoader classLoader) {
+        return Proxy.newProxyInstance(
+                this.getClass().getClassLoader(),
+                this.advised.getTargetClass().getInterfaces(),
+                this);
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
+        List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method,this.advised.getTargetClass());
+
+        MyMethodInvocation invocation = new MyMethodInvocation(proxy,this.advised.getTarget(),method,args,this.advised.getTargetClass(),chain);
+
+        return invocation.proceed();
+    }
+}
+```
+
+##### MyAdvisedSupport配置解析
+
+```java
+public class MyAdvisedSupport {
+    private MyAopConfig config;
+
+    private Pattern pointCutClassPattern;
+
+    // chain
+//    private Map<Method, Map<String, MyAdvice>> methodCache;
+    private HashMap<Object, List<Object>> methodCache;
+
+    private Class targetClass;
+    private Object target;
 
 
-## 手绘Spring IOC运行时序图
+    public MyAdvisedSupport(MyAopConfig config) {
+        this.config = config;
+    }
+
+    public Class getTargetClass() {
+        return targetClass;
+    }
+
+    public void setTargetClass(Class targetClass) {
+        this.targetClass = targetClass;
+        parse();
+    }
+
+    private void parse() {
+        // public .* com.study.myspring.demo.service..*Service..*(.*)
+        // 修饰符 方法返回值 包名.类名.方法名(形参列表)
+        String pointCutRegex = this.config.getPointCut()
+                .replaceAll("\\.", "\\\\.")
+                .replaceAll("\\\\.\\*", ".*")
+                .replaceAll("\\(", "\\\\(")
+                .replaceAll("\\)", "\\\\)");
+        // public .* com.study.myspring.demo.service..*Service
+        String pointCutForClassRegex = pointCutRegex.substring(0, pointCutRegex.lastIndexOf("\\(") - 4);
+
+        pointCutClassPattern = Pattern.compile("class " + pointCutForClassRegex.substring(pointCutForClassRegex.lastIndexOf(" ") + 1));
+
+
+        // 保存回调通知和目标切点之间的关系
+        // 一个方法 对应 多个目标切点
+//        methodCache = new HashMap<>();
+        methodCache = new HashMap<Object, List<Object>>();
+
+        try {
+
+            // 先把切面方法缓存起来，方便解析AOP配置文件的时候，可以根据方法名快速找到对应的回调方法
+            Map<String, Method> aspectMethods = new HashMap<>();
+            Class aspectClass = Class.forName(this.config.getAspectClass());
+            for (Method method : aspectClass.getMethods()) {
+                aspectMethods.put(method.getName(), method);
+            }
+
+            Pattern pointCutPattern = Pattern.compile(pointCutRegex);
+
+            for (Method method : this.targetClass.getMethods()) {
+                // public java.lang.String com.study.myspring.demo.service.impl.QueryService.query(java.lang.String)
+                String methodString = method.toString();
+
+                // public java.lang.String com.study.myspring.demo.service.impl.QueryService.query(java.lang.String) throws Exception
+                if (methodString.contains("throws")) {
+                    methodString = methodString.substring(0, methodString.lastIndexOf("throws")).trim();
+                }
+
+                Matcher matcher = pointCutPattern.matcher(methodString);
+                if (matcher.matches()) {
+
+                    List<Object> advices = new LinkedList<Object>();
+
+                    if (!(null == this.config.getAspectBefore() || "".equals(this.config.getAspectBefore()))) {
+                        advices.add(new MyMethodBeforeAdviceInterceptor(
+                                aspectClass.newInstance(),
+                                aspectMethods.get(this.config.getAspectBefore())
+                        ));
+                    }
+
+                    if (!(null == this.config.getAspectAfter() || "".equals(this.config.getAspectAfter()))) {
+                        advices.add(new MyAfterReturningAdviceInterceptor(
+                                aspectClass.newInstance(),
+                                aspectMethods.get(this.config.getAspectAfter())
+                        ));
+                    }
+
+                    if (!(null == this.config.getAspectAfterThrow() || "".equals(this.config.getAspectAfterThrow()))) {
+                        MyAspectJAfterThrowingAdvice advice = new MyAspectJAfterThrowingAdvice(
+                                aspectClass.newInstance(),
+                                aspectMethods.get(this.config.getAspectAfterThrow())
+                        );
+                        advice.setThrowName(this.config.getAspectAfterThrowingName());
+                        advices.add(advice);
+                    }
+
+                    this.methodCache.put(method, advices);
+                }
+            }
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public Object getTarget() {
+        return target;
+    }
+
+    public void setTarget(Object target) {
+        this.target = target;
+    }
+
+    public boolean pointCutMatch() {
+        return this.pointCutClassPattern.matcher(this.targetClass.toString()).matches();
+    }
+
+    public List<Object> getInterceptorsAndDynamicInterceptionAdvice(Method method, Class targetClass) throws Exception {
+        List<Object> cache = this.methodCache.get(method);
+
+        if (cache == null) {
+            Method m = null;
+            m = targetClass.getMethod(method.getName(), method.getParameterTypes());
+            cache = methodCache.get(m);
+            this.methodCache.put(m, cache);
+        }
+        return cache;
+    }
+}
+```
+
+##### MyAdvice通知接口定义
+
+```java
+public interface MyAdvice {
+//    private Object aspect;
+//    private Method adviceMethod;
+//    private String throwName;
+//
+//    public MyAdvice(Object aspect, Method adviceMethod) {
+//        this.aspect = aspect;
+//        this.adviceMethod = adviceMethod;
+//    }
+//
+//    public Object getAspect() {
+//        return aspect;
+//    }
+//
+//    public void setAspect(Object aspect) {
+//        this.aspect = aspect;
+//    }
+//
+//    public Method getAdviceMethod() {
+//        return adviceMethod;
+//    }
+//
+//    public void setAdviceMethod(Method adviceMethod) {
+//        this.adviceMethod = adviceMethod;
+//    }
+//
+//    public String getThrowName() {
+//        return throwName;
+//    }
+//
+//    public void setThrowName(String throwName) {
+//        this.throwName = throwName;
+//    }
+}
+```
+
+##### MyAbstractAspectJAdvice封装代理
+
+```java
+public class MyAbstractAspectJAdvice implements MyAdvice{
+
+    private Object aspect;
+    private Method adviceMethod;
+    private String throwName;
+
+    public MyAbstractAspectJAdvice(Object aspect, Method adviceMethod) {
+        this.aspect = aspect;
+        this.adviceMethod = adviceMethod;
+    }
+
+    protected Object invokeAdviceMethod(
+            MyJoinPoint joinPoint, Object returnValue, Throwable ex)
+            throws Throwable {
+        Class<?> [] paramTypes = this.adviceMethod.getParameterTypes();
+        if(null == paramTypes || paramTypes.length == 0){
+            return this.adviceMethod.invoke(aspect);
+        }else {
+            Object[] args = new Object[paramTypes.length];
+            for (int i = 0; i < paramTypes.length; i++) {
+                if (paramTypes[i] == MyJoinPoint.class) {
+                    args[i] = joinPoint;
+                } else if (paramTypes[i] == Throwable.class) {
+                    args[i] = ex;
+                } else if (paramTypes[i] == Object.class) {
+                    args[i] = returnValue;
+                }
+            }
+            return this.adviceMethod.invoke(aspect, args);
+        }
+    }
+}
+```
+
+##### MyAopCofig封装配置
+
+```java
+@Data
+public class MyAopConfig {
+    private String pointCut;
+    private String aspectClass;
+    private String aspectBefore;
+    private String aspectAfter;
+    private String aspectAfterThrow;
+    private String aspectAfterThrowingName;
+}
+```
+
+##### 接入getBean()方法与IOC容器衔接
+
+找到MyApplicationContext的getBean()方法，可以知道getBean()负责Bean初始化的方法其实就是instantiateBean()，在初始化时就可以确定是否返回原生Bean还是Proxy Bean。代码实现如下：
+
+```java
+private Object instantiateBean(String beanName, MyBeanDefinition beanDefinition) {
+
+    if(beanDefinition.isSingleton() && this.factoryBeanObjectCache.containsKey(beanName)){
+        return this.factoryBeanObjectCache.get(beanName);
+    }
+
+    String className = beanDefinition.getBeanClassName();
+
+    Object instance = null;
+
+    try {
+        Class<?> clazz = Class.forName(className);
+        instance = clazz.newInstance();
+
+        // 如果是代理对象，触发AOP逻辑
+        MyAdvisedSupport config = instantionAopConfig(beanDefinition);
+        config.setTargetClass(clazz);
+        config.setTarget(instance);
+
+        // 判断规则，是否要成代理，如果要调用代理工厂生成代理类，并且放入到三级缓存中
+        // 如果不符合规则，则返回原生类
+        if(config.pointCutMatch()){
+            instance = proxyFactory.createAopProxy(config).getProxy();
+        }
+
+
+        factoryBeanObjectCache.put(beanName, instance);
+
+        factoryBeanObjectCache.put(clazz.getName(), instance);
+
+        for (Class<?> i : clazz.getInterfaces()) {
+            this.factoryBeanObjectCache.put(i.getName(),instance);
+        }
+
+
+    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        e.printStackTrace();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return instance;
+}
+
+private MyAdvisedSupport instantionAopConfig(MyBeanDefinition beanDefinition) {
+    MyAopConfig config = new MyAopConfig();
+
+    config.setPointCut(this.reader.getConfig().getProperty("pointCut"));
+    config.setAspectClass(this.reader.getConfig().getProperty("aspectClass"));
+    config.setAspectBefore(this.reader.getConfig().getProperty("aspectBefore"));
+    config.setAspectAfter(this.reader.getConfig().getProperty("aspectAfter"));
+    config.setAspectAfterThrow(this.reader.getConfig().getProperty("aspectAfterThrow"));
+    config.setAspectAfterThrowingName(this.reader.getConfig().getProperty("aspectAfterThrowingName"));
+
+    return new MyAdvisedSupport(config);
+}
+```
+
+##### LogAspect自定义切面配置
+
+```java
+public class LogAspect {
+
+    // 在调用一个方法之前，执行before方法·
+    public void before(MyJoinPoint joinPoint){
+        joinPoint.setUserAttribute("startTime_" + joinPoint.getMethod().getName(), System.currentTimeMillis());
+        System.out.println("Invoker Before Method!!!");
+    }
+
+    // 在调用一个方法之后，执行after方法
+    public void after(MyJoinPoint joinPoint){
+        // 用于体现，暂停时间
+        try {TimeUnit.MILLISECONDS.sleep(10);} catch (InterruptedException e) {e.printStackTrace();}
+        long startTime = (Long)joinPoint.getUserAttribute("startTime_" + joinPoint.getMethod().getName());
+        long endTime = System.currentTimeMillis();
+        System.out.println("Invoker After Method!!! use time："+(endTime - startTime) + "ms");
+    }
+
+    public void afterThrowing(){
+        System.out.println("出现异常");
+    }
+}
+```
+
+项目结构如下：
+
+![image-20220626170929339](../../../../../assets/Spring%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E7%AC%94%E8%AE%B0/image-20220626170929339.png)
+
+![image-20220626170942908](../../../../../assets/Spring%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E7%AC%94%E8%AE%B0/image-20220626170942908.png)
+
+## 手绘Spring 运行时序图
+
+### IOC运行时序图
+
+### DI运行时序图
+
+### AOP运行时序图
+
+### MVC运行时序图
 
 ## Spring事务传播原理
 
