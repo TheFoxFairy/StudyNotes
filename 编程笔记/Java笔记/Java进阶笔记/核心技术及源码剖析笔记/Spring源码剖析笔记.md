@@ -2182,6 +2182,73 @@ public class LogAspect {
 
 ### IOC运行时序图
 
+#### Spring IOC容器
+
+##### 什么是IOC/DI？
+
+**IOC(Inversion of Control)控制反转**∶所谓控制反转，就是把原先我们代码里面需要实现的对象创建、依赖的代码，反转给容器来帮忙实现。
+
+**DI(Dependency Injection)依赖注入**：就是指对象是被动接受依赖类而不是自己主动去找，换句话说就是指对象不是从容器中查找它依赖的类，而是在容器实例化对象的时候主动将它依赖的类注入给它。
+
+##### 设计视角
+
+###### 对象和对象的关系怎么表示？
+
+可以用xml , properties文件等语义化配置文件表示。
+
+###### 描述对象关系的文件存放在哪里？
+
+可能是classpath , filesystem，或者是 URL网络资源，servletContext等。
+
+###### 如何统一配置文件的标准？
+
+在内部需要有一个统一的关于对象的定义，所有外部的描述都必须转化成统一的描述定义。
+
+比如，BeanDefinition。
+
+###### 如何对不同的配置文件进行解析？
+
+需要对不同的配置文件语法，采用不同的解析器，采用策略模式。
+
+##### Spring核心容器类图
+
+- **BeanFactory**
+- **BeanDefinition**
+- **BeanDefinitionReader**
+
+##### 基于XML的IOC容器的初始化
+
+IOC容器的初始化包括BeanDefinition的Resource定位、加载和注册这三个基本的过程。
+
+![image-20220703175643600](../../../../../assets/Spring%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E7%AC%94%E8%AE%B0/image-20220703175643600.png)
+
+* 定位：定位配置文件和扫描相关注解
+* 加载：将配置信息载入到内存中
+* 注册：根据载入的信息，将对象初始化到IOC容器中
+
+详细过程如下：
+
+![image-20220703175818555](../../../../../assets/Spring%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E7%AC%94%E8%AE%B0/image-20220703175818555.png)
+
+##### IOC容器初始化小结
+
+现在通过上面的代码，总结一下IOC容器初始化的基本步骤：
+
+- 初始化的入口在容器实现中的refresh()调用来完成。
+- 对Bean定义载入IOC容器使用的方法是loadBeanDefinition()，其中的大致过程如下：
+
+通过**ResourceLoader**来完成资源文件位置的定位，DefaultResourceLoader是默认的实现，同时上下文本身就给出了ResourceLoader的实现，可以从类路径，文件系统,URL等方式来定为资源位置。
+
+如果是**XmlBeanFactory**作为IOC容器，那么需要为它**指定Bean定义的资源**，也就是说Bean定义文件时通过抽象成Resource来被IOC容器处理的，**容器通过BeanDefinitionReader来完成定义信息的解析和 Bean信息的注册，往往使用的是XmlBeanDefinitionReader 来解析Bean的XML定义文件-实际的处理过程是委托给BeanDefinitionParserDelegate来完成的**，从而得到 bean的定义信息，这些信息在Spring中使用BeanDefinition对象来表示-这个名字可以让我们想到loadBeanDefinition()，registerBeanDefinition()这些相关方法。它们都是为处理BeanDefinitin服务的，容器解析得到BeanDefinition 以后，需要把它在IOC容器中注册，这由IOC实现 BeanDefinitionRegistry 接口来实现。注册过程就是在IOC容器内部维护的一个HashMap来保存得到的BeanDefinition的过程。这个HashMap是IOC容器持有Bean信息的场所，以后对 Bean的操作都是围绕这个HashMap来实现的。
+
+然后我们就可以通过BeanFactory和ApplicationContext来享受到Spring lOC的服务了,在使用IOC容器的时候，我们注意到除了少量粘合代码，绝大多数以正确IOC风格编写的应用程序代码完全不用关心如何到达工厂，因为容器将把这些对象与容器管理的其他对象钩在一起。基本的策略是把工厂放到已知的地方,最好是放在对预期使用的上下文有意义的地方,以及代码将实际需要访问工厂的地方。Spring本身提供了对声明式载入web应用程序用法的应用程序上下文,并将其存储在ServletContext中的框架实现。
+
+![image-20220704212033670](../../../../../assets/Spring%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E7%AC%94%E8%AE%B0/image-20220704212033670.png)
+
+![image-20220704212049424](../../../../../assets/Spring%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E7%AC%94%E8%AE%B0/image-20220704212049424.png)
+
+![image-20220704212105728](../../../../../assets/Spring%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E7%AC%94%E8%AE%B0/image-20220704212105728.png)
+
 ### DI运行时序图
 
 ### AOP运行时序图

@@ -133,6 +133,7 @@
   * [KMP算法](算法笔记/KMP算法.md)
   * [字典树](算法笔记/字典树.md)
   * [并查集](算法笔记/并查集.md)
+  * [算法题解分析](算法笔记/算法题解分析.md)
 - 编程笔记
   - C++笔记
     - 逆向笔记
@@ -173,10 +174,8 @@
       * [Spring笔记](编程笔记/Java笔记/SSM框架笔记/Spring笔记.md)
     - 常用中间件
       * [ElasticSearch笔记](编程笔记/Java笔记/常用中间件/ElasticSearch笔记.md)
-      * [kafka笔记](编程笔记/Java笔记/常用中间件/kafka笔记.md)
-      * [RabbitMQ笔记](编程笔记/Java笔记/常用中间件/RabbitMQ笔记.md)
-      * [RocketMQ笔记](编程笔记/Java笔记/常用中间件/RocketMQ笔记.md)
-      * [ShardingJDBC笔记](编程笔记/Java笔记/常用中间件/ShardingJDBC笔记.md)
+      * [分库分表笔记](编程笔记/Java笔记/常用中间件/分库分表笔记.md)
+      * [消息中间件笔记](编程笔记/Java笔记/常用中间件/消息中间件笔记.md)
     - 常用第三方技术
       * [CDN技术笔记](编程笔记/Java笔记/常用第三方技术/CDN技术笔记.md)
       * [POI技术笔记](编程笔记/Java笔记/常用第三方技术/POI技术笔记.md)

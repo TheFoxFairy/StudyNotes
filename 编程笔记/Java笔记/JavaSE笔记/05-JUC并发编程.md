@@ -2062,12 +2062,12 @@ public class LazyMan {
 
     private LazyMan(){
 
-//        // 由于反射会破坏单例，这里加把锁
-//        synchronized (LazyMan.class){ //但是这里加了三把锁，但是仍然会破坏
-//            if(lazyMan == null){
-//                System.out.println("不要试图使用反射破坏异常");
-//            }
-//        }
+        //        // 由于反射会破坏单例，这里加把锁
+        //        synchronized (LazyMan.class){ //但是这里加了三把锁，但是仍然会破坏
+        //            if(lazyMan == null){
+        //                System.out.println("不要试图使用反射破坏异常");
+        //            }
+        //        }
 
         // 由于反射会破坏单例，这里加把锁
         synchronized (LazyMan.class){ //但是这里加了三把锁，但是仍然会破坏
@@ -2084,17 +2084,15 @@ public class LazyMan {
     // 双重检测锁模式的懒汉式单例-DCL
     public static LazyMan getInstance(){
         if(lazyMan == null){
-            if(lazyMan == null){
-                synchronized (LazyMan.class){
-                    if(lazyMan == null){
-                        lazyMan = new LazyMan(); // 不是原子性操作
-                        /**
+            synchronized (LazyMan.class){
+                if(lazyMan == null){
+                    lazyMan = new LazyMan(); // 不是原子性操作
+                    /**
                          * 以下指令，可能会指令重排，导致返回时，还没有构造好，因此需要将对象进行可见，避免问题发生
                          * 1.分配内存空间
                          * 2. 执行构造方法，初始化对象
                          * 3. 把这个对象执向这个空间
                          */
-                    }
                 }
             }
         }
@@ -2103,14 +2101,14 @@ public class LazyMan {
     // 单例没问题
     // 并发有问题
     public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
-//        for(int i=0;i<10;i++){
-//            new Thread(()->{
-//                LazyMan.getInstance();
-//            }).start();
-//        }
+        //        for(int i=0;i<10;i++){
+        //            new Thread(()->{
+        //                LazyMan.getInstance();
+        //            }).start();
+        //        }
 
-//        //反射会被破坏这个单例
-//        LazyMan instance = LazyMan.getInstance();
+        //        //反射会被破坏这个单例
+        //        LazyMan instance = LazyMan.getInstance();
 
         // 反射破坏了单例
         Constructor<LazyMan> declaredConstructor = LazyMan.class.getDeclaredConstructor(null);
